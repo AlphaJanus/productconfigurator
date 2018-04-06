@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Netzexpert_ProductConfigurator::configurator"
+             title="Product Configurator"
+             translate="title"
+             parent="Magento_Catalog::catalog"
+             module="Netzexpert_ProductConfigurator"
+             resource="Netzexpert_ProductConfigurator::configurator"
+             dependsOnModule="Netzexpert_ProductConfigurator"
+             sortOrder="90" />
+        <add id="Netzexpert_ProductConfigurator::options"
+             title="Configurator options"
+             translate="title"
+             parent="Netzexpert_ProductConfigurator::configurator"
+             module="Netzexpert_ProductConfigurator"
+             resource="Netzexpert_ProductConfigurator::options"
+             dependsOnModule="Netzexpert_ProductConfigurator"
+             action="configurator/option"
+             sortOrder="10" />
+    </menu>
+</config>
