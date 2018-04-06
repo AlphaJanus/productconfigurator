@@ -15,14 +15,20 @@ class InstallData implements InstallDataInterface
     /** @var EavSetupFactory  */
     protected $eavSetupFactory;
 
+    /** @var ConfiguratorOptionSetupFactory  */
+    protected $configuratorOptionSetupFactory;
+
     /**
      * InstallData constructor.
      * @param EavSetupFactory $eavSetupFactory
+     * @param ConfiguratorOptionSetupFactory $configuratorOptionSetupFactory
      */
     public function __construct(
-        EavSetupFactory $eavSetupFactory
+        EavSetupFactory $eavSetupFactory,
+        ConfiguratorOptionSetupFactory $configuratorOptionSetupFactory
     ) {
-        $this->eavSetupFactory = $eavSetupFactory;
+        $this->eavSetupFactory                  = $eavSetupFactory;
+        $this->configuratorOptionSetupFactory   = $configuratorOptionSetupFactory;
     }
 
     /**
@@ -62,5 +68,7 @@ class InstallData implements InstallDataInterface
                 );
             }
         }
+
+        $this->configuratorOptionSetupFactory->create(['setup' => $setup])->installEntities();
     }
 }

@@ -7,5 +7,8 @@
           sortOrder="80"
           isQty="true">
         <priceModel instance="Netzexpert\ProductConfigurator\Model\Product\Price" />
+        <customAttributes>
+            <attribute name="refundable" value="true"/>
+        </customAttributes>
     </type>
 </config>
