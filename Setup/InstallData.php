@@ -13,10 +13,10 @@ use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 class InstallData implements InstallDataInterface
 {
     /** @var EavSetupFactory  */
-    protected $eavSetupFactory;
+    private $eavSetupFactory;
 
     /** @var ConfiguratorOptionSetupFactory  */
-    protected $configuratorOptionSetupFactory;
+    private $configuratorOptionSetupFactory;
 
     /**
      * InstallData constructor.
@@ -58,7 +58,7 @@ class InstallData implements InstallDataInterface
                 ',',
                 $eavSetup->getAttribute(Product::ENTITY, $field, 'apply_to')
             );
-            if(!in_array(Configurator::TYPE_ID,$aplyTo)){
+            if (!in_array(Configurator::TYPE_ID, $aplyTo)) {
                 $aplyTo[] = Configurator::TYPE_ID;
                 $eavSetup->updateAttribute(
                     Product::ENTITY,

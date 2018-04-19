@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption" />
+    <preference for="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\RepositoryInterface" type="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\Repository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionAttributeRepositoryInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Attribute\Repository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOptionRepository" />
+</config>
