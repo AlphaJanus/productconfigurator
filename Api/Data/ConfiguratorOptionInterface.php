@@ -7,11 +7,14 @@
 
 namespace Netzexpert\ProductConfigurator\Api\Data;
 
+use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant\Collection;
+
 interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     const NAME =  'name';
 
     const TYPE  = 'type';
+    const VALUES = 'values';
 
 
     /**
@@ -48,6 +51,22 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     public function setType($type);
 
     /**
+     * @return []
+     */
+    public function getValues();
+
+    /**
+     * @param array $values
+     * @return $this
+     */
+    public function setValues($values);
+
+    /**
+     * @return Collection
+     */
+    public function getVariants();
+
+    /**
      * Object data getter
      *
      * If $key is not defined will return all the data as an array.
@@ -77,4 +96,12 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
      * @return $this
      */
     public function setData($key, $value = null);
+
+    /**
+     * Get object original data
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getOrigData($key = null);
 }

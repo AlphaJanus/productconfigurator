@@ -1,7 +1,25 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption" />
-    <preference for="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\RepositoryInterface" type="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\Repository" />
-    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionAttributeRepositoryInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Attribute\Repository" />
-    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface" type="Netzexpert\ProductConfigurator\Model\ConfiguratorOptionRepository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption" />
+    <preference for="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\RepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\Repository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionAttributeRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Attribute\Repository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOptionRepository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionAttributeInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Attribute" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionVariantInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\VariantRepository" />
+
+    <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
+        <arguments>
+            <argument name="resource" xsi:type="object">\Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant</argument>
+        </arguments>
+    </type>
 </config>

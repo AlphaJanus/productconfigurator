@@ -10,9 +10,13 @@ namespace Netzexpert\ProductConfigurator\Controller\Adminhtml\Option;
 use Magento\Backend\App\Action;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterfaceFactory;
+use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class Save extends Action
 {
@@ -30,6 +34,8 @@ class Save extends Action
     /** @var ConfiguratorOptionInterfaceFactory  */
     private $optionFactory;
 
+    private $variantRepository;
+
     /** @var DataPersistorInterface  */
     private $dataPersistor;
 
@@ -37,10 +43,12 @@ class Save extends Action
         Action\Context $context,
         ConfiguratorOptionRepositoryInterface $optionRepository,
         ConfiguratorOptionInterfaceFactory $optionFactory,
+        ConfiguratorOptionVariantRepositoryInterface $variantRepository,
         DataPersistorInterface $dataPersistor
     ) {
         $this->optionRepository     = $optionRepository;
         $this->optionFactory        = $optionFactory;
+        $this->variantRepository    = $variantRepository;
         $this->dataPersistor        = $dataPersistor;
         parent::__construct($context);
     }
@@ -53,7 +61,7 @@ class Save extends Action
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         $data = $this->getRequest()->getParams();
-        if (!empty($data)) {
+        if (!empty($data) && isset($data['option'])) {
             if (isset($data['option']['entity_id'])) {
                 try {
                     $option = $this->optionRepository->get($data['option']['entity_id']);
@@ -63,7 +71,12 @@ class Save extends Action
             } else {
                 $option = $this->optionFactory->create();
             }
+            $dataToUnset = array_diff_key($option->getOrigData(), $data['option']);
+            $this->deleteVariants($option, $data);
             $option->setData($data['option']);
+            foreach (array_keys($dataToUnset) as $key) {
+                $option->setData($key, null);
+            }
 
             try {
                 $this->optionRepository->save($option);
@@ -81,5 +94,31 @@ class Save extends Action
             }
         }
         return $resultRedirect->setPath('*/*/');
+    }
+
+    /**
+     * @param ConfiguratorOptionInterface $option
+     * @param array $data
+     */
+    private function deleteVariants($option, $data)
+    {
+        $variants = $option->getVariants()->toArray()['items'];
+        foreach ($variants as $variant) {
+            $exists = false;
+            if ($data['option']['type'] == OptionType::TYPE_SELECT && isset($data['option']['values'])) {
+                foreach ($data['option']['values'] as $value) {
+                    if ($variant['value_id'] == $value['value_id']) {
+                        $exists = true;
+                    }
+                }
+            }
+            if (!$exists) {
+                try {
+                    $this->variantRepository->deleteById($variant['value_id']);
+                } catch (LocalizedException $exception) {
+                    $this->messageManager->addExceptionMessage($exception);
+                }
+            }
+        }
     }
 }

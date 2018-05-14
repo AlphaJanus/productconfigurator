@@ -8,6 +8,7 @@
 namespace Netzexpert\ProductConfigurator\Ui\Component;
 
 
+use Magento\Eav\Model\Attribute;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionAttributeInterface;
 
 class ColumnFactory
@@ -48,7 +49,7 @@ class ColumnFactory
     }
 
     /**
-     * @param ConfiguratorOptionAttributeInterface $attribute
+     * @param ConfiguratorOptionAttributeInterface | Attribute $attribute
      * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
      * @param array $config
      * @return \Magento\Ui\Component\Listing\Columns\ColumnInterface
@@ -60,8 +61,8 @@ class ColumnFactory
             'label' => __($attribute->getDefaultFrontendLabel()),
             'dataType' => $this->getDataType($attribute),
             'add_field' => true,
-            'visible' => $attribute->getIsVisibleInGrid(),
-            'filter' => ($attribute->getIsFilterableInGrid())
+            'visible' => $attribute->getData('is_visible_in_grid'),
+            'filter' => ($attribute->getData('is_filterable_in_grid'))
                 ? $this->getFilterType($attribute->getFrontendInput())
                 : null,
         ], $config);

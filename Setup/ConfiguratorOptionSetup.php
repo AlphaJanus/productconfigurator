@@ -7,17 +7,44 @@
 
 namespace Netzexpert\ProductConfigurator\Setup;
 
+use Magento\Eav\Model\Config;
+use Magento\Eav\Model\Entity\Setup\Context;
+use Magento\Eav\Model\ResourceModel\Entity\Attribute\Group\CollectionFactory;
 use Magento\Eav\Setup\EavSetup;
+use Magento\Framework\App\CacheInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption;
 
 class ConfiguratorOptionSetup extends EavSetup
 {
+    /** @var Config  */
+    private $eavConfig;
+
+    /**
+     * ConfiguratorOptionSetup constructor.
+     * @param ModuleDataSetupInterface $setup
+     * @param Context $context
+     * @param CacheInterface $cache
+     * @param CollectionFactory $attrGroupCollectionFactory
+     * @param Config $eavConfig
+     */
+    public function __construct(
+        ModuleDataSetupInterface $setup,
+        Context $context,
+        CacheInterface $cache,
+        CollectionFactory $attrGroupCollectionFactory,
+        Config $eavConfig
+    ) {
+        $this->eavConfig = $eavConfig;
+        parent::__construct($setup, $context, $cache, $attrGroupCollectionFactory);
+    }
+
     public function getDefaultEntities()
     {
         return [
             'configurator_option_entity' => [
-                'entity_model'  => ConfiguratorOption::class,
-                'table'         => 'configurator_option_entity',
+                'entity_model'                  => ConfiguratorOption::class,
+                'table'                         => 'configurator_option_entity',
                 'attributes'    => [
                     'name'  => [
                         'type'  => 'varchar',
@@ -53,5 +80,15 @@ class ConfiguratorOptionSetup extends EavSetup
                 ]
             ]
         ];
+    }
+
+    /**
+     * Gets EAV configuration
+     *
+     * @return Config
+     */
+    public function getEavConfig()
+    {
+        return $this->eavConfig;
     }
 }

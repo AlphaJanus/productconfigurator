@@ -7,6 +7,7 @@
 
 namespace Netzexpert\ProductConfigurator\Ui\Component\Listing;
 
+use Magento\Eav\Model\Entity\Attribute;
 use Netzexpert\ProductConfigurator\Ui\Component\ColumnFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Netzexpert\ProductConfigurator\Ui\Component\Listing\Attribute\RepositoryInterface;
@@ -57,11 +58,12 @@ class Columns extends \Magento\Ui\Component\Listing\Columns
     public function prepare()
     {
         $columnSortOrder = self::DEFAULT_COLUMNS_MAX_ORDER;
+        /** @var Attribute $attribute */
         foreach ($this->attributeRepository->getList() as $attribute) {
             $config = [];
-            if (!isset($this->components[$attribute->getAttributeCode()])) {
+            if (!isset($this->components[$attribute->getAttributeCode()]) && $attribute->getData('is_visible_in_grid')) {
                 $config['sortOrder'] = ++$columnSortOrder;
-                if ($attribute->getIsFilterableInGrid()) {
+                if ($attribute->getData('is_filterable_in_grid')) {
                     $config['filter'] = $this->getFilterType($attribute->getFrontendInput());
                 }
                 $column = $this->columnFactory->create($attribute, $this->getContext(), $config);
