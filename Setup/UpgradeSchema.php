@@ -473,6 +473,19 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->endSetup();
             }
         }
+        if (version_compare($context->getVersion(), '2.0.7') < 0) {
+            $setup->getConnection()->addColumn(
+                $setup->getTable('configurator_option_entity_variants'),
+                'image',
+                [
+                    'type'      => Table::TYPE_TEXT,
+                    'length'    => 255,
+                    'nullable'  => true,
+                    'default'   => null,
+                    'comment'   => 'Variant image'
+                ]
+            );
+        }
         $setup->endSetup();
     }
 }

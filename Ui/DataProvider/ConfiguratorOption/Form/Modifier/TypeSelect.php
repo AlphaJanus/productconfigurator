@@ -10,9 +10,14 @@ namespace Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form
 use Magento\Eav\Model\Config;
 use Magento\Eav\Model\ResourceModel\Entity\AttributeFactory as EavAttributeFactory;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Request\DataPersistorInterface;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\ArrayManager;
+use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Ui\Component\Container;
 use Magento\Ui\Component\DynamicRows;
@@ -38,6 +43,7 @@ class TypeSelect extends AbstractModifier
     const GROUP_VALUES_NAME     = 'values';
 
     const FIELD_ID_NAME         = 'value_id';
+    const FIELD_IMAGE_NAME      = 'image';
     const FIELD_TITLE_NAME      = 'title';
     const FIELD_VALUE_NAME      = 'value';
     const FIELD_PRICE_NAME      = 'price';
@@ -53,6 +59,18 @@ class TypeSelect extends AbstractModifier
     /** @var Registry  */
     private $registry;
 
+    /** @var CollectionFactory  */
+    private $variantsCollectionFactory;
+
+    /** @var UrlInterface  */
+    private $urlBuilder;
+
+    /** @var Filesystem  */
+    private $filesystem;
+
+    /** @var ManagerInterface  */
+    private $messageManager;
+
     /**
      * TypeSelect constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
@@ -66,6 +84,9 @@ class TypeSelect extends AbstractModifier
      * @param OptionType $optionTypeSource
      * @param StoreManagerInterface $storeManager
      * @param CollectionFactory $variantsCollectionFactory
+     * @param UrlInterface $url
+     * @param Filesystem $filesystem
+     * @param ManagerInterface $messageManager
      * @param array $attributesToDisable
      */
     public function __construct(
@@ -80,6 +101,9 @@ class TypeSelect extends AbstractModifier
         OptionType $optionTypeSource,
         StoreManagerInterface $storeManager,
         CollectionFactory $variantsCollectionFactory,
+        UrlInterface $url,
+        Filesystem $filesystem,
+        ManagerInterface $messageManager,
         array $attributesToDisable = []
     ) {
         parent::__construct(
@@ -98,6 +122,9 @@ class TypeSelect extends AbstractModifier
         $this->storeManager                 = $storeManager;
         $this->registry                     = $registry;
         $this->variantsCollectionFactory    = $variantsCollectionFactory;
+        $this->urlBuilder                   = $url;
+        $this->filesystem                   = $filesystem;
+        $this->messageManager               = $messageManager;
     }
 
     /**
@@ -105,12 +132,35 @@ class TypeSelect extends AbstractModifier
      */
     public function modifyData(array $data)
     {
+        try {
+            $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
+        } catch (FileSystemException $exception) {
+            $this->messageManager->addExceptionMessage($exception);
+        }
         $option = $this->registry->registry('configurator_option');
         if ($optionId = $option->getId()) {
             /** @var Collection $variants */
             $variants = $this->variantsCollectionFactory->create()
                 ->addFieldToFilter('option_id', ['eq' => $optionId])->toArray();
             $data[$optionId]['option']['values'] = $variants['items'];
+        }
+        if(!empty($data[$optionId]['option']['values'])) {
+            foreach ($data[$optionId]['option']['values'] as &$value) {
+                if (isset($value['image'])) {
+                    $fileValue = $value['image'];
+                    $file = 'configurator/option' . $fileValue;
+                    $url = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $file;
+                    $value['image'] = [];
+                    $value['image'][0] = [
+                        'file' => $fileValue,
+                        'name' => $this->getFileFromPathFile($fileValue),
+                        'size' => $mediaDirectory->stat($file)['size'],
+                        'status' => 'old',
+                        'url' => $url,
+                        'type' => 'image'
+                    ];
+                }
+            }
         }
 
         return $data;
@@ -189,8 +239,29 @@ class TypeSelect extends AbstractModifier
                                 'visible'   => false,
                             ]
                         ),
-                        static::FIELD_TITLE_NAME => $this->getVariantsFieldConfig(
+                        static::FIELD_IMAGE_NAME => $this->getVariantsFieldConfig(
                             10,
+                            [
+                                'label'         => __('Image'),
+                                'dataScope'     => static::FIELD_IMAGE_NAME,
+                                'formElement'   => 'fileUploader',
+                                'componentType' => 'fileUploader',
+                                //'component'     => 'Netzexpert_ProductConfigurator/js/form/element/multiple-uploader',
+                                'uploaderConfig' => [
+                                    'url' => $this->urlBuilder->addSessionParam()->getUrl(
+                                        'configurator/option_image/upload',
+                                        ['_secure' => true]
+                                    ),
+                                    'isMultipleFiles' => false,
+                                    'singleFileUploads' => true,
+                                    'placeholderType'   => 'image',
+                                    'sequentialUploads' => true,
+                                    'paramName'         => 'optionImage'
+                                ],
+                            ]
+                        ),
+                        static::FIELD_TITLE_NAME => $this->getVariantsFieldConfig(
+                            20,
                             [
                                 'label'                 => __('Title'),
                                 'dataScope'             => static::FIELD_TITLE_NAME,
@@ -200,7 +271,7 @@ class TypeSelect extends AbstractModifier
                             ]
                         ),
                         static::FIELD_VALUE_NAME => $this->getVariantsFieldConfig(
-                            20,
+                            30,
                             [
                                 'label'                 => __('Value'),
                                 'dataScope'             => static::FIELD_VALUE_NAME,
@@ -210,7 +281,7 @@ class TypeSelect extends AbstractModifier
                             ]
                         ),
                         static::FIELD_PRICE_NAME => $this->getVariantsFieldConfig(
-                            30,
+                            40,
                             [
                                 'label'         => __('Price'),
                                 'dataScope'     => static::FIELD_PRICE_NAME,
@@ -224,7 +295,7 @@ class TypeSelect extends AbstractModifier
                             ]
                         ),
                         static::FIELD_IS_DEFAULT_NAME => $this->getVariantsFieldConfig(
-                            40,
+                            50,
                             [
                                 'label'             => __('Is Default'),
                                 'dataScope'         => static::FIELD_IS_DEFAULT_NAME,
@@ -240,7 +311,7 @@ class TypeSelect extends AbstractModifier
                             ]
                         ),
                         static::FIELD_SORT_ORDER_NAME => $this->getVariantsFieldConfig(
-                            50,
+                            60,
                             [
                                 'label'     => __('Sort order'),
                                 'dataScope' => static::FIELD_SORT_ORDER_NAME,
@@ -308,5 +379,18 @@ class TypeSelect extends AbstractModifier
                 ],
             ],
         ];
+    }
+
+    /**
+     * Return file name form file path
+     *
+     * @param string $pathFile
+     * @return string
+     */
+    public function getFileFromPathFile($pathFile)
+    {
+        $file = substr($pathFile, strrpos($pathFile, '/') + 1);
+
+        return $file;
     }
 }

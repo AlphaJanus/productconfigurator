@@ -26,7 +26,6 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
 
     protected $_eventPrefix = 'configurator_option_entity';
 
-
     /** @var ConfiguratorOption\VariantRepository  */
     private $variantRepository;
 
@@ -83,7 +82,6 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
             $data
         );
     }
-
 
     /**
      * Initialize customer model
@@ -169,7 +167,6 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
                 if ($value['value_id']) {
                     try {
                         $variant = $this->variantRepository->get($value['value_id']);
-
                     } catch (NoSuchEntityException $exception) {
                         $this->logger->error($exception->getMessage());
                     }
@@ -179,6 +176,11 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
                 }
                 try {
                     $variant->setData($value);
+                    if (isset($value['image'])) {
+                        $variant->setImage($value["image"][0]["file"]);
+                    } else {
+                        $variant->setImage(null);
+                    }
                     $variant->setOptionId($this->getId());
                     $this->variantRepository->save($variant);
                 } catch (CouldNotSaveException $exception) {

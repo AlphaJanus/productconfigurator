@@ -10,7 +10,12 @@ define([
         defaults: {
             imports: {
                 optionType: '${ $ .provider }:data.option.type',
-            }
+            },
+            applicableTo: [
+                'select',
+                'radio',
+                'image'
+            ]
         },
 
         /**
@@ -20,7 +25,7 @@ define([
             var self = this;
             this._super();
             self.initSubscribers();
-            self.visible(self.optionType() === 'select');
+            self.visible(self.applicableTo.includes(self.optionType()));
         },
 
         /**
@@ -43,11 +48,15 @@ define([
             //creating a knockout subscriber to observe any changes in the option type
             self.optionType.subscribe(
                 function (optionType) {
-                    var visible = optionType === 'select';
+                    var visible = self.applicableTo.includes(optionType);
                     self.visible(visible);
                 }
             );
         },
+
+        isVisible: function(){
+
+        }
     });
 }
 );

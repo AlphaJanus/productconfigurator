@@ -18,6 +18,7 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
     const SORT_ORDER    = 'sort_order';
     const PRICE         = 'price';
     const IS_DEFAULT    = 'is_default';
+    const IMAGE         = 'image';
 
     /**
      * @return int
@@ -95,6 +96,17 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
      * @return $this
      */
     public function setIsDefault($isDefault);
+
+    /**
+     * @return string
+     */
+    public function getImage();
+
+    /**
+     * @param string $image
+     * @return $this
+     */
+    public function setImage($image);
 
     /**
      * @param string $key

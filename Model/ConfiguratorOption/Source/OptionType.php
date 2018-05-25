@@ -15,6 +15,8 @@ class OptionType extends AbstractSource implements OptionSourceInterface
 
     const TYPE_TEXT     = 'text';
     const TYPE_SELECT   = 'select';
+    const TYPE_RADIO    = 'radio';
+    const TYPE_IMAGE    = 'image';
     /**
      * @inheritDoc
      */
@@ -31,7 +33,9 @@ class OptionType extends AbstractSource implements OptionSourceInterface
         if ($this->_options === null) {
             $this->_options = [
                 ['label' => __('Text'), 'value' => self::TYPE_TEXT],
-                ['label' => __('Select'), 'value' => self::TYPE_SELECT]
+                ['label' => __('Select'), 'value' => self::TYPE_SELECT],
+                ['label' => __('Radio'), 'value' => self::TYPE_RADIO],
+                ['label' => __('Image'), 'value' => self::TYPE_IMAGE],
             ];
         }
         return $this->_options;
