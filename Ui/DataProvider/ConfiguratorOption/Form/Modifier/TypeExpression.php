@@ -107,7 +107,6 @@ class TypeExpression extends AbstractModifier
                             "configurator_option_form.configurator_option_form"
                         ],
                         'breakLine'         => false,
-                        //'showLabel'         => false,
                         'sortOrder'         => $sortOrder * self::SORT_ORDER_MULTIPLIER,
                         'visible'           => false
                     ]
