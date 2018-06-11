@@ -14,6 +14,8 @@ use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\Ui\Component\Container;
+use Magento\Ui\Component\Form\Element\Input;
+use Magento\Ui\Component\Form\Field;
 use Magento\Ui\Component\Form\Fieldset;
 use Magento\Ui\DataProvider\Mapper\FormElement as FormElementMapper;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionAttributeRepositoryInterface;
@@ -147,6 +149,43 @@ class Eav extends AbstractModifier
             $meta['general']['children'][static::CONTAINER_PREFIX . $attribute->getAttributeCode()] = $containerMeta;
             $containerCount++;
         }
+
+        $attributeMeta = $this->arrayManager->set($configPath, [], [
+            'dataType'      => 'text',
+            'formElement'   => Input::NAME,
+            'componentType' => Field::NAME,
+            'visible'       => true,
+            'required'      => true,
+            'default'       => null,
+            'label'         => __('Code'),
+            'code'          => 'code',
+            'source'        => 'general',
+            'sortOrder'     => 15,
+            'validation' => ['required-entry' => true]
+        ]);
+
+        $container[static::CONTAINER_PREFIX . 'code'] = [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'formElement'   => Container::NAME,
+                        'componentType' => Container::NAME,
+                        'breakLine'     => false,
+                        'label'         => $attribute->getDefaultFrontendLabel(),
+                        'required'      => $attribute->getIsRequired(),
+                        'sortOrder'     => 15
+                    ],
+                ],
+            ],
+            'children' => [
+                'code' => $attributeMeta
+            ]
+        ];
+        $meta = $this->arrayManager->merge(
+            'general/children',
+            $meta,
+            $container
+        );
 
         return $meta;
     }

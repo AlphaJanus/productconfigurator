@@ -2,8 +2,7 @@ define([
     'jquery',
     "Magento_Ui/js/form/components/fieldset",
     'uiRegistry',
-    'Magento_Ui/js/dynamic-rows/action-delete'
-], function($, Component, registry, actionDelete) {
+], function($, Component, registry) {
     'use strict';
 
     return Component.extend({
@@ -50,12 +49,20 @@ define([
                 function (optionType) {
                     var visible = self.applicableTo.includes(optionType);
                     self.visible(visible);
+                    var rowsComponent = registry.get('configurator_option_form.configurator_option_form.general.container_values.values');
+                    if(visible){
+                        rowsComponent.addChild();
+                        setTimeout(
+                            function()
+                            {
+                                rowsComponent.showSpinner(false);
+                            }, 500);
+
+                    } else {
+                        rowsComponent.clear();
+                    }
                 }
             );
-        },
-
-        isVisible: function(){
-
         }
     });
 }

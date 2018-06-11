@@ -12,6 +12,7 @@ use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Varian
 interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     const NAME =  'name';
+    const CODE = 'code';
 
     const TYPE  = 'type';
     const VALUES = 'values';
@@ -38,6 +39,17 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
      * @return ConfiguratorOptionInterface
      */
     public function setName($name);
+
+    /**
+     * @return string
+     */
+    public function getCode();
+
+    /**
+     * @param string $code
+     * @return ConfiguratorOptionInterface
+     */
+    public function setCode($code);
 
     /**
      * @return string

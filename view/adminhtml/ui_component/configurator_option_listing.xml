@@ -98,7 +98,14 @@
                 <label translate="true">Name</label>
             </settings>
         </column>
-        <column name="type" sortOrder="30">
+        <column name="code" sortOrder="30">
+            <settings>
+                <addField>true</addField>
+                <filter>text</filter>
+                <label translate="true">Code</label>
+            </settings>
+        </column>
+        <column name="type" sortOrder="40">
             <settings>
                 <addField>true</addField>
                 <options class="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType" />

@@ -1,0 +1,7 @@
+<?php
+/** @var \Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\ExpressionHint $list */
+$options = $this->getOptions()->getColumnValues('code');
+$list = implode(', ', $options);
+echo __('You can use next options in expression: %1', $list);
+?>
+

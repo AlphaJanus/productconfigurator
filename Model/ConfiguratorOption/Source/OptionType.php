@@ -13,10 +13,12 @@ use Magento\Framework\Data\OptionSourceInterface;
 class OptionType extends AbstractSource implements OptionSourceInterface
 {
 
-    const TYPE_TEXT     = 'text';
-    const TYPE_SELECT   = 'select';
-    const TYPE_RADIO    = 'radio';
-    const TYPE_IMAGE    = 'image';
+    const TYPE_TEXT         = 'text';
+    const TYPE_SELECT       = 'select';
+    const TYPE_RADIO        = 'radio';
+    const TYPE_IMAGE        = 'image';
+    const TYPE_EXPRESSION   = 'expression';
+
     /**
      * @inheritDoc
      */
@@ -36,6 +38,7 @@ class OptionType extends AbstractSource implements OptionSourceInterface
                 ['label' => __('Select'), 'value' => self::TYPE_SELECT],
                 ['label' => __('Radio'), 'value' => self::TYPE_RADIO],
                 ['label' => __('Image'), 'value' => self::TYPE_IMAGE],
+                ['label' => __('Expression'), 'value' => self::TYPE_EXPRESSION],
             ];
         }
         return $this->_options;

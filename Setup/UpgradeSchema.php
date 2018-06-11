@@ -486,6 +486,29 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
+        if (version_compare($context->getVersion(), '2.0.8') < 0) {
+            $setup->getConnection()->addColumn(
+                $setup->getTable('configurator_option_entity'),
+                'code',
+                [
+                    'type'      => Table::TYPE_TEXT,
+                    'length'    => 255,
+                    'nullable'  => false,
+                    'default'   => '',
+                    'comment'   => 'Option Code'
+                ]
+            );
+            $setup->getConnection()->addIndex(
+                $setup->getTable('configurator_option_entity'),
+                $setup->getIdxName(
+                    'configurator_option_entity',
+                    'code',
+                    AdapterInterface::INDEX_TYPE_UNIQUE
+                ),
+                'code',
+                AdapterInterface::INDEX_TYPE_UNIQUE
+            );
+        }
         $setup->endSetup();
     }
 }

@@ -144,7 +144,7 @@ class TypeSelect extends AbstractModifier
                 ->addFieldToFilter('option_id', ['eq' => $optionId])->toArray();
             $data[$optionId]['option']['values'] = $variants['items'];
         }
-        if(!empty($data[$optionId]['option']['values'])) {
+        if (!empty($data[$optionId]['option']['values'])) {
             foreach ($data[$optionId]['option']['values'] as &$value) {
                 if (isset($value['image'])) {
                     $fileValue = $value['image'];
@@ -210,7 +210,7 @@ class TypeSelect extends AbstractModifier
                         'additionalClasses'         => 'admin__field-wide',
                         'deleteProperty'            => static::FIELD_IS_DELETE,
                         'deleteValue'               => '1',
-                        'defaultRecord'             => true,
+                        'defaultRecord'             => false,
                         'sortOrder'                 => $sortOrder,
                         'identificationProperty'    => 'value_id'
 
@@ -246,7 +246,6 @@ class TypeSelect extends AbstractModifier
                                 'dataScope'     => static::FIELD_IMAGE_NAME,
                                 'formElement'   => 'fileUploader',
                                 'componentType' => 'fileUploader',
-                                //'component'     => 'Netzexpert_ProductConfigurator/js/form/element/multiple-uploader',
                                 'uploaderConfig' => [
                                     'url' => $this->urlBuilder->addSessionParam()->getUrl(
                                         'configurator/option_image/upload',

@@ -63,6 +63,9 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '2.0.5', '<')) {
             $this->upgradeVersionTwoZeroFive($configuratorOptionSetup);
         }
+        if (version_compare($context->getVersion(), '2.0.8', '<')) {
+            $this->upgradeVersionTwoZeroEight($eavSetup);
+        }
 
         $setup->endSetup();
     }
@@ -222,5 +225,49 @@ class UpgradeData implements UpgradeDataInterface
 
         ];
         $this->upgradeAttributes($entityAttributes, $configuratorOptionSetup);
+    }
+
+    /**
+     * @param EavSetup $eavSetup
+     * @return void
+     */
+    private function upgradeVersionTwoZeroEight($eavSetup)
+    {
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'expression',
+            [
+                'group'                 => 'General',
+                'type'                  => 'varchar',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Expression',
+                'input'                 => 'textarea',
+                'class'                 => '',
+                'required'              => true,
+                'position'              => 90,
+                'is_visible_in_grid'    => 0,
+                'is_filterable_in_grid' => 0,
+                'apply_to'              => 'expression'
+            ]
+        );
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'code',
+            [
+                'group'                 => 'General',
+                'type'                  => 'static',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Expression',
+                'input'                 => 'text',
+                'class'                 => 'validate-data',
+                'unique'                => true,
+                'required'              => true,
+                'position'              => 90,
+                'is_visible_in_grid'    => 1,
+                'is_filterable_in_grid' => 1,
+            ]
+        );
     }
 }

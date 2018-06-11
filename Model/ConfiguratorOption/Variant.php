@@ -225,6 +225,4 @@ class Variant extends AbstractExtensibleModel implements ConfiguratorOptionVaria
         }
         return parent::afterDelete();
     }
-
-
 }

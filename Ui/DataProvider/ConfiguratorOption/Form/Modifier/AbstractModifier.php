@@ -160,6 +160,15 @@ abstract class AbstractModifier implements ModifierInterface
                 'validation' => ['required-entry' => true],
             ]);
         }
+        $validations = explode(' ', $attribute->getFrontendClass());
+
+        foreach ($validations as $validation) {
+            if ($validation) {
+                $meta = $this->arrayManager->merge($configPath . '/validation', $meta, [
+                    $validation => true,
+                ]);
+            }
+        }
 
         $attributeModel = $this->getAttributeModel($attribute);
         if ($attributeModel->usesSource()) {

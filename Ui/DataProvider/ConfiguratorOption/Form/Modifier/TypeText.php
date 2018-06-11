@@ -83,7 +83,6 @@ class TypeText extends AbstractModifier
             $containerMeta[static::CONTAINER_PREFIX . 'for_text']['children'][$attribute->getAttributeCode()] =
                 $this->setupAttributeMeta($attribute, $attribute->getSortOrder());
         }
-        //$meta['general']['children'][static::CONTAINER_PREFIX . 'for_text'] = $containerMeta;
         $meta = $this->arrayManager->merge(
             'general/children',
             $meta,

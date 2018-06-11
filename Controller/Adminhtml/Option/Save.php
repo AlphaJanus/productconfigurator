@@ -61,17 +61,18 @@ class Save extends Action
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         $data = $this->getRequest()->getParams();
+        $dataToUnset = [];
         if (!empty($data) && isset($data['option'])) {
             if (isset($data['option']['entity_id'])) {
                 try {
                     $option = $this->optionRepository->get($data['option']['entity_id']);
+                    $dataToUnset = array_diff_key($option->getOrigData(), $data['option']);
                 } catch (NoSuchEntityException $exception) {
                     $this->messageManager->addErrorMessage(__('This option no longer exists'));
                 }
             } else {
                 $option = $this->optionFactory->create();
             }
-            $dataToUnset = array_diff_key($option->getOrigData(), $data['option']);
             $this->deleteVariants($option, $data);
             $option->setData($data['option']);
             foreach (array_keys($dataToUnset) as $key) {
@@ -105,7 +106,7 @@ class Save extends Action
         $variants = $option->getVariants()->toArray()['items'];
         foreach ($variants as $variant) {
             $exists = false;
-            if ($data['option']['type'] == OptionType::TYPE_SELECT && isset($data['option']['values'])) {
+            if (in_array($data['option']['type'], $this->getTypesWithVariants()) && isset($data['option']['values'])) {
                 foreach ($data['option']['values'] as $value) {
                     if ($variant['value_id'] == $value['value_id']) {
                         $exists = true;
@@ -120,5 +121,17 @@ class Save extends Action
                 }
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getTypesWithVariants()
+    {
+        return [
+            OptionType::TYPE_SELECT,
+            OptionType::TYPE_RADIO,
+            OptionType::TYPE_IMAGE,
+        ];
     }
 }
