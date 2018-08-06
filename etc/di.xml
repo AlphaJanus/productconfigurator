@@ -16,10 +16,28 @@
                 type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant" />
     <preference for="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface"
                 type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\VariantRepository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface"
+                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOption" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionRepository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionSearchResultInterface"
+                type="Magento\Framework\Api\SearchResults" />
 
     <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
         <arguments>
-            <argument name="resource" xsi:type="object">\Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant</argument>
+            <argument name="resource"
+                      xsi:type="object">Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant</argument>
         </arguments>
+    </type>
+    
+    <type name="Magento\Catalog\Api\ProductRepositoryInterface">
+        <plugin name="save_configurator_options"
+                type="Netzexpert\ProductConfigurator\Plugin\Catalog\Product\SavePlugin" />
+        <plugin name="get_configurator_options"
+                type="Netzexpert\ProductConfigurator\Plugin\Catalog\Product\GetPlugin" />
+    </type>
+    <type name="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface">
+        <plugin name="get_option_variants"
+                type="Netzexpert\ProductConfigurator\Plugin\Configurator\Option\GetPlugin" />
     </type>
 </config>

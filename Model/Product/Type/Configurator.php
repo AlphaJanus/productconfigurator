@@ -23,5 +23,4 @@ class Configurator extends AbstractType
     public function deleteTypeSpecificData(\Magento\Catalog\Model\Product $product)
     {
     }
-
 }

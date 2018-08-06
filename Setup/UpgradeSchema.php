@@ -509,6 +509,130 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 AdapterInterface::INDEX_TYPE_UNIQUE
             );
         }
+
+
+
+        if (version_compare($context->getVersion(), '2.0.9') < 0) {
+            $table = $setup->getConnection()->newTable(
+                $setup->getTable('catalog_product_configurator_options')
+            );
+            try {
+                $table->addColumn(
+                    'option_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'identity' => true,
+                        'nullable' => false,
+                        'primary' => true,
+                        'unsigned' => true
+                    ],
+                    'Option id'
+                )->addColumn(
+                    'product_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false,
+                        'unsigned' => true
+                    ],
+                    'Product Id'
+                )->addColumn(
+                    'configurator_option_id',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false,
+                        'unsigned' => true
+                    ],
+                    'Configurator option Id'
+                )->addColumn(
+                    'position',
+                    Table::TYPE_INTEGER,
+                    null,
+                    [
+                        'nullable' => false,
+                        'unsigned' => true,
+                        'default' => 0
+                    ],
+                    'Sort order'
+                )->addIndex(
+                    $setup->getIdxName(
+                        'catalog_product_configurator_options',
+                        ['product_id','configurator_option_id'],
+                        AdapterInterface::INDEX_TYPE_UNIQUE
+                    ),
+                    ['product_id','configurator_option_id'],
+                    ['type' => AdapterInterface::INDEX_TYPE_UNIQUE]
+                )->addIndex(
+                    $setup->getIdxName('catalog_product_configurator_options', ['product_id']),
+                    ['product_id']
+                )->addIndex(
+                    $setup->getIdxName('catalog_product_configurator_options', ['configurator_option_id']),
+                    ['configurator_option_id']
+                )->addForeignKey(
+                    $setup->getFkName(
+                        'catalog_product_configurator_options',
+                        'product_id',
+                        'catalog_product_entity',
+                        'entity_id'
+                    ),
+                    'product_id',
+                    $setup->getTable('catalog_product_entity'),
+                    'entity_id',
+                    Table::ACTION_CASCADE
+                )->addForeignKey(
+                    $setup->getFkName(
+                        'catalog_product_configurator_options',
+                        'configurator_option_id',
+                        'configurator_option_entity',
+                        'entity_id'
+                    ),
+                    'configurator_option_id',
+                    $setup->getTable('configurator_option_entity'),
+                    'entity_id',
+                    Table::ACTION_CASCADE
+                );
+                $setup->getConnection()->createTable($table);
+            } catch (\Zend_Db_Exception $exception) {
+                $this->logger->error($exception->getMessage());
+                $setup->endSetup();
+            }
+        }
+
+        if (version_compare($context->getVersion(), '2.0.10') < 0) {
+            $setup->getConnection()->addColumn(
+                $setup->getTable('catalog_product_configurator_options'),
+                'parent_option',
+                [
+                    'type'      => Table::TYPE_INTEGER,
+                    'length'    => null,
+                    'nullable'  => true,
+                    'default'   => null,
+                    'comment'   => 'Parent option'
+                ]
+            );
+            $setup->getConnection()->addIndex(
+                $setup->getTable('catalog_product_configurator_options'),
+                $setup->getIdxName('catalog_product_configurator_options', ['parent_option']),
+                ['parent_option']
+            );
+        }
+
+        if (version_compare($context->getVersion(), '2.0.11') < 0) {
+            $setup->getConnection()->addColumn(
+                $setup->getTable('catalog_product_configurator_options'),
+                'values_data',
+                [
+                    'type'      => Table::TYPE_TEXT,
+                    'length'    => '64k',
+                    'nullable'  => true,
+                    'default'   => null,
+                    'comment'   => 'Values data'
+                ]
+            );
+        }
+
         $setup->endSetup();
     }
 }

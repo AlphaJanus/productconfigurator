@@ -18,10 +18,20 @@ define([
          */
         initialize: function () {
             var self = this;
-            var overriden = false
+            var overriden = false;
+            var isRequiredSwitch = registry.get("configurator_option_form.configurator_option_form.general.container_is_required.is_required");
             this._super();
             self.initSubscribers();
             self.visible(self.optionType() === 'expression');
+            if(!self.visible) {
+                isRequiredSwitch.checked(false);
+                isRequiredSwitch.disabled(false);
+            } else {
+                if(self.optionType() === 'expression'){
+                    isRequiredSwitch.checked(true);
+                }
+                isRequiredSwitch.disabled(true);
+            }
             $("#save_and_continue,#save").on('click',function(e){
                 if (overriden) {
                     overriden = false; // reset flag

@@ -116,4 +116,9 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
      * @return mixed
      */
     public function getOrigData($key = null);
+
+    /**
+     * @return []
+     */
+    public function getTypesWithVariants();
 }
