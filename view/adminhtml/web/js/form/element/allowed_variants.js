@@ -27,7 +27,7 @@ define([
             var option,
                 self = this;
             var assignedOptions = registry.get("product_form.product_form_data_source").data.product.assigned_configurator_options
-            var parentOption = _.findWhere(assignedOptions, {option_id: value});
+            var parentOption = _.findWhere(assignedOptions, {configurator_option_id: value});
 
             if(typeof(parentOption) != 'undefined' && parentOption != 0){
                 var options = [],
@@ -41,16 +41,16 @@ define([
                     options.push(option);
                 });
                 self.setOptions(options);
-                self.disabled(false);
+                self.refreshDisable();
             } else {
                 self.setOptions([]);
-                self.disabled(true);
+                self.refreshDisable();
             }
 
         },
 
         refreshDisable: function () {
-            if(this.isEnabled() && this.isDependent()) {
+            if(parseInt(this.isEnabled()) && parseInt(this.isDependent())) {
                 this.disabled(false);
             } else {
                 this.disabled(true);

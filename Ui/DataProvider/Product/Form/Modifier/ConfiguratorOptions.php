@@ -111,6 +111,7 @@ class ConfiguratorOptions extends AbstractModifier
                     } catch (NoSuchEntityException $exception) {
                         $this->logger->error($exception->getMessage());
                     }
+                    $values = $configuratorOption->getValues();
                     $valuesData = [];
                     if ($vData = $option->getValuesData()) {
                         $valuesData = $this->json->unserialize($vData);
@@ -118,6 +119,7 @@ class ConfiguratorOptions extends AbstractModifier
                     foreach ($valuesData as &$val) {
                         unset($val['initialize']);
                     }
+                    $valuesData = array_replace_recursive($values, $valuesData);
                     $configuratorOption->setValues($valuesData);
                     $options[] = array_merge(
                         $option->getData(),
@@ -259,7 +261,8 @@ class ConfiguratorOptions extends AbstractModifier
                             'entity_id' => 'entity_id',
                             'configurator_option_id' => 'entity_id',
                             'code' => 'code',
-                            'name' => 'name'
+                            'name' => 'name',
+                            'values' => 'values'
                         ],
                         'dndConfig' => [
                             'enabled' => true,
@@ -552,6 +555,7 @@ class ConfiguratorOptions extends AbstractModifier
                                                 'sortOrder' => 0,
                                                 'default' => 1,
                                                 'initialValue' => 1,
+                                                'checked' => 1,
                                                 'prefer' => 'toggle',
                                                 'valueMap' => [
                                                     'false' => '0',

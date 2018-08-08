@@ -129,7 +129,7 @@ define([
                         if ((item.configurator_option_id !== row.configurator_option_id) &&
                             (parseInt(item.position) < parseInt(row.position))) {
                             option = {
-                                value: item.option_id,
+                                value: item.configurator_option_id,
                                 label: item.name,
                                 labeltitle: item.name,
                                 position: parseInt(item.position)
@@ -137,7 +137,9 @@ define([
                             options.push(option);
                         }
                     });
-                    component.setOptions(options)
+                    if(typeof (component) != 'undefined') {
+                        component.setOptions(options)
+                    }
                 });
             }
         },

@@ -50,6 +50,14 @@ class ProductConfiguratorOptionsDataProvider extends AbstractDataProvider
         if (!$this->getCollection()->isLoaded()) {
             $this->getCollection()->load();
         }
+        /** @var \Netzexpert\ProductConfigurator\Model\ConfiguratorOption $item */
+        foreach ($this->getCollection() as &$option) {
+            $values = $option->getVariants()->toArray();
+            foreach ($values['items'] as &$item) {
+                $item['enabled'] = "1";
+            }
+            $option->setValues($values['items']);
+        }
         $items = $this->getCollection()->toArray();
 
         return [

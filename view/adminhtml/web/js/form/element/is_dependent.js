@@ -20,7 +20,7 @@ define([
         },
 
         refreshDisabled: function(){
-            if(this.parentOption() != 0 && typeof(this.parentOption()) != 'undefined' && this.isEnabled()) {
+            if(this.parentOption() != 0 && typeof(this.parentOption()) != 'undefined' && parseInt(this.isEnabled())) {
                 this.disabled(false);
             } else {
                 this.disabled(true);
