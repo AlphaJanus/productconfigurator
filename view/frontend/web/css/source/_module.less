@@ -1,0 +1,31 @@
+& when (@media-common = true) {
+  .page-product-configurator {
+    .product-options-wrapper {
+      .hide {
+        //display: none;
+        visibility: hidden;
+        position: absolute;
+      }
+      .hidden {
+        display: none;
+      }
+      .values {
+        list-style-type: none;
+        .value {
+          display: inline-block;
+          cursor: pointer;
+          .lib-css(border, solid transparent 1px);
+          &.selected {
+            .lib-css(border, solid black 1px);
+          }
+          &.hide {
+            display: none;
+          }
+          img {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

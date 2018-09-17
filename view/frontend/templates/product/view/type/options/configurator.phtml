@@ -1,0 +1,25 @@
+<?php
+/** @var \Netzexpert\ProductConfigurator\Block\Product\View\Type\Configurator $block */
+$product = $block->getProduct();
+$options = $block->getConfiguratorOptions();
+$_productId = $product->getId();
+if (!empty($options)) :
+?>
+    <script type="text/x-magento-init">
+        {
+            "#product_addtocart_form": {
+                "configuratorOptions": {
+                    "optionConfig": <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>,
+                    "priceHolderSelector": "[data-product-id='<?= $block->escapeHtml($_productId) ?>'][data-role=priceBox]",
+                    "dependencyConfig": <?php echo /* @escapeNotVerified */ $block->getDependencyJsonConfig() ?>
+                },
+                "configuratorValidation": {}
+            }
+        }
+    </script>
+<?php
+foreach ($options as $option) {
+    echo $block->getOptionHtml($option);
+}
+endif;
+?>

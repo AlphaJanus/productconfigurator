@@ -30,7 +30,6 @@ define([
                 if(self.optionType() === 'expression'){
                     isRequiredSwitch.checked(true);
                 }
-                isRequiredSwitch.disabled(true);
             }
             $("#save_and_continue,#save").on('click',function(e){
                 if (overriden) {

@@ -1,0 +1,27 @@
+<?php
+/** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Expression $block */
+$option = $block->getOption();
+
+$isHidden = /*!$option->getIsVisible() ? ' hide' :*/ '';
+?>
+<div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
+    <input type="text"
+           id="expression-<?php echo /* @escapeNotVerified */ $option->getId() ?>"
+           class="input-text product-configurator-option"
+           name="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
+           data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+           data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
+           value=""
+           disabled="disabled" />
+</div>
+
+<script type="text/x-magento-init">
+    {
+        "#option-<?php echo $option->getId() ?>": {
+            "expressionField": {
+                "input": "expression-<?php echo $option->getId(); ?>",
+                "expressionCode": "<?php echo $option->getData('expression')?>"
+            }
+        }
+    }
+</script>

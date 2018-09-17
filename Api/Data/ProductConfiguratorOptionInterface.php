@@ -88,6 +88,13 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
     public function setValuesData($valuesData);
 
     /**
+     * @param string|array $additionalData
+     * @param mixed $value
+     * @return $this
+     */
+    public function setAdditionalData($additionalData, $value = null);
+
+    /**
      * @param string $key
      * @param string|int $index
      * @return mixed

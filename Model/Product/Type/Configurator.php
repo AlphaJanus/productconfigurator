@@ -23,4 +23,20 @@ class Configurator extends AbstractType
     public function deleteTypeSpecificData(\Magento\Catalog\Model\Product $product)
     {
     }
+
+    /**
+     * @param \Magento\Catalog\Model\Product $product
+     * @return $this
+     */
+    public function beforeSave($product)
+    {
+        parent::beforeSave($product);
+
+        if($product->getData('assigned_configurator_options')){
+            $product->setTypeHasOptions(true);
+            $product->setTypeHasRequiredOptions(true);
+        }
+
+        return $this;
+    }
 }

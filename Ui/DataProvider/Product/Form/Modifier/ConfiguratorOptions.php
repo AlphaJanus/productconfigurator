@@ -127,17 +127,18 @@ class ConfiguratorOptions extends AbstractModifier
                     );
                 }
             }
-        }
-        return array_replace_recursive(
-            $data,
-            [
-                $this->locator->getProduct()->getId() => [
-                    'product' => [
-                        static::GRID_OPTIONS_NAME => $options
+            return array_replace_recursive(
+                $data,
+                [
+                    $this->locator->getProduct()->getId() => [
+                        'product' => [
+                            static::GRID_OPTIONS_NAME => $options
+                        ]
                     ]
                 ]
-            ]
-        );
+            );
+        }
+        return $data;
     }
 
     /**

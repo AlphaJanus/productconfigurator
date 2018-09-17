@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="page-product-configurator"/>
+        <referenceBlock name="product.info.options.wrapper">
+            <block class="Netzexpert\ProductConfigurator\Block\Product\View\Type\Configurator"
+                   name="product.info.options.configurator"
+                   as="options_configurator"
+                   before="-"
+                   template="Netzexpert_ProductConfigurator::product/view/type/options/configurator.phtml" >
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Text"
+                       name="product.info.configurator.options.text"
+                       as="c-text"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/text.phtml" />
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Select"
+                       name="product.info.configurator.options.select"
+                       as="c-select"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/select.phtml" />
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Image"
+                       name="product.info.configurator.options.image"
+                       as="c-image"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/image.phtml" />
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Expression"
+                       name="product.info.configurator.options.expression"
+                       as="c-expression"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/expression.phtml" />
+            </block>
+        </referenceBlock>
+    </body>
+</page>

@@ -115,5 +115,21 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
         return $this->setData(self::VALUES_DATA, $valuesData);
     }
 
-
+    /**
+     * @inheritDoc
+     */
+    public function setAdditionalData($additionalData, $value = null)
+    {
+        if ($additionalData === (array)$additionalData) {
+            foreach ($additionalData as $key => $value) {
+                $this->_data[$key] = $value;
+            }
+        } else {
+            if (!array_key_exists($additionalData, $this->_data) || $this->_data[$additionalData] !== $value) {
+                $this->_hasDataChanges = true;
+            }
+            $this->_data[$additionalData] = $value;
+        }
+        return $this;
+    }
 }

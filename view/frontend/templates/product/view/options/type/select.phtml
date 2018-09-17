@@ -1,0 +1,18 @@
+<?php
+/** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Select $block */
+$option = $block->getOption();
+$required = $option->getData('is_required') ? ' required' : '';
+$isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' hide' : '';
+?>
+<div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $required . $isHidden; ?>">
+    <label class="label"
+           for="<?php echo /* @escapeNotVerified */ 'select_' . $option->getData('code') ?>">
+        <?php echo /* @escapeNotVerified */ $option->getData('name') ?>
+    </label>
+    <div class="description">
+        <?php echo /* @escapeNotVerified */ $option->getData('description') ?>
+    </div>
+    <div class="control">
+        <?php echo $block->getValuesHtml() ?>
+    </div>
+</div>
