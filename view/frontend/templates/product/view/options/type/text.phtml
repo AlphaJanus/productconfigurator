@@ -33,7 +33,7 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
                 <?php if (!empty($_textValidate)) {?>
                     data-validate="<?php echo $block->escapeHtml(json_encode($_textValidate)) ?>"
                 <?php } ?>
-                   name="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
+                   name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                    data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
                    data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
                    value="<?php echo $block->escapeHtml($option->getDefaultValue()) ?>"/>
@@ -51,7 +51,7 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
                 <?php if (!empty($_textAreaValidate)) {?>
                     data-validate="<?php echo $block->escapeHtml(json_encode($_textAreaValidate)) ?>"
                 <?php } ?>
-                      name="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
+                      name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                       data-selector="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                       rows="5"
                       cols="25"><?php echo $block->escapeHtml($option->getDefaultValue()) ?></textarea>

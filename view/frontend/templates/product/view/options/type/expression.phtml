@@ -2,13 +2,13 @@
 /** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Expression $block */
 $option = $block->getOption();
 
-$isHidden = /*!$option->getIsVisible() ? ' hide' :*/ '';
+$isHidden = !$option->getIsVisible() ? ' hide' : '';
 ?>
 <div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
     <input type="text"
            id="expression-<?php echo /* @escapeNotVerified */ $option->getId() ?>"
            class="input-text product-configurator-option"
-           name="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
+           name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
            data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
            data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
            value=""

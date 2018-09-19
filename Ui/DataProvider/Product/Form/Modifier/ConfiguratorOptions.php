@@ -514,7 +514,6 @@ class ConfiguratorOptions extends AbstractModifier
                                 'addButton'                 => false,
                                 'deleteValue'               => '1',
                                 'defaultRecord'             => false,
-                                'sortOrder'                 => 0,
                                 'dataScope'                 => '',
                                 'dataProvider'              => '${ $.dataScope }.dependency',
                                 'dndConfig' => [

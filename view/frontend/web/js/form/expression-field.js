@@ -21,6 +21,7 @@ define([
             this.currentOptions = $(configuratorOptions.options.optionsSelector, form);
             this.optionsData = configuratorOptions.options.dependencyConfig;
             this.input = document.getElementById(this.options.input);
+            this.optionId = this.options.input.replace('expression-', '');
 
             this.currentOptions.on('change', this._recalculateValue.bind(this));
         },
@@ -59,7 +60,24 @@ define([
             } catch (err) {
                 console.log($t('*** Problem when evaluating the expression for the option "' + $(this.input).data('code') + '": ') + err);
             }
+            if(self.optionsData[self.optionId].add_to_price) {
+                var changes = {};
+                changes[this.input.name] = {
+                    basePrice: {
+                        amount: val
+                    },
+                    finalPrice: {
+                        amount: val
+                    },
+                    oldPrice: {
+                        amount: val
+                    },
+                };
+                $(configuratorOptions.options.priceHolderSelector).trigger('updatePrice', changes);
+            }
             this.input.value = val;
+
+
         }
     });
     return $.mage.expressionField;

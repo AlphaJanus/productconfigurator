@@ -48,7 +48,7 @@ define([
             var self = this;
 
             var rows = registry.get('product_form.product_form_data_source').data.product.assigned_configurator_options;
-            rows.forEach(function(row,){
+            rows.forEach(function(row){
                 self.optionsParents.push(row.parent_option)
             });
             return this;
@@ -285,7 +285,7 @@ define([
 
         sort: function (position, elem) {
             this._super(position, elem);
-            this.trigger('sortOrderChanged');
+            this.trigger('sortOrderChanged', {'position': position, 'elem': elem});
         }
     });
 });

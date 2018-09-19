@@ -66,6 +66,9 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '2.0.8', '<')) {
             $this->upgradeVersionTwoZeroEight($eavSetup);
         }
+        if (version_compare($context->getVersion(), '2.0.12', '<')) {
+            $this->upgradeVersionTwoZeroTwelve($eavSetup);
+        }
 
         $setup->endSetup();
     }
@@ -267,6 +270,33 @@ class UpgradeData implements UpgradeDataInterface
                 'position'              => 90,
                 'is_visible_in_grid'    => 1,
                 'is_filterable_in_grid' => 1,
+            ]
+        );
+    }
+
+    /**
+     * @param EavSetup $eavSetup
+     * @return void
+     */
+    private function upgradeVersionTwoZeroTwelve($eavSetup)
+    {
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'add_to_price',
+            [
+                'group'                 => 'General',
+                'type'                  => 'int',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Add value to price',
+                'input'                 => 'boolean',
+                'class'                 => '',
+                'required'              => false,
+                'position'              => 95,
+                'is_visible_in_grid'    => 0,
+                'is_filterable_in_grid' => 0,
+                'apply_to'              => 'expression',
+                'source'                => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
             ]
         );
     }

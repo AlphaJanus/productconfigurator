@@ -106,8 +106,8 @@ define([
             var self = this,
                 rows = registry.get('product_form.product_form.configurator_options_group.assigned_configurator_options'),
                 dnd = registry.get('product_form.product_form.configurator_options_group.assigned_configurator_options_dnd');
-            rows.on('sortOrderChanged', function(){
-                self.updateOptions();
+            rows.on('sortOrderChanged', function(data){
+                self.updateOptions(data);
             });
             dnd.on('sortOrderChanged', function(){
                 self.updateOptions();
@@ -116,15 +116,29 @@ define([
             return this;
         },
 
-        updateOptions: function(){
+        updateOptions: function(data){
 
             var option,
                 component,
+                value,
                 self = this;
+
+            if(data && data.elem.index){
+                if(self.assignedOptions[data.elem.index].record_id !== self.rowData.record_id){
+                    return;
+                }
+
+                if(self.assignedOptions[data.elem.index].position === data.position && self.options().length !== 0){
+                    return;
+                }
+            }
             if(Array.isArray(self.assignedOptions)) {
                 self.assignedOptions.forEach(function (row, index) {
+                    if(data && data.elem.index !== index.toString()) {
+                        return;
+                    }
                     var options = [];
-                    component = registry.get("product_form.product_form.configurator_options_group.assigned_configurator_options."+ index +".dependency_container.parent_option");
+                    component = registry.get("product_form.product_form.configurator_options_group.assigned_configurator_options." + index + ".dependency_container.parent_option");
                     self.assignedOptions.forEach(function (item) {
                         if ((item.configurator_option_id !== row.configurator_option_id) &&
                             (parseInt(item.position) < parseInt(row.position))) {
@@ -137,8 +151,12 @@ define([
                             options.push(option);
                         }
                     });
-                    if(typeof (component) != 'undefined') {
-                        component.setOptions(options)
+                    if (typeof(component) !== 'undefined') {
+                        value = component.value();
+                        component.setOptions(options);
+                        if (typeof(_.findWhere(component.options(), {value: value})) !== "undefined") {
+                            component.value(value);
+                        }
                     }
                 });
             }

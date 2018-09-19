@@ -20,11 +20,11 @@ define([
         },
 
         refreshDisabled: function(){
-            if(this.parentOption() != 0 && typeof(this.parentOption()) != 'undefined' && parseInt(this.isEnabled())) {
+            if(this.parentOption() !== 0 && typeof(this.parentOption()) !== 'undefined' && parseInt(this.isEnabled())) {
                 this.disabled(false);
             } else {
                 this.disabled(true);
-                if(typeof(this.isEnabled()) != 'undefined') {
+                if(typeof(this.isEnabled()) !== 'undefined') {
                     this.value(0);
                 }
             }
