@@ -113,6 +113,15 @@ class TypeExpression extends AbstractModifier
                 );
             $containerMeta['children'][$attribute->getAttributeCode()] =
                 $this->setupAttributeMeta($attribute, $attribute->getSortOrder());
+            if ($attribute->getAttributeCode() =="expression") {
+                $containerMeta = $this->arrayManager->merge(
+                    'children/' . $attribute->getAttributeCode() . '/' .$configPath,
+                    $containerMeta,
+                    [
+                    'component' => 'Netzexpert_ProductConfigurator/js/form/element/expression',
+                    ]
+                );
+            }
             $meta['general']['children'][static::CONTAINER_PREFIX . $attribute->getAttributeCode()] = $containerMeta;
         }
 

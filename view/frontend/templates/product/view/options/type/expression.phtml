@@ -1,10 +1,10 @@
 <?php
 /** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Expression $block */
 $option = $block->getOption();
-
+$_productId = $block->getProduct()->getId();
 $isHidden = !$option->getIsVisible() ? ' hide' : '';
 ?>
-<div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
+<div id="option-<?php echo $option->getId() ?>" class="field hide">
     <input type="text"
            id="expression-<?php echo /* @escapeNotVerified */ $option->getId() ?>"
            class="input-text product-configurator-option"
@@ -14,12 +14,21 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
            value=""
            disabled="disabled" />
 </div>
+<div class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
+    <div class="label" >
+        <span><?php echo /*$block->escapeHtml(*/$option->getName()/*)*/ ?></span>
+    </div>
+    <div id="option-value-<?php echo $option->getId() ?>">
+    </div>
+</div>
 
 <script type="text/x-magento-init">
     {
         "#option-<?php echo $option->getId() ?>": {
             "expressionField": {
                 "input": "expression-<?php echo $option->getId(); ?>",
+                "priceHolderSelector": "[data-product-id='<?= $block->escapeHtml($_productId) ?>'][data-role=priceBox]",
+                "dependencyConfig": <?php echo /* @escapeNotVerified */ $block->getDependencyJsonConfig() ?>,
                 "expressionCode": "<?php echo $option->getData('expression')?>"
             }
         }

@@ -262,7 +262,7 @@ class UpgradeData implements UpgradeDataInterface
                 'type'                  => 'static',
                 'backend'               => '',
                 'frontend'              => '',
-                'label'                 => 'Expression',
+                'label'                 => 'Code',
                 'input'                 => 'text',
                 'class'                 => 'validate-data',
                 'unique'                => true,

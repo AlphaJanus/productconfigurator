@@ -8,9 +8,78 @@
 
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type;
 
+use Magento\Catalog\Api\Data\ProductExtensionFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Framework\View\Element\Template;
+use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions;
 
 class Expression extends AbstractOptions
 {
+    /** @var ProductExtensionFactory  */
+    private $extensionFactory;
 
+    /** @var ConfiguratorOptionRepositoryInterface  */
+    private $configuratorOptionRepository;
+
+    /** @var Json  */
+    private $json;
+
+    public function __construct(
+        Template\Context $context,
+        ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
+        Json $json,
+        ProductExtensionFactory $extensionFactory,
+        array $data = []
+    ) {
+        $this->extensionFactory             = $extensionFactory;
+        $this->configuratorOptionRepository = $configuratorOptionRepository;
+        $this->json = $json;
+        parent::__construct(
+            $context,
+            $configuratorOptionRepository,
+            $json,
+            $data
+        );
+    }
+
+    /**
+     * @return \Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface[]|null
+     */
+    public function getConfiguratorOptions()
+    {
+        $extensionAttributes = $this->getProduct()->getExtensionAttributes();
+        $productExtension = $extensionAttributes ?
+            $extensionAttributes : $this->extensionFactory->create();
+        $productOptions = $productExtension->getConfiguratorOptions();
+        if (!empty($productOptions)) {
+            foreach ($productOptions as &$option) {
+                try {
+                    $configuratorOption = $this->configuratorOptionRepository
+                        ->get($option->getConfiguratorOptionId());
+                } catch (NoSuchEntityException $exception) {
+                    $this->_logger->error($exception->getMessage());
+                    return null;
+                }
+                $option->setAdditionalData($configuratorOption->getData());
+            }
+            return $productOptions;
+        }
+        return $productOptions;
+    }
+
+    public function getDependencyJsonConfig()
+    {
+        $config = [];
+        foreach ($this->getConfiguratorOptions() as $option) {
+            $id = $option->getId();
+            $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
+            $config[$id] = $option->getData();
+            $config[$id]['values'] = $valuesData;
+            unset($config[$id]['values_data']);
+        }
+
+        return $this->json->serialize($config);
+    }
 }

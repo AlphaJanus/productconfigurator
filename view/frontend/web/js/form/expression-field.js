@@ -5,21 +5,21 @@ define([
 ], function ($,_,$t) {
     'use strict';
 
-    var configuratorOptions = $('#product_addtocart_form').data('mageConfiguratorOptions');
-
     $.widget('mage.expressionField', {
-
+        options: {
+            optionsSelector: '.product-configurator-option',
+        },
         /**
          * @private
          */
         _init: function initPriceBundle() {
-            $(configuratorOptions.options.optionsSelector, this.element).trigger('change');
+            $(this.options.optionsSelector, this.element).trigger('change');
         },
 
         _create: function () {
             var form = document.getElementById('product_addtocart_form')
-            this.currentOptions = $(configuratorOptions.options.optionsSelector, form);
-            this.optionsData = configuratorOptions.options.dependencyConfig;
+            this.currentOptions = $(this.options.optionsSelector, form);
+            this.optionsData = this.options.dependencyConfig;
             this.input = document.getElementById(this.options.input);
             this.optionId = this.options.input.replace('expression-', '');
 
@@ -60,7 +60,7 @@ define([
             } catch (err) {
                 console.log($t('*** Problem when evaluating the expression for the option "' + $(this.input).data('code') + '": ') + err);
             }
-            if(self.optionsData[self.optionId].add_to_price) {
+            if(parseInt(self.optionsData[self.optionId].add_to_price) === 1) {
                 var changes = {};
                 changes[this.input.name] = {
                     basePrice: {
@@ -73,10 +73,10 @@ define([
                         amount: val
                     },
                 };
-                $(configuratorOptions.options.priceHolderSelector).trigger('updatePrice', changes);
+                $(this.options.priceHolderSelector).trigger('updatePrice', changes);
             }
             this.input.value = val;
-
+            $('#option-value-'+self.optionId).text(val);
 
         }
     });
