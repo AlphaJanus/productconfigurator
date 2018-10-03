@@ -5,4 +5,8 @@
                 type="\Netzexpert\ProductConfigurator\Plugin\Catalog\Model\Product\Type\AbstractTypePlugin"
                 sortOrder="1" />
     </type>
+    <type name="Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer">
+        <plugin name="addConfiguratorOptionsToOrderView"
+                type="Netzexpert\ProductConfigurator\Plugin\Sales\Block\Order\Item\Renderer\DefaultRenderer\AddConfiguratorOptionsToOrderView" />
+    </type>
 </config>

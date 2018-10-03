@@ -36,6 +36,30 @@
         <plugin name="get_configurator_options"
                 type="Netzexpert\ProductConfigurator\Plugin\Catalog\Product\GetPlugin" />
     </type>
+    <type name="Magento\Catalog\Helper\Product\Configuration">
+        <plugin name="getConfiguratorOptions"
+                type="Netzexpert\ProductConfigurator\Plugin\Catalog\Helper\Product\ConfigurationPlugin" />
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item">
+        <plugin name="get_configurator_options_from_item"
+                type="Netzexpert\ProductConfigurator\Plugin\Quote\Model\Quote\Item\GetProductPlugin" />
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item\Processor">
+        <plugin name="processConfiguratedPrice"
+                type="Netzexpert\ProductConfigurator\Plugin\Quote\Model\Quote\Item\Processor\Plugin" />
+    </type>
+    <type name="\Magento\Sales\Block\Order\Email\Items\DefaultItems">
+        <plugin name="addConfiguratorOptionsToInvoiceEmail"
+                type="Netzexpert\ProductConfigurator\Plugin\Sales\Block\Order\Email\Items\DefaultItems\AddConfiguratorOptionsToInvoiceEmail" />
+    </type>
+    <type name="Magento\Sales\Block\Order\Email\Items\Order\DefaultOrder">
+        <plugin name="addConfiguratorOptionsToOrderEmail"
+                type="Netzexpert\ProductConfigurator\Plugin\Sales\Block\Order\Email\Items\Order\DefaultOrder\AddConfiguratorOptionsToOrderEmail" />
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Items\AbstractItems">
+        <plugin name="addConfiguratorOptionsToInvoicePdf"
+                type="\Netzexpert\ProductConfigurator\Plugin\Sales\Model\Order\Pdf\Items\AbstractItems\AddConfiguratorOptionsToInvoicePdf" />
+    </type>
     <type name="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface">
         <plugin name="get_option_variants"
                 type="Netzexpert\ProductConfigurator\Plugin\Configurator\Option\GetPlugin" />

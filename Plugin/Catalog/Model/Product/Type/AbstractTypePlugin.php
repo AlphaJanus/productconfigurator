@@ -43,8 +43,12 @@ class AbstractTypePlugin
         $product,
         $processMode
     ) {
-        $product->addCustomOption('info_buyRequest', $this->serializer->serialize($buyRequest->getData()));
         $options = $this->prepareOptions($buyRequest, $product);
+        $optionIds = array_keys($options);
+        $product->addCustomOption('configurator_option_ids', implode(',', $optionIds));
+        foreach ($options as $optionId => $optionValue) {
+            $product->addCustomOption('configurator_option_' . $optionId, $optionValue);
+        }
         return [$buyRequest, $product, $processMode];
     }
 

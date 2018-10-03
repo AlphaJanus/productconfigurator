@@ -8,7 +8,6 @@
 
 namespace Netzexpert\ProductConfigurator\Plugin\Configurator\Option;
 
-
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionVariantInterface;

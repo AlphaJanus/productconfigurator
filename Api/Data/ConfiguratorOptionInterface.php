@@ -17,7 +17,6 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     const TYPE  = 'type';
     const VALUES = 'values';
 
-
     /**
      * @return int|null
      */

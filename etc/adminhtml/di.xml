@@ -37,4 +37,9 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <type name="Magento\Sales\Block\Adminhtml\Items\Column\DefaultColumn">
+        <plugin name="addConfiguratorOptionsToOrderItem"
+                type="Netzexpert\ProductConfigurator\Plugin\Sales\Block\Adminhtml\Items\Column\DefaultColumn\AddConfiguratorOptionsToOrderItem" />
+    </type>
 </config>

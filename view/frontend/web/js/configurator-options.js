@@ -75,12 +75,6 @@ define([
 
     $.widget('mage.configuratorOptions', {
         options: globalOptions,
-        /**
-         * @private
-         */
-        _init: function initPriceBundle() {
-            $(this.options.optionsSelector, this.element).trigger('change');
-        },
 
         /**
          * Widget creating method.

@@ -2,23 +2,24 @@
 /**
  * Created by PhpStorm.
  * User: andrew
- * Date: 06.07.18
- * Time: 15:24
+ * Date: 01.10.18
+ * Time: 15:40
  */
 
-namespace Netzexpert\ProductConfigurator\Plugin\Catalog\Product;
+namespace Netzexpert\ProductConfigurator\Plugin\Quote\Model\Quote\Item;
 
 use Magento\Catalog\Api\Data\ProductExtensionFactory;
-use Magento\Catalog\Api\Data\ProductInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Quote\Model\Quote\Item;
 use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 use Psr\Log\LoggerInterface;
 
-class GetPlugin
+class GetProductPlugin
 {
+
     /** @var SearchCriteriaBuilder  */
     private $searchCriteriaBuilder;
 
@@ -50,9 +51,9 @@ class GetPlugin
         $this->logger                       = $logger;
     }
 
-    public function afterGet(
-        ProductRepositoryInterface $productRepository,
-        ProductInterface $product
+    public function afterGetProduct(
+        Item $item,
+        Product $product
     ) {
         if ($product->getTypeId() == Configurator::TYPE_ID) {
             $this->searchCriteriaBuilder->addFilter('product_id', $product->getId());

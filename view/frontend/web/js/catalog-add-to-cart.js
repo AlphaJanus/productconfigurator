@@ -13,12 +13,26 @@ define([
             // Find disabled inputs, and remove the "disabled" attribute
             var disabled = $(form).find(':input:disabled.product-configurator-option').removeAttr('disabled');
 
+            var priceBox = $('.price-box', $('.product-configurator-option').element);
+
+            var configuratedPrice;
+
+
+            if(priceBox.data('magePriceBox') &&
+                priceBox.data('magePriceBox').cache &&
+                priceBox.data('magePriceBox').cache.displayPrices &&
+                priceBox.data('magePriceBox').cache.displayPrices.finalPrice) {
+                configuratedPrice = priceBox.data('magePriceBox').cache.displayPrices.finalPrice.amount;
+            }
+
+            var postData = configuratedPrice ? form.serialize() + '&configured_price=' + configuratedPrice : form.serialize();
+
             $(self.options.minicartSelector).trigger('contentLoading');
             self.disableAddToCartButton(form);
 
             $.ajax({
                 url: form.attr('action'),
-                data: form.serialize(),
+                data: postData,
                 type: 'post',
                 dataType: 'json',
 
