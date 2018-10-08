@@ -47,7 +47,6 @@ define([
         },
 
         updateSelected: function(event){
-            console.log('changed');
             $(this.element.context).find('.value').removeClass('selected');
             $(this.element.context).find('.value[data-id="' + event.target.value + '"]').addClass('selected');
         }

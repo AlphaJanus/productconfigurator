@@ -216,7 +216,8 @@ define([
                         if(valueConfig) {
                             allowedVariants = valueConfig.allowed_variants;
                         }
-                        if(optionValue && parseInt(valueConfig.is_dependent) && !allowedVariants.includes(parentElement.val().toString()) ) {
+                        if(optionValue && parseInt(valueConfig.is_dependent) && !allowedVariants.includes(parentElement.val().toString()) ||
+                            (optionValue && !parseInt(valueConfig.enabled))) {
                             $(optionHtml).attr('disabled','disabled');
                             if(optionHtml.parentElement.value === optionValue) {
                                 optionHtml.parentElement.value = '';
@@ -244,7 +245,7 @@ define([
                         $(option).parents('.field').removeClass('hidden');
                         $(option).removeClass('hidden');
                     }
-                    //$(option).trigger('visibilityChanged');
+                    $(option).trigger('visibilityChanged');
                 }
 
             });
