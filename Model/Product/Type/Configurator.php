@@ -149,4 +149,28 @@ class Configurator extends AbstractType
         }
         return $options;
     }
+
+    /**
+     * Prepare selected options for product
+     *
+     * @param  \Magento\Catalog\Model\Product $product
+     * @param  \Magento\Framework\DataObject $buyRequest
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function processBuyRequest($product, $buyRequest)
+    {
+        /* add product custom options data */
+        $configuratorOptions = $buyRequest->getData('configurator_options');
+        if (is_array($configuratorOptions)) {
+            array_filter(
+                $configuratorOptions,
+                function ($value) {
+                    return $value !== "";
+                }
+            );
+            return ['configurator_options' => $configuratorOptions];
+        }
+        return [];
+    }
 }

@@ -13,6 +13,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Type\AbstractType;
 use Magento\Framework\DataObject;
 use Magento\Framework\Serialize\Serializer\Json;
+use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 
 class AbstractTypePlugin
 {
@@ -45,9 +46,11 @@ class AbstractTypePlugin
     ) {
         $options = $this->prepareOptions($buyRequest, $product);
         $optionIds = array_keys($options);
-        $product->addCustomOption('configurator_option_ids', implode(',', $optionIds));
-        foreach ($options as $optionId => $optionValue) {
-            $product->addCustomOption('configurator_option_' . $optionId, $optionValue);
+        if ($product->getTypeId() == Configurator::TYPE_ID) {
+            $product->addCustomOption('configurator_option_ids', implode(',', $optionIds));
+            foreach ($options as $optionId => $optionValue) {
+                $product->addCustomOption('configurator_option_' . $optionId, $optionValue);
+            }
         }
         return [$buyRequest, $product, $processMode];
     }

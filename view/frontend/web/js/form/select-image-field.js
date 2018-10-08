@@ -25,16 +25,16 @@ define([
             $(this.element.context).find('select option').each(function(index, el){
                 disabledObserver.observe(el, config);
             });
-            $(this.element.context).find('select').on('change, visibilityChanged', this.updateSelected.bind(this));
+            $('#' + this.options.select).on('change', this.updateSelected.bind(this));
+            $('#' + this.options.select).on('visibilityChanged', this.updateSelected.bind(this));
         },
 
         updateValue: function (event) {
             var valueElement = $(event.currentTarget);
-            $(this.element.context).find('.value').removeClass('selected');
-            valueElement.addClass('selected');
             this.value(valueElement.data('value'));
-            $(this.element.context).find('select option[data-id="' + valueElement.attr('id') + '"]').prop('selected',true)
-            $(this.element.context).find('select').trigger('change');
+            $('#' + this.options.select).find('option[data-id=\"' + valueElement.attr('id') + '\"]').prop('selected','selected');
+            $('#' + this.options.select).val(valueElement.data('id').toString());
+            $('#' + this.options.select).trigger('change');
             return this;
         },
 
@@ -47,6 +47,7 @@ define([
         },
 
         updateSelected: function(event){
+            console.log('changed');
             $(this.element.context).find('.value').removeClass('selected');
             $(this.element.context).find('.value[data-id="' + event.target.value + '"]').addClass('selected');
         }

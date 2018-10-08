@@ -37,22 +37,26 @@ define([
                 tempExpr = '';
 
             $.each(this.currentOptions, function(index, option){
-                if($(option).val()) {
+                //if($(option).val()) {
                     switch (option.type) {
                         case 'select-one':
                             parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
                             optionId = parts[2];
-                            valueData = _.findWhere(self.optionsData[optionId].values, {'value_id': $(option).val().toString()})
-                            optionVal = valueData.value;
+                            valueData = _.findWhere(self.optionsData[optionId].values, {'value_id': $(option).val().toString()});
+                            if(typeof(valueData) != "undefined") {
+                                optionVal = valueData.value;
+                            } else {
+                                optionVal = false;
+                            }
                             break;
                         case 'text':
                         default:
                             optionVal = $(option).val();
                             break;
                     }
-                    optionVal = (isNaN(optionVal)) ? '\"' + optionVal + '\"' : optionVal;
+                    optionVal = (isNaN(optionVal)) ? '\"' + optionVal + '\"' : (optionVal) ? optionVal : 'false';
                     tempExpr += "var " + $(option).data('code') + "=" + optionVal + ";\n";
-                }
+                //}
             });
             expr = tempExpr + this.options.expressionCode;
             try {

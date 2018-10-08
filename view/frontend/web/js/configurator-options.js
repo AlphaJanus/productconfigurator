@@ -75,6 +75,12 @@ define([
 
     $.widget('mage.configuratorOptions', {
         options: globalOptions,
+        /**
+         * @private
+         */
+        _init: function initPriceBundle() {
+            $(this.options.optionsSelector, this.element).trigger('change');
+        },
 
         /**
          * Widget creating method.
@@ -122,7 +128,7 @@ define([
                 changes = defaultGetOptionValue(option, this.options.optionConfig);
             }
             $(this.options.priceHolderSelector).trigger('updatePrice', changes);
-            this.updateOptions();
+            this.updateOptions(event);
         },
 
         /**
@@ -182,7 +188,7 @@ define([
             });
         },
 
-        updateOptions: function(){
+        updateOptions: function(event){
             var optionId,
                 parts,
                 tempId,
@@ -218,9 +224,9 @@ define([
                             }
                         } else {
                             $(optionHtml).removeAttr('disabled');
-                            if(typeof(valueConfig) !== "undefined" && valueConfig.is_default == "1"){
+                            /*if(typeof(valueConfig) !== "undefined" && valueConfig.is_default == "1"){
                                 optionHtml.parentElement.value = optionValue;
-                            }
+                            }*/
                             var availableOptions = _.filter(optionHtml.parentElement.options, function(el){
                                 return (el.value !== "" && !el.disabled);
                             });
@@ -238,7 +244,7 @@ define([
                         $(option).parents('.field').removeClass('hidden');
                         $(option).removeClass('hidden');
                     }
-                    $(option).trigger('visibilityChanged');
+                    //$(option).trigger('visibilityChanged');
                 }
 
             });

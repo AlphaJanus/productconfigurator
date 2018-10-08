@@ -4,6 +4,7 @@ $option = $block->getOption();
 $required = $option->getData('is_required') ? ' required' : '';
 $parentOptionDefaultValue = $this->getParentOptionDefaultValue();
 $isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' hidden' : '';
+$defaultValue = $block->getDefaultValue();
 $value = null;
 $disabled = false;
 ?>
@@ -21,10 +22,10 @@ $disabled = false;
                 $disabled = true;
             }
             if ($item['enabled']) {
-                if ($item['is_default']) {
+                if ($item['value_id'] == $defaultValue) {
                     $value = $item['value'];
                 }
-                $selected = $item['is_default'] ? ' selected' : '';
+                $selected = ($item['value_id'] == $defaultValue) ? ' selected' : '';
                 $hidden = $disabled ? ' hide' : '';
                 ?>
                 <li class="value<?php echo /* @escapeNotVerified */ $selected . $hidden; ?>"
@@ -53,10 +54,10 @@ $disabled = false;
                 if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, $item['allowed_variants'])) {
                     $disabled = true;
                 }
-                if ($item['is_default']) {
+                if ($item['value_id'] == $defaultValue) {
                     $value = $item['value'];
                 }
-                $selected = ($item['is_default'] && !$disabled) ? ' selected="selected"' : '';
+                $selected = (($item['value_id'] == $defaultValue) && !$disabled) ? ' selected="selected"' : '';
                 ?>
                 <option data-id="value-<?php echo $item['value_id'];?>"
                         value="<?php echo $item['value_id'] ?>"
@@ -72,6 +73,7 @@ $disabled = false;
     {
         "#option-<?php echo $option->getId() ?>": {
             "imageField": {
+                "select": "image-<?php echo $option->getData('code') ?>"
             }
         }
     }

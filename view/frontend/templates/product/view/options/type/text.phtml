@@ -36,7 +36,7 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
                    name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                    data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
                    data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
-                   value="<?php echo $block->escapeHtml($option->getDefaultValue()) ?>"/>
+                   value="<?php echo $block->escapeHtml($block->getDefaultValue()) ?>"/>
         <?php } elseif ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) { ?>
             <?php $_textAreaValidate = null;
             if ($option->getIsRequired()) {

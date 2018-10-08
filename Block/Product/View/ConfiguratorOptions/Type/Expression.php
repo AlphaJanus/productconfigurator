@@ -9,10 +9,12 @@
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type;
 
 use Magento\Catalog\Api\Data\ProductExtensionFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions;
 
 class Expression extends AbstractOptions
@@ -29,6 +31,8 @@ class Expression extends AbstractOptions
     public function __construct(
         Template\Context $context,
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
+        ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         Json $json,
         ProductExtensionFactory $extensionFactory,
         array $data = []
@@ -39,6 +43,8 @@ class Expression extends AbstractOptions
         parent::__construct(
             $context,
             $configuratorOptionRepository,
+            $productConfiguratorOptionRepository,
+            $searchCriteriaBuilder,
             $json,
             $data
         );

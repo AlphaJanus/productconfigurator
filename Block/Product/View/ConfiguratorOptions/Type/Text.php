@@ -9,10 +9,15 @@
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type;
 
 use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions;
-use Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOption;
 
 class Text extends AbstractOptions
 {
-    /** @var ProductConfiguratorOption */
-    private $option;
+
+    public function getDefaultValue()
+    {
+        $configuredValue = $this->getProduct()
+            ->getPreconfiguredValues()
+            ->getData('configurator_options/' . $this->getOption()->getId());
+        return $configuredValue ? $configuredValue : $this->getOption()->getData('default_value');
+    }
 }

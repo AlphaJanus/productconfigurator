@@ -20,7 +20,7 @@ class Select extends AbstractOptions
         $require = $_option->getIsRequired() ? ' required' : '';
         $params = [];
 
-        $value = null;
+        $value = $this->getDefaultValue();
 
         $select = $this->getLayout()->createBlock(
             \Magento\Framework\View\Element\Html\Select::class
@@ -32,9 +32,7 @@ class Select extends AbstractOptions
         );
         $select->setName('configurator_options[' . $_option->getId(). ']')->addOption('', __('-- Please Select --'));
         foreach ($this->getValuesData() as $_value) {
-            $disabled = false;
             if ($_value['is_dependent'] && !in_array($parentOptionDefaultValue, $_value['allowed_variants'])) {
-                $disabled = true;
                 $params = ['disabled' => true];
             }
             if ($_value['enabled']) {
@@ -43,9 +41,6 @@ class Select extends AbstractOptions
                     $_value['title'],
                     $params
                 );
-                if ($_value['is_default'] && !$disabled) {
-                    $value = $_value['value_id'];
-                }
             }
         }
 
@@ -57,5 +52,21 @@ class Select extends AbstractOptions
         }
 
         return $select->getHtml();
+    }
+
+    public function getDefaultValue()
+    {
+        $configuredValue = $this->getProduct()
+            ->getPreconfiguredValues()
+            ->getData('configurator_options/' . $this->getOption()->getId());
+        if ($configuredValue) {
+            return $configuredValue;
+        }
+        foreach ($this->getValuesData() as $value) {
+            if ($value['is_default']) {
+                return $value['value_id'];
+            }
+        }
+        return null;
     }
 }

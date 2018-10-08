@@ -19,4 +19,6 @@ class ProductConfiguratorOption extends AbstractDb
     {
         $this->_init('catalog_product_configurator_options', 'option_id');
     }
+
+
 }
