@@ -10,7 +10,7 @@ define([
                 //parent: '${ $.parentName }:visible'
             }
         },
-        initialize: function () {
+        initObservable: function () {
             this._super();
             this.parentModule = registry.get(this.modules.parent);
             this.visible = this.parentModule.visible;
