@@ -157,13 +157,15 @@ class ProductConfiguratorOptionsProcessor
      */
     private function deleteAllOptions($options, $group)
     {
-        foreach ($options[$group->getId()]['options'] as $option) {
-            try {
-                $this->productConfiguratorOptionRepository->deleteById($option->getId());
-            } catch (CouldNotDeleteException $exception) {
-                $this->logger->error($exception->getMessage());
-            } catch (NoSuchEntityException $exception) {
-                $this->logger->error($exception->getMessage());
+        if (!empty($options[$group->getId()]['options'])) {
+            foreach ($options[$group->getId()]['options'] as $option) {
+                try {
+                    $this->productConfiguratorOptionRepository->deleteById($option->getId());
+                } catch (CouldNotDeleteException $exception) {
+                    $this->logger->error($exception->getMessage());
+                } catch (NoSuchEntityException $exception) {
+                    $this->logger->error($exception->getMessage());
+                }
             }
         }
     }
