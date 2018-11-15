@@ -23,10 +23,24 @@
     <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionSearchResultInterface"
                 type="Magento\Framework\Api\SearchResults" />
 
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface"
+                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionsGroup" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionsGroupRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionsGroupRepository" />
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupSearchResultInterface"
+                type="Magento\Framework\Api\SearchResults" />
+
     <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
         <arguments>
             <argument name="resource"
                       xsi:type="object">Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant</argument>
+        </arguments>
+    </type>
+
+    <type name="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionsGroup">
+        <arguments>
+            <argument name="resource"
+                      xsi:type="object">\Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionsGroup</argument>
         </arguments>
     </type>
     

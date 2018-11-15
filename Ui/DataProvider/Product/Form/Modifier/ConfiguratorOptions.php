@@ -38,6 +38,7 @@ class ConfiguratorOptions extends AbstractModifier
 
     const CONTAINER_HEADER_NAME                             = 'configurator_container_header';
     const CONTAINER_OPTION                                  = 'configurator_container_option';
+    const GRID_OPTIONS_GROUP_NAME                           = 'configurator_option_groups';
     const GRID_OPTIONS_NAME                                 = 'assigned_configurator_options';
 
     const BUTTON_ADD                                        = 'button_add';
@@ -102,37 +103,51 @@ class ConfiguratorOptions extends AbstractModifier
     {
         $product = $this->locator->getProduct();
         if ($product->getTypeId() == Configurator::TYPE_ID) {
-            $options = [];
-            if (!empty($configuratorOptions = $product->getExtensionAttributes()->getConfiguratorOptions())) {
-                foreach ($configuratorOptions as $option) {
-                    try {
-                        $configuratorOption = $this->configuratorOptionRepository
-                            ->get($option->getConfiguratorOptionId());
-                    } catch (NoSuchEntityException $exception) {
-                        $this->logger->error($exception->getMessage());
+            $groups = [];
+            $productExtensions = $product->getExtensionAttributes();
+            $configuratorOptionsGroups = $productExtensions->getConfiguratorOptions();
+            $assignedOptions = [];
+            if (!empty($optionsGroups = $productExtensions->getConfiguratorOptionsGroups())) {
+                foreach ($optionsGroups as $optionsGroup) {
+                    $group = $optionsGroup->getData();
+                    $options = [];
+                    if (!empty($groupOptions = $configuratorOptionsGroups[$optionsGroup->getId()]['options'])) {
+                        foreach ($groupOptions as $option) {
+                            try {
+                                $configuratorOption = $this->configuratorOptionRepository
+                                    ->get($option->getConfiguratorOptionId());
+                            } catch (NoSuchEntityException $exception) {
+                                $this->logger->error($exception->getMessage());
+                            }
+                            $values = $configuratorOption->getValues();
+                            $valuesData = [];
+                            if ($vData = $option->getValuesData()) {
+                                $valuesData = $this->json->unserialize($vData);
+                            }
+                            foreach ($valuesData as &$val) {
+                                unset($val['initialize']);
+                            }
+                            $valuesData = array_replace_recursive($values, $valuesData);
+                            $configuratorOption->setValues($valuesData);
+                            $options[] = array_merge(
+                                $option->getData(),
+                                $configuratorOption->getData()
+                            );
+                        }
                     }
-                    $values = $configuratorOption->getValues();
-                    $valuesData = [];
-                    if ($vData = $option->getValuesData()) {
-                        $valuesData = $this->json->unserialize($vData);
-                    }
-                    foreach ($valuesData as &$val) {
-                        unset($val['initialize']);
-                    }
-                    $valuesData = array_replace_recursive($values, $valuesData);
-                    $configuratorOption->setValues($valuesData);
-                    $options[] = array_merge(
-                        $option->getData(),
-                        $configuratorOption->getData()
-                    );
+                    $group['assigned_configurator_options'] = $options;
+                    $assignedOptions[] = $options;
+                    $groups[] = $group;
                 }
             }
+
             return array_replace_recursive(
                 $data,
                 [
                     $this->locator->getProduct()->getId() => [
                         'product' => [
-                            static::GRID_OPTIONS_NAME => $options
+                            static::GRID_OPTIONS_GROUP_NAME => $groups,
+                            static::INSERT_LISTING_NAME => $assignedOptions
                         ]
                     ]
                 ]
@@ -164,7 +179,7 @@ class ConfiguratorOptions extends AbstractModifier
                         ],
                         'children' => [
                             static::CONTAINER_HEADER_NAME => $this->getHeaderContainerConfig(10),
-                            static::GRID_OPTIONS_NAME => $this->getOptionsGridConfig(30)
+                            static::GRID_OPTIONS_GROUP_NAME => $this->getOptionGroupsConfig(20)
                         ]
                     ]
                 ]
@@ -193,7 +208,7 @@ class ConfiguratorOptions extends AbstractModifier
             'arguments' => [
                 'data' => [
                     'config' => [
-                        'label' => null,
+                        'label' => __('Assigned Configurator Options'),
                         'formElement' => Container::NAME,
                         'componentType' => Container::NAME,
                         'template' => 'ui/form/components/complex',
@@ -204,7 +219,7 @@ class ConfiguratorOptions extends AbstractModifier
                     ],
                 ],
             ],
-            'children' => [
+            /*'children' => [
                 static::BUTTON_ADD => [
                     'arguments' => [
                         'data' => [
@@ -225,7 +240,7 @@ class ConfiguratorOptions extends AbstractModifier
                         ],
                     ],
                 ],
-            ],
+            ],*/
         ];
     }
 
@@ -299,6 +314,146 @@ class ConfiguratorOptions extends AbstractModifier
         ];
     }
 
+    private function getOptionGroupsConfig($sortOrder)
+    {
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'addButtonLabel'            => __('Add Group'),
+                        'componentType'             => DynamicRows::NAME,
+                        'component'                 => 'Magento_Ui/js/dynamic-rows/dynamic-rows',
+                        'template'                  => 'Netzexpert_ProductConfigurator/dynamic-rows/templates/group',
+                        'deleteProperty'            => static::FIELD_IS_DELETE,
+                        'deleteValue'               => '1',
+                        'defaultRecord'             => false,
+                        'sortOrder'                 => $sortOrder,
+                        'identificationProperty'    => 'group_id',
+                        'additionalClasses'         => 'admin__field-wide',
+                        'dndConfig' => [
+                            'enabled' => true,
+                        ]
+                    ]
+                ]
+            ],
+            'children' => [
+                'record' => [
+                    'arguments' => [
+                        'data' => [
+                            'config' => [
+                                'componentType'     => Container::NAME,
+                                'component'         => 'Magento_Ui/js/dynamic-rows/record',
+                                'positionProvider'  => static::FIELD_SORT_ORDER_NAME,
+                                'isTemplate'        => true,
+                                'is_collection'     => true,
+                            ]
+                        ]
+                    ],
+                    'children' => [
+                        'group_id' => [
+                            'arguments' => [
+                                'data' => [
+                                    'config' => [
+                                        'componentType' => Field::NAME,
+                                        'formElement'   => Input::NAME,
+                                        'dataScope'     => 'group_id',
+                                        'dataType'      => Text::NAME,
+                                        'sortOrder'     => 10,
+                                        'required'      => false,
+                                        'visible'       => false
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'name' => [
+                            'arguments' => [
+                                'data' => [
+                                    'config' => [
+                                        'componentType'     => Field::NAME,
+                                        'formElement'       => Input::NAME,
+                                        'dataScope'         => 'name',
+                                        'dataType'          => Text::NAME,
+                                        'sortOrder'         => 20,
+                                        'additionalClasses' =>'group-name',
+                                        'required'          => true
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'is_delete' => [
+                            'arguments' => [
+                                'data' => [
+                                    'config' => [
+                                        'componentType'     => ActionDelete::NAME,
+                                        'fit'               => true,
+                                        'additionalClasses' => 'group-delete',
+                                        'sortOrder'         => 30
+                                    ],
+                                ],
+                            ]
+                        ],
+                        'position' => $this->getPositionFieldConfig(40),
+                        'options_container' => [
+                            'arguments' => [
+                                'data' => [
+                                    'config' => [
+                                        'label' => '',
+                                        'componentType' => Fieldset::NAME,
+                                        'dataScope' => '',
+                                        'additionalClasses' => 'admin__field-wide',
+                                        'collapsible' => true,
+                                        'opened' => true,
+                                        'sortOrder' => 40,
+                                    ]
+                                ]
+                            ],
+                            'children' => [
+                                'header' => [
+                                    'arguments' => [
+                                        'data' => [
+                                            'config' => [
+                                                'label' => '',
+                                                'formElement' => Container::NAME,
+                                                'componentType' => Container::NAME,
+                                                'template' => 'ui/form/components/complex',
+                                                'sortOrder' => $sortOrder,
+                                            ],
+                                        ],
+                                    ],
+                                    'children' => [
+                                        static::BUTTON_ADD => [
+                                            'arguments' => [
+                                                'data' => [
+                                                    'config' => [
+                                                        'title' => __('Add Option'),
+                                                        'formElement' => Container::NAME,
+                                                        'componentType' => Container::NAME,
+                                                        'component' =>
+                                                        'Netzexpert_ProductConfigurator/js/form/components/add-option',
+                                                        'sortOrder' => 10,
+                                                        'actions' => [
+                                                            [
+                                                                'targetName' => 'ns=' . static::FORM_NAME . ', index='
+                                                                    . static::ADD_OPTION_MODAL,
+                                                                'actionName' => 'openModal',
+                                                            ],
+                                                        ],
+                                                    ]
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                static::GRID_OPTIONS_NAME => $this->getOptionsGridConfig(30),
+                                //static::ADD_OPTION_MODAL => $this->getAddOptionModalConfig()
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     /**
      * Get config for modal window "Add Option"
      *
@@ -312,7 +467,7 @@ class ConfiguratorOptions extends AbstractModifier
                 'data' => [
                     'config' => [
                         'componentType' => Modal::NAME,
-                        'dataScope' => static::GROUP_CONFIGURATOR_OPTIONS_SCOPE,
+                        'component' => 'Magento_Ui/js/modal/modal-component',
                         'options' => [
                             'title' => __('Select Option'),
                             'buttons' => [
@@ -340,7 +495,8 @@ class ConfiguratorOptions extends AbstractModifier
                                 'autoRender' => true,
                                 'cssclass' => 'noclass',
                                 'componentType' => 'insertListing',
-                                'dataScope' => static::INSERT_LISTING_NAME,
+                                'component' => 'Netzexpert_ProductConfigurator/js/form/components/options-listing',
+                                'dataScope' => 'data.product.' . static::INSERT_LISTING_NAME,
                                 'externalProvider' => static::CONFIGURATOR_OPTIONS_LISTING . '.'
                                     . static::CONFIGURATOR_OPTIONS_LISTING . '_data_source',
                                 'selectionsProvider' => static::CONFIGURATOR_OPTIONS_LISTING . '.'
@@ -508,7 +664,8 @@ class ConfiguratorOptions extends AbstractModifier
                         'data' => [
                             'config' => [
                                 'componentType'             => DynamicRows::NAME,
-                                'component'                 => 'Netzexpert_ProductConfigurator/js/dynamic-rows/dependency-grid',
+                                'component'
+                                    => 'Netzexpert_ProductConfigurator/js/dynamic-rows/dependency-grid',
                                 'additionalClasses'         => 'admin__field-wide',
                                 'deleteProperty'            => static::FIELD_IS_DELETE,
                                 'addButton'                 => false,
@@ -516,9 +673,6 @@ class ConfiguratorOptions extends AbstractModifier
                                 'defaultRecord'             => false,
                                 'dataScope'                 => '',
                                 'dataProvider'              => '${ $.dataScope }.dependency',
-                                'dndConfig' => [
-                                    'enabled' => false,
-                                ],
                                 'map'   => [
                                     'value_id' => 'value_id',
                                     'enabled' => 'enabled'
@@ -589,7 +743,8 @@ class ConfiguratorOptions extends AbstractModifier
                                                 'formElement' => Checkbox::NAME,
                                                 'dataType' => Number::NAME,
                                                 'componentType' => Field::NAME,
-                                                'component' => 'Netzexpert_ProductConfigurator/js/form/element/is_dependent',
+                                                'component' =>
+                                                    'Netzexpert_ProductConfigurator/js/form/element/is_dependent',
                                                 'dataScope' => 'is_dependent',
                                                 'sortOrder' => 2,
                                                 'default' => 0,
@@ -611,7 +766,8 @@ class ConfiguratorOptions extends AbstractModifier
                                             'config' => [
                                                 'label' => __('Allowed for parent values'),
                                                 'componentType' => Field::NAME,
-                                                'component' => 'Netzexpert_ProductConfigurator/js/form/element/allowed_variants',
+                                                'component' =>
+                                                    'Netzexpert_ProductConfigurator/js/form/element/allowed_variants',
                                                 'formElement' => MultiSelect::NAME,
                                                 'dataType' => Select::NAME,
                                                 'default' => [],

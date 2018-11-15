@@ -9,6 +9,7 @@
 namespace Netzexpert\ProductConfigurator\Model\ResourceModel\Product;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 
 class ProductConfiguratorOption extends AbstractDb
 {
@@ -17,8 +18,6 @@ class ProductConfiguratorOption extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('catalog_product_configurator_options', 'option_id');
+        $this->_init('catalog_product_configurator_options', ProductConfiguratorOptionInterface::ID);
     }
-
-
 }

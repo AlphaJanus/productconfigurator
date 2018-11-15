@@ -17,6 +17,7 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
     const ID                        = 'option_id';
     const PRODUCT_ID                = 'product_id';
     const CONFIGURATOR_OPTION_ID    = 'configurator_option_id';
+    const GROUP_ID                  = 'group_id';
     const POSITION                  = 'position';
     const PARENT_OPTION             = 'parent_option';
     const VALUES_DATA               = 'values_data';
@@ -35,6 +36,11 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
      * @return int
      */
     public function getConfiguratorOptionId();
+
+    /**
+     * @return int
+     */
+    public function getGroupId();
 
     /**
      * @return int
@@ -68,6 +74,12 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
      * @return $this
      */
     public function setConfiguratorOptionId($configuratorOptionId);
+
+    /**
+     * @param int $groupId
+     * @return $this
+     */
+    public function setGroupId($groupId);
 
     /**
      * @param int $position

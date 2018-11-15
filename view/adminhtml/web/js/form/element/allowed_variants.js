@@ -10,7 +10,8 @@ define([
             imports: {
                 parentOption: '${ $ .provider }:${ $ .dataScope.replace(/\.values\.[(0-9)+]\.allowed_variants/, "") }.parent_option',
                 isDependent: '${ $ .provider }:${ $ .parentScope }.is_dependent',
-                isEnabled: '${ $ .provider }:${ $ .parentScope }.enabled'
+                isEnabled: '${ $ .provider }:${ $ .parentScope }.enabled',
+                rows: '${ $ .provider }:${ $ .dataScope.replace(/\.[(0-9)+]\.values\.[(0-9)+]\.allowed_variants/, "") }'
             }
         },
 
@@ -26,10 +27,9 @@ define([
         refreshVariants: function(value){
             var option,
                 self = this;
-            var assignedOptions = registry.get("product_form.product_form_data_source").data.product.assigned_configurator_options
-            var parentOption = _.findWhere(assignedOptions, {configurator_option_id: value});
+            var parentOption = _.findWhere(this.rows, {configurator_option_id: value});
 
-            if(typeof(parentOption) != 'undefined' && parentOption != 0){
+            if(typeof(parentOption) !== 'undefined' && parentOption !== 0){
                 var options = [],
                     variants = parentOption.values;
                 variants.forEach(function (item) {

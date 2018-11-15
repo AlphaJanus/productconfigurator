@@ -4,6 +4,10 @@
  * See COPYING.txt for license details.
  */
 -->
+<style>
+    .group-name {display: inline-block;width: 80%;}
+    .group-delete {display: inline-block;width: 19%;text-align:right;}
+</style>
 <div class="admin__field" visible="visible" disable="disabled" css="element.setClasses(element)">
     <label if="element.label" class="admin__field-label" attr="for: element.uid">
         <span translate="element.label"/>
@@ -18,7 +22,7 @@
                     <span repeat="8"/>
                 </div>
             </div>
-            <table class="admin__dynamic-rows admin__control-table nested-table" data-role="grid" attr="{'data-index': index}">
+            <table class="admin__dynamic-rows admin__control-table" data-role="grid" attr="{'data-index': index}">
                 <thead if="element.columnsHeader">
                     <tr>
                         <th if="dndConfig.enabled" />
@@ -38,16 +42,19 @@
                             template="name: dndConfig.template, data: dnd"/>
 
                         <!-- ko if: $record().elems().length > 0 -->
-                        <td class="admin__field-complex">
+                        <td attr="{'colspan': element.getColumnsCount()}"
+                            class="admin__field-complex">
                             <!-- ko foreach: { data: $record().elems(), as: 'elem'}  -->
                             <div if="elem.template"
-                                css="$parent.setClasses(elem)"
-                                visible="elem.visible"
-                                disable="elem.disabled"
-                                template="elem.template"/>
+                                 css="$parent.setClasses(elem)"
+                                 visible="elem.visible"
+                                 disable="elem.disabled"
+                                 template="elem.template"/>
                             <!-- /ko -->
                         </td>
                         <!-- /ko -->
+
+
                 </tr>
                 </tbody>
 

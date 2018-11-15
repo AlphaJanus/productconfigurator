@@ -45,6 +45,14 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     /**
      * @inheritDoc
      */
+    public function getGroupId()
+    {
+        return $this->getData(self::GROUP_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getPosition()
     {
         return $this->getData(self::POSITION);
@@ -65,7 +73,6 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     {
         return $this->getData(self::VALUES_DATA);
     }
-
 
     /**
      * @inheritDoc
@@ -89,6 +96,14 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     public function setConfiguratorOptionId($configuratorOptionId)
     {
         return $this->setData(self::CONFIGURATOR_OPTION_ID, $configuratorOptionId);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setGroupId($groupId)
+    {
+        return $this->setData(self::GROUP_ID, $groupId);
     }
 
     /**

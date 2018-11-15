@@ -7,10 +7,11 @@
  * @api
  */
 define([
+    'jquery',
     'underscore',
     'uiRegistry',
     'Magento_Ui/js/dynamic-rows/dynamic-rows'
-], function (_, registry, dynamicRows) {
+], function ($, _, registry, dynamicRows) {
     'use strict';
 
     return dynamicRows.extend({
@@ -35,22 +36,23 @@ define([
             optionsParents: []
         },
 
+        initConfig: function (config) {
+            config.groupIndex = config.dataScope.slice(-1);
+            config.links.insertData =  config.provider + ':data.product.assign_configurator_option_grid';
+            config.dataProvider = config.index + '.' + config.groupIndex;
+            return this._super(config)
+        },
+
         /**
          * Calls 'initObservable' of parent
          *
          * @returns {Object} Chainable.
          */
         initObservable: function () {
-            this._super()
-                .observe([
+            this._super();
+            this.observe([
                     'insertData'
                 ]);
-            var self = this;
-
-            var rows = registry.get('product_form.product_form_data_source').data.product.assigned_configurator_options;
-            rows.forEach(function(row){
-                self.optionsParents.push(row.parent_option)
-            });
             return this;
         },
 
@@ -96,11 +98,12 @@ define([
          */
         initElements: function (data) {
             var newData = this.getNewData(data);
+            var insertData = this.insertData();
 
             this.parsePagesData(data);
 
             if (newData.length) {
-                if (this.insertData().length) {
+                if (insertData[this.groupIndex] && insertData[this.groupIndex].length) {
                     this.processingAddChild(newData[0], data.length - 1, newData[0][this.identificationProperty]);
                 }
             }
@@ -126,12 +129,14 @@ define([
          * @param {String|Number} recordId
          */
         updateInsertData: function (recordId) {
-            var data = this.getElementData(this.insertData(), recordId),
+            var insertData = this.insertData();
+            var data = this.getElementData(insertData[this.groupIndex], recordId),
                 prop = this.map[this.identificationDRProperty];
 
-            this.insertData(_.reject(this.source.get(this.dataProvider), function (recordData) {
+            insertData[this.groupIndex] = _.reject(this.source.get(this.dataProvider), function (recordData) {
                 return ~~recordData[prop] === ~~data[prop];
-            }, this));
+            }, this);
+            this.insertData(insertData);
         },
 
         /**
@@ -204,11 +209,16 @@ define([
         /**
          * Processing insert data
          *
-         * @param {Object} data
          */
-        processingInsertData: function (data) {
+        processingInsertData: function () {
             var changes,
                 obj = {};
+
+            var data = this.insertData()[this.groupIndex];
+            if (typeof(data) === "undefined") {
+                return false;
+            }
+
 
             changes = this._checkGridData(data);
             this.cacheGridData = data;
@@ -285,7 +295,36 @@ define([
 
         sort: function (position, elem) {
             this._super(position, elem);
+            this.updateParentOptions(position, elem);
             this.trigger('sortOrderChanged', {'position': position, 'elem': elem});
+        },
+
+        updateParentOptions: function(position, elem) {
+            var option,
+                value,
+                self = this,
+                parentOptionElem = registry.get(elem.name + '.dependency_container.parent_option');
+            var options = [];
+            $.each(this.elems(), function (index, row) {
+                var item = _.findWhere(self.recordData(), {entity_id: row.recordId});
+                var pos = (typeof(row.position) !== 'undefined') ? row.position : item.position;
+                if (typeof(item) !== 'undefined' && parseInt(pos) < parseInt(elem.position)) {
+                    option = {
+                        value: item.configurator_option_id,
+                        label: item.name,
+                        labeltitle: item.name,
+                        position: parseInt(row.position)
+                    };
+                    options.push(option);
+                }
+            });
+            if (typeof(parentOptionElem) !== 'undefined') {
+                value = parentOptionElem.value();
+                parentOptionElem.setOptions(options);
+                if (typeof(_.findWhere(parentOptionElem.options(), {value: value})) !== "undefined") {
+                    parentOptionElem.value(value);
+                }
+            }
         }
     });
 });

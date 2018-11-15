@@ -16,7 +16,10 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterfaceFactory;
+use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface;
+use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterfaceFactory;
 use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionsGroupRepositoryInterface;
 use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 use Psr\Log\LoggerInterface;
 
@@ -31,6 +34,12 @@ class ProductConfiguratorOptionsProcessor
     /** @var ProductExtensionFactory  */
     private $productExtensionFactory;
 
+    /** @var ProductConfiguratorOptionsGroupRepositoryInterface  */
+    private $groupRepository;
+
+    /** @var ProductConfiguratorOptionsGroupInterfaceFactory  */
+    private $groupFactory;
+
     /** @var Json  */
     private $json;
 
@@ -42,6 +51,8 @@ class ProductConfiguratorOptionsProcessor
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param ProductConfiguratorOptionInterfaceFactory $productConfiguratorOptionFactory
      * @param ProductExtensionFactory $productExtensionFactory
+     * @param ProductConfiguratorOptionsGroupRepositoryInterface $groupRepository
+     * @param ProductConfiguratorOptionsGroupInterfaceFactory $groupInterfaceFactory
      * @param Json $json
      * @param LoggerInterface $logger
      */
@@ -49,12 +60,16 @@ class ProductConfiguratorOptionsProcessor
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         ProductConfiguratorOptionInterfaceFactory $productConfiguratorOptionFactory,
         ProductExtensionFactory $productExtensionFactory,
+        ProductConfiguratorOptionsGroupRepositoryInterface $groupRepository,
+        ProductConfiguratorOptionsGroupInterfaceFactory $groupInterfaceFactory,
         Json $json,
         LoggerInterface $logger
     ) {
         $this->productConfiguratorOptionRepository  = $productConfiguratorOptionRepository;
         $this->productConfiguratorOptionFactory     = $productConfiguratorOptionFactory;
         $this->productExtensionFactory              = $productExtensionFactory;
+        $this->groupRepository                      = $groupRepository;
+        $this->groupFactory                         = $groupInterfaceFactory;
         $this->json                                 = $json;
         $this->logger                               = $logger;
     }
@@ -70,38 +85,67 @@ class ProductConfiguratorOptionsProcessor
             $productExtension = $extensionAttributes ?
                 $extensionAttributes : $this->productExtensionFactory->create();
             $originalOptions = $productExtension->getConfiguratorOptions();
+            $originalGroups = $productExtension->getConfiguratorOptionsGroups();
             if (!$originalOptions) {
                 $originalOptions = [];
             }
-            $assigned_options = $product->getData('assigned_configurator_options');
-            if (!empty($assigned_options)) {
-                $this->processDeleteOptions($originalOptions, $assigned_options);
-                foreach ($assigned_options as $option) {
-                    if ($option['option_id']) {
+            if (!$originalGroups) {
+                $originalGroups = [];
+            }
+            $options_groups = $product->getData('configurator_option_groups');
+            if (!empty($options_groups)) {
+                $this->processDeleteGroups($originalGroups, $options_groups);
+                foreach ($options_groups as $options_group) {
+                    if ($options_group['group_id']) {
                         try {
-                            $optionEntity = $this->productConfiguratorOptionRepository->get($option['option_id']);
+                            $group = $this->groupRepository->get($options_group['group_id']);
                         } catch (NoSuchEntityException $exception) {
                             $this->logger->error($exception->getMessage());
                         }
                     } else {
-                        $optionEntity = $this->productConfiguratorOptionFactory->create();
+                        $group = $this->groupFactory->create();
+                        unset($options_group['group_id']);
                     }
-                    $optionEntity->setData($option);
-                    if(!empty($option['values'])) {
-                        $optionEntity->setValuesData($this->json->serialize($option['values']));
-                    }
-                    if (!$option['option_id']) {
-                        $optionEntity->setId(null);
-                    }
-                    $optionEntity->setProductId($product->getId());
+                    $group->setData($options_group)->setProductId($product->getId());
                     try {
-                        $this->productConfiguratorOptionRepository->save($optionEntity);
+                        $this->groupRepository->save($group);
                     } catch (CouldNotSaveException $exception) {
                         $this->logger->error($exception->getMessage());
                     }
+
+                    if (!empty($group->getData('assigned_configurator_options'))) {
+                        $this->processDeleteOptions($originalOptions, $group);
+                        foreach ($group['assigned_configurator_options'] as $option) {
+                            if ($option['option_id']) {
+                                try {
+                                    $optionEntity = $this->productConfiguratorOptionRepository
+                                                        ->get($option['option_id']);
+                                } catch (NoSuchEntityException $exception) {
+                                    $this->logger->error($exception->getMessage());
+                                }
+                            } else {
+                                $optionEntity = $this->productConfiguratorOptionFactory->create();
+                            }
+                            $optionEntity->setData($option)->setGroupId($group->getId());
+                            if (!empty($option['values'])) {
+                                $optionEntity->setValuesData($this->json->serialize($option['values']));
+                            }
+                            if (!$option['option_id']) {
+                                $optionEntity->setId(null);
+                            }
+                            $optionEntity->setProductId($product->getId());
+                            try {
+                                $this->productConfiguratorOptionRepository->save($optionEntity);
+                            } catch (CouldNotSaveException $exception) {
+                                $this->logger->error($exception->getMessage());
+                            }
+                        }
+                    } else {
+                        $this->deleteAllOptions($originalOptions, $group);
+                    }
                 }
             } else {
-                $this->deleteAllOptions($originalOptions);
+                $this->processDeleteGroups($originalGroups, []);
             }
         }
         return $product;
@@ -109,10 +153,11 @@ class ProductConfiguratorOptionsProcessor
 
     /**
      * @param ProductConfiguratorOptionInterface[] $options
+     * @param ProductConfiguratorOptionsGroupInterface $group
      */
-    private function deleteAllOptions($options)
+    private function deleteAllOptions($options, $group)
     {
-        foreach ($options as $option) {
+        foreach ($options[$group->getId()]['options'] as $option) {
             try {
                 $this->productConfiguratorOptionRepository->deleteById($option->getId());
             } catch (CouldNotDeleteException $exception) {
@@ -125,16 +170,37 @@ class ProductConfiguratorOptionsProcessor
 
     /**
      * @param ProductConfiguratorOptionInterface[] $originalOptions
-     * @param array $assigned_options
+     * @param ProductConfiguratorOptionsGroupInterface $group
      */
-    private function processDeleteOptions($originalOptions, $assigned_options)
+    private function processDeleteOptions($originalOptions, $group)
     {
-        $assignedIds = array_column($assigned_options, 'option_id');
-        foreach ($originalOptions as $originalOption) {
+        $assignedIds = array_column($group->getData('assigned_configurator_options'), 'option_id');
+        foreach ($originalOptions[$group->getId()]['options'] as $originalOption) {
             $optionId = $originalOption->getId();
             if (false === array_search($optionId, $assignedIds)) {
                 try {
                     $this->productConfiguratorOptionRepository->deleteById($optionId);
+                } catch (CouldNotDeleteException $exception) {
+                    $this->logger->error($exception->getMessage());
+                } catch (NoSuchEntityException $exception) {
+                    $this->logger->error($exception->getMessage());
+                }
+            }
+        }
+    }
+
+    /**
+     * @param ProductConfiguratorOptionsGroupInterface[] $originalGroups
+     * @param array $options_groups
+     */
+    private function processDeleteGroups($originalGroups, $options_groups)
+    {
+        $assignedGroupsIds = array_column($options_groups, 'group_id');
+        foreach ($originalGroups as $originalGroup) {
+            $groupId = $originalGroup->getId();
+            if (false === array_search($groupId, $assignedGroupsIds)) {
+                try {
+                    $this->groupRepository->deleteById($groupId);
                 } catch (CouldNotDeleteException $exception) {
                     $this->logger->error($exception->getMessage());
                 } catch (NoSuchEntityException $exception) {
