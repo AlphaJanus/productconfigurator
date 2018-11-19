@@ -127,6 +127,10 @@ define([
             var provider,
                 filter = {};
 
+            if (!_.isArray(items)) {
+                items = Object.values(items);
+            }
+
             if (!this.externalFilterMode) {
                 return;
             }

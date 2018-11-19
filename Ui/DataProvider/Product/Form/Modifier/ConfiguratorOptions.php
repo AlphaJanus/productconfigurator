@@ -147,7 +147,8 @@ class ConfiguratorOptions extends AbstractModifier
                     $this->locator->getProduct()->getId() => [
                         'product' => [
                             static::GRID_OPTIONS_GROUP_NAME => $groups,
-                            static::INSERT_LISTING_NAME => $assignedOptions
+                            static::INSERT_LISTING_NAME => $assignedOptions,
+                            static::GRID_OPTIONS_NAME => $assignedOptions,
                         ]
                     ]
                 ]
