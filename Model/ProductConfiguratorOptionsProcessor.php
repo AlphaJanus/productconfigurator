@@ -177,6 +177,9 @@ class ProductConfiguratorOptionsProcessor
     private function processDeleteOptions($originalOptions, $group)
     {
         $assignedIds = array_column($group->getData('assigned_configurator_options'), 'option_id');
+        if (empty($originalOptions[$group->getId()])) {
+            return;
+        }
         foreach ($originalOptions[$group->getId()]['options'] as $originalOption) {
             $optionId = $originalOption->getId();
             if (false === array_search($optionId, $assignedIds)) {
