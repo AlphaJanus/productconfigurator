@@ -5,6 +5,12 @@ define([
 ], function ($, InsertListing, _) {
     'use strict';
     return InsertListing.extend({
+
+        initConfig: function (config) {
+            config.dataScope = "data.product.assign_configurator_option_grid";
+            this._super(config);
+        },
+
         /**
          * Updates externalValue, from selectionsProvider data
          * (which only stores data of the current page rows)

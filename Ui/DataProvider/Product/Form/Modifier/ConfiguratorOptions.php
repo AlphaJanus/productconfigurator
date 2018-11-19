@@ -322,7 +322,7 @@ class ConfiguratorOptions extends AbstractModifier
                     'config' => [
                         'addButtonLabel'            => __('Add Group'),
                         'componentType'             => DynamicRows::NAME,
-                        'component'                 => 'Magento_Ui/js/dynamic-rows/dynamic-rows',
+                        'component'                 => 'Netzexpert_ProductConfigurator/js/dynamic-rows/dynamic-rows-groups',
                         'template'                  => 'Netzexpert_ProductConfigurator/dynamic-rows/templates/group',
                         'deleteProperty'            => static::FIELD_IS_DELETE,
                         'deleteValue'               => '1',

@@ -39,7 +39,8 @@ define([
         initConfig: function (config) {
             config.groupIndex = config.dataScope.slice(-1);
             config.links.insertData =  config.provider + ':data.product.assign_configurator_option_grid';
-            config.dataProvider = config.index + '.' + config.groupIndex;
+            config.links.recordData =  config.provider + ':data.product.' + config.index;
+            config.dataProvider = 'data.product.assign_configurator_option_grid.' + config.groupIndex;
             return this._super(config)
         },
 
@@ -61,10 +62,15 @@ define([
          */
         setToInsertData: function () {
             var insertData = [],
+                recData = this.recordData()[this.groupIndex] ? this.recordData()[this.groupIndex] : [],
                 obj;
 
-            if (this.recordData().length && !this.update) {
-                _.each(this.recordData(), function (recordData) {
+            if (!_.isArray(recData)) {
+                recData = Object.values(recData);
+            }
+
+            if (recData.length && !this.update) {
+                _.each(recData, function (recordData) {
                     obj = {};
                     obj[this.map[this.identificationProperty]] = recordData[this.identificationProperty];
                     insertData.push(obj);
@@ -73,6 +79,10 @@ define([
                 if (insertData.length) {
                     this.source.set(this.dataProvider, insertData);
                 }
+            }
+            /** This is workaround for deleting last record. Not sure. (By Andrew Stepanchuk) */
+            else {
+                this.source.set(this.dataProvider, insertData)
             }
         },
 
@@ -97,6 +107,10 @@ define([
          * @returns {Object} Chainable.
          */
         initElements: function (data) {
+            data = data[this.groupIndex];
+            if(!Array.isArray(data)) {
+                data = Object.values(data);
+            }
             var newData = this.getNewData(data);
             var insertData = this.insertData();
 
@@ -120,7 +134,46 @@ define([
          */
         deleteRecord: function (index, recordId) {
             this.updateInsertData(recordId);
-            this._super();
+            var recordInstance,
+                lastRecord,
+                recordsData;
+
+            if (this.deleteProperty) {
+                recordsData = this.recordData();
+                recordInstance = _.find(this.elems(), function (elem) {
+                    return elem.index === index;
+                });
+                recordInstance.destroy();
+                this.elems([]);
+                this._updateCollection();
+                this.removeMaxPosition();
+                recordsData[this.groupIndex][recordInstance.index][this.deleteProperty] = this.deleteValue;
+                this.recordData(recordsData);
+                this.reinitRecordData();
+                this.reload();
+            } else {
+                this.update = true;
+
+                if (~~this.currentPage() === this.pages()) {
+                    lastRecord =
+                        _.findWhere(this.elems(), {
+                            index: this.startIndex + this.getChildItems().length - 1
+                        }) ||
+                        _.findWhere(this.elems(), {
+                            index: (this.startIndex + this.getChildItems().length - 1).toString()
+                        });
+
+                    lastRecord.destroy();
+                }
+
+                this.removeMaxPosition();
+                recordsData = this._getDataByProp(recordId);
+                this._updateData(recordsData);
+                this.update = false;
+            }
+
+            this._reducePages();
+            this._sort();
         },
 
         /**
@@ -210,15 +263,15 @@ define([
          * Processing insert data
          *
          */
-        processingInsertData: function () {
+        processingInsertData: function (data) {
             var changes,
                 obj = {};
 
-            var data = this.insertData()[this.groupIndex];
             if (typeof(data) === "undefined") {
                 return false;
             }
 
+            data = data[this.groupIndex] ? data[this.groupIndex] : [];
 
             changes = this._checkGridData(data);
             this.cacheGridData = data;
@@ -243,7 +296,12 @@ define([
          */
         mappingValue: function (data) {
             var obj = {},
+                recData = this.recordData()[this.groupIndex] ? this.recordData()[this.groupIndex] : [],
                 tmpObj = {};
+
+            if(!Array.isArray(recData)) {
+                recData = Object.values(recData);
+            }
 
             if (this.mappingSettings.enabled) {
                 _.each(this.map, function (prop, index) {
@@ -256,7 +314,7 @@ define([
             if (this.mappingSettings.distinct) {
                 tmpObj[this.identificationDRProperty] = obj[this.identificationDRProperty];
 
-                if (_.findWhere(this.recordData(), tmpObj)) {
+                if (_.findWhere(this.recordData()[this.groupIndex], tmpObj)) {
                     return false;
                 }
             }
@@ -266,7 +324,9 @@ define([
                 obj[this.positionProvider] = this.maxPosition;
             }
 
-            this.source.set(this.dataScope + '.' + this.index + '.' + this.recordData().length, obj);
+            this.source.set(this.dataScope + '.' + this.index + '.' + recData.length, obj);
+            this.source.set('data.product.' + this.index + '.' + this.groupIndex + '.' + recData.length, obj);
+
         },
 
         /**
@@ -303,10 +363,11 @@ define([
             var option,
                 value,
                 self = this,
+                recData  = self.recordData()[this.groupIndex],
                 parentOptionElem = registry.get(elem.name + '.dependency_container.parent_option');
             var options = [];
             $.each(this.elems(), function (index, row) {
-                var item = _.findWhere(self.recordData(), {entity_id: row.recordId});
+                var item = _.findWhere(recData, {entity_id: row.recordId});
                 var pos = (typeof(row.position) !== 'undefined') ? row.position : item.position;
                 if (typeof(item) !== 'undefined' && parseInt(pos) < parseInt(elem.position)) {
                     option = {
@@ -325,6 +386,45 @@ define([
                     parentOptionElem.value(value);
                 }
             }
+        },
+
+        /**
+         * Checking loader visibility
+         *
+         * @param {Array} elems
+         */
+        checkSpinner: function (elems) {
+            var recData = this.recordData()[this.groupIndex] ? this.recordData()[this.groupIndex] : [];
+            this.showSpinner(!(!recData.length || elems && elems.length === this.getChildItems().length));
+        },
+
+        /**
+         * Reinit record data in order to remove deleted values
+         *
+         * @return void
+         */
+        reinitRecordData: function () {
+            var recData = this.recordData();
+            recData[this.groupIndex] = _.filter(this.recordData()[this.groupIndex], function (elem) {
+                return elem && elem[this.deleteProperty] !== this.deleteValue;
+            }, this);
+            this.recordData(recData);
+        },
+
+        /**
+         * Get items to rendering on current page
+         *
+         * @returns {Array} data
+         */
+        getChildItems: function (data, page) {
+            var dataRecord = data || this.relatedData,
+                startIndex;
+
+            this.startIndex = (~~this.currentPage() - 1) * this.pageSize;
+
+            startIndex = page || this.startIndex;
+
+            return dataRecord.slice(startIndex, this.startIndex + this.pageSize);
         }
     });
 });

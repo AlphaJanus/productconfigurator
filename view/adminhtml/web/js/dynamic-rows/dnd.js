@@ -7,7 +7,6 @@ define([
     return Dnd.extend({
         mouseupHandler: function (event) {
             this._super(event);
-            this.trigger('sortOrderChanged');
         },
 
         /**
