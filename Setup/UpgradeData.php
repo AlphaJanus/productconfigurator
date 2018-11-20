@@ -69,6 +69,9 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '2.0.12', '<')) {
             $this->upgradeVersionTwoZeroTwelve($eavSetup);
         }
+        if (version_compare($context->getVersion(), '2.0.14', '<')) {
+            $this->upgradeVersionTwoZeroFourteen($eavSetup);
+        }
 
         $setup->endSetup();
     }
@@ -299,5 +302,14 @@ class UpgradeData implements UpgradeDataInterface
                 'source'                => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
             ]
         );
+    }
+
+    /**
+     * @param EavSetup $eavSetup
+     * @return void
+     */
+    private function upgradeVersionTwoZeroFourteen($eavSetup)
+    {
+        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY,'expression','backend_type', 'text');
     }
 }
