@@ -12,6 +12,7 @@ use Magento\Catalog\Api\Data\ProductExtensionFactory;
 use Magento\Catalog\Block\Product\View\AbstractView;
 use Magento\Catalog\Block\Product\Context;
 use Magento\Catalog\Helper\Data as CatalogHelper;
+use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -37,6 +38,9 @@ class Configurator extends AbstractView
     /** @var Json  */
     private $json;
 
+    /** @var DataObjectFactory  */
+    private $dataObjectFactory;
+
     /**
      * Configurator constructor.
      * @param Context $context
@@ -56,13 +60,15 @@ class Configurator extends AbstractView
         PricingHelper $pricingHelper,
         CatalogHelper $catalogHelper,
         Json $json,
+        DataObjectFactory $dataObjectFactory,
         array $data = []
     ) {
         $this->extensionFactory             = $extensionFactory;
         $this->configuratorOptionRepository = $configuratorOptionRepository;
         $this->pricingHelper                = $pricingHelper;
         $this->catalogHelper                = $catalogHelper;
-        $this->json = $json;
+        $this->json                         = $json;
+        $this->dataObjectFactory            = $dataObjectFactory;
         parent::__construct(
             $context,
             $arrayUtils,
@@ -71,7 +77,7 @@ class Configurator extends AbstractView
     }
 
     /**
-     * @return \Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface[]|null
+     * @return array|null
      */
     public function getConfiguratorOptions()
     {
@@ -80,15 +86,17 @@ class Configurator extends AbstractView
             $extensionAttributes : $this->extensionFactory->create();
         $productOptions = $productExtension->getConfiguratorOptions();
         if (!empty($productOptions)) {
-            foreach ($productOptions as &$option) {
-                try {
-                    $configuratorOption = $this->configuratorOptionRepository
-                        ->get($option->getConfiguratorOptionId());
-                } catch (NoSuchEntityException $exception) {
-                    $this->_logger->error($exception->getMessage());
-                    return null;
+            foreach ($productOptions as $optionGroup) {
+                foreach ($optionGroup['options'] as &$option) {
+                    try {
+                        $configuratorOption = $this->configuratorOptionRepository
+                            ->get($option->getConfiguratorOptionId());
+                    } catch (NoSuchEntityException $exception) {
+                        $this->_logger->error($exception->getMessage());
+                        return null;
+                    }
+                    $option->setAdditionalData($configuratorOption->getData());
                 }
-                $option->setAdditionalData($configuratorOption->getData());
             }
             return $productOptions;
         }
@@ -114,12 +122,14 @@ class Configurator extends AbstractView
     public function getDependencyJsonConfig()
     {
         $config = [];
-        foreach ($this->getConfiguratorOptions() as $option) {
-            $id = $option->getId();
-            $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
-            $config[$id] = $option->getData();
-            $config[$id]['values'] = $valuesData;
-            unset($config[$id]['values_data']);
+        foreach ($this->getConfiguratorOptions() as $optionGroup) {
+            foreach ($optionGroup['options'] as $option) {
+                $id = $option->getId();
+                $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
+                $config[$id] = $option->getData();
+                $config[$id]['values'] = $valuesData;
+                unset($config[$id]['values_data']);
+            }
         }
 
         return $this->json->serialize($config);
@@ -128,22 +138,25 @@ class Configurator extends AbstractView
     public function getJsonConfig()
     {
         $config = [];
-        foreach ($this->getConfiguratorOptions() as $option) {
-            $id = $option->getId();
-            if ($option->hasValues()) {
-                $tmpPriceValues = [];
-                foreach ($option->getData('values') as $value) {
-                    $value = new \Magento\Framework\DataObject($value);
-                    $value->setData('product', $this->getProduct());
-                    $tmpPriceValues[$value->getData('value_id')] = $this->getPriceConfiguration($value);
+        foreach ($this->getConfiguratorOptions() as $optionGroup) {
+            foreach ($optionGroup['options'] as $option) {
+                $id = $option->getId();
+                if ($option->hasValues()) {
+                    $tmpPriceValues = [];
+                    foreach ($option->getData('values') as $value) {
+                        $valueObj = $this->dataObjectFactory->create();
+                        $valueObj->setData($value);
+                        $valueObj->setData('product', $this->getProduct());
+                        $tmpPriceValues[$valueObj->getData('value_id')] = $this->getPriceConfiguration($valueObj);
+                    }
+
+                    $priceValue = $tmpPriceValues;
+                } else {
+                    $priceValue = $this->getPriceConfiguration($option);
                 }
 
-                $priceValue = $tmpPriceValues;
-            } else {
-                $priceValue = $this->getPriceConfiguration($option);
+                $config[$id] = $priceValue;
             }
-
-            $config[$id] = $priceValue;
         }
 
         return $this->json->serialize($config);

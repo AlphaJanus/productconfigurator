@@ -1,9 +1,9 @@
 <?php
 /** @var \Netzexpert\ProductConfigurator\Block\Product\View\Type\Configurator $block */
 $product = $block->getProduct();
-$options = $block->getConfiguratorOptions();
+$optionsGroups = $block->getConfiguratorOptions();
 $_productId = $product->getId();
-if (!empty($options)) :
+if (!empty($optionsGroups)) :
 ?>
     <script type="text/x-magento-init">
         {
@@ -18,8 +18,10 @@ if (!empty($options)) :
         }
     </script>
 <?php
-foreach ($options as $option) {
-    echo $block->getOptionHtml($option);
+foreach ($optionsGroups as $optionsGroup) {
+    foreach ($optionsGroup['options'] as $option) {
+        echo $block->getOptionHtml($option);
+    }
 }
 endif;
 ?>
