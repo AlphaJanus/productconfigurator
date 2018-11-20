@@ -116,6 +116,9 @@ class ProductConfiguratorOptionsProcessor
                     if (!empty($group->getData('assigned_configurator_options'))) {
                         $this->processDeleteOptions($originalOptions, $group);
                         foreach ($group['assigned_configurator_options'] as $option) {
+                            if (!is_array($option)) {
+                                continue;
+                            }
                             if ($option['option_id']) {
                                 try {
                                     $optionEntity = $this->productConfiguratorOptionRepository
