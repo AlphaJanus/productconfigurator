@@ -107,11 +107,13 @@ class ConfiguratorOptions extends AbstractModifier
             $productExtensions = $product->getExtensionAttributes();
             $configuratorOptionsGroups = $productExtensions->getConfiguratorOptions();
             $assignedOptions = [];
-            if (!empty($optionsGroups = $productExtensions->getConfiguratorOptionsGroups())) {
+            $optionsGroups = $productExtensions->getConfiguratorOptionsGroups();
+            if (!empty($optionsGroups)) {
                 foreach ($optionsGroups as $optionsGroup) {
                     $group = $optionsGroup->getData();
                     $options = [];
-                    if (!empty($groupOptions = $configuratorOptionsGroups[$optionsGroup->getId()]['options'])) {
+                    $groupOptions = $configuratorOptionsGroups[$optionsGroup->getId()]['options'];
+                    if (!empty($groupOptions)) {
                         foreach ($groupOptions as $option) {
                             try {
                                 $configuratorOption = $this->configuratorOptionRepository
@@ -121,7 +123,8 @@ class ConfiguratorOptions extends AbstractModifier
                             }
                             $values = $configuratorOption->getValues();
                             $valuesData = [];
-                            if ($vData = $option->getValuesData()) {
+                            $vData = $option->getValuesData();
+                            if ($vData) {
                                 $valuesData = $this->json->unserialize($vData);
                             }
                             foreach ($valuesData as &$val) {
