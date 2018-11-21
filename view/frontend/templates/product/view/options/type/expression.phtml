@@ -4,21 +4,19 @@ $option = $block->getOption();
 $_productId = $block->getProduct()->getId();
 $isHidden = !$option->getIsVisible() ? ' hide' : '';
 ?>
-<div id="option-<?php echo $option->getId() ?>" class="field hide">
+<div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
     <input type="text"
            id="expression-<?php echo /* @escapeNotVerified */ $option->getId() ?>"
-           class="input-text product-configurator-option"
+           class="input-text product-configurator-option expression-value"
            name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
            data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
            data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
            value=""
            disabled="disabled" />
-</div>
-<div class="field<?php echo /* @escapeNotVerified */ $isHidden; ?>">
     <div class="label" >
         <span><?php echo /*$block->escapeHtml(*/$option->getName()/*)*/ ?></span>
     </div>
-    <div id="option-value-<?php echo $option->getId() ?>">
+    <div class="option-value" id="option-value-<?php echo $option->getId() ?>">
     </div>
 </div>
 

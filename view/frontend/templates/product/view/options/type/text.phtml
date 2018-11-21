@@ -4,13 +4,15 @@ $option = $block->getOption();
 $class = ($option->getIsRequired()) ? ' required' : '';
 $isHidden = !$option->getIsVisible() ? ' hide' : '';
 ?>
-<div id="option-<?php echo $option->getId() ?>" class="field
-<?php if ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) {
+<div id="option-<?php echo $option->getId() ?>" class="field<?php if ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) {
     echo ' textarea';
 } ?><?php echo /* @escapeNotVerified */ $class . $isHidden ?>">
     <label class="label" for="options_<?php echo /* @escapeNotVerified */ $option->getId() ?>_text">
         <span><?php echo /*$block->escapeHtml(*/$option->getName()/*)*/ ?></span>
     </label>
+    <div class="description">
+        <?php echo /* @escapeNotVerified */ $option->getData('description') ?>
+    </div>
     <div class="control">
         <?php if ($option->getType() == \Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType::TYPE_TEXT) { ?>
             <?php $_textValidate = null;

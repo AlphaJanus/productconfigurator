@@ -7,7 +7,6 @@ define([
         defaults: {
             modules: {
                 parent: '${ $.parentName }'
-                //parent: '${ $.parentName }:visible'
             }
         },
         initObservable: function () {
