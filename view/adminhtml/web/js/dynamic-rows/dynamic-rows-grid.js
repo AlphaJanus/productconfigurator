@@ -150,7 +150,7 @@ define([
                 recordsData[this.groupIndex][recordInstance.index][this.deleteProperty] = this.deleteValue;
                 this.recordData(recordsData);
                 this.reinitRecordData();
-                delete registry.get('product_form.product_form_data_source').data.product.configurator_option_groups[this.groupIndex].assigned_configurator_options[index];
+                registry.get('product_form.product_form_data_source').data.product.configurator_option_groups[this.groupIndex].assigned_configurator_options = recordsData[this.groupIndex];
                 this.reload();
             } else {
                 this.update = true;
