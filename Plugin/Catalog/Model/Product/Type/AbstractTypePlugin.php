@@ -68,10 +68,12 @@ class AbstractTypePlugin
         $configuratorOptions = $productExtension->getConfiguratorOptions();
         $requestOptions = $buyRequest->getDataByKey('configurator_options');
         if ($configuratorOptions != null && $requestOptions != null) {
-            foreach ($configuratorOptions as $option) {
-                $optionValue = (!empty($requestOptions[$option->getId()])) ? $requestOptions[$option->getId()] : '';
-                if ($optionValue) {
-                    $options[$option->getConfiguratorOptionId()] = $optionValue;
+            foreach ($configuratorOptions as $optionGroup) {
+                foreach ($optionGroup['options'] as $option) {
+                    $optionValue = (!empty($requestOptions[$option->getId()])) ? $requestOptions[$option->getId()] : '';
+                    if ($optionValue) {
+                        $options[$option->getConfiguratorOptionId()] = $optionValue;
+                    }
                 }
             }
         }
