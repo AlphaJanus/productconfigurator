@@ -5,6 +5,12 @@
         visibility: hidden;
         height: 0;
         margin: 0;
+        input,
+        .option-value {
+          height: 0;
+          display:none;
+        }
+
       }
       .hidden {
         display: none;
@@ -24,6 +30,26 @@
           img {
             display: block;
           }
+        }
+      }
+      .field {
+        &:not(.hide) {
+          margin-bottom: @indent__m;
+          input:not(.expression-value) {
+            margin-top: @indent__s;
+          }
+        }
+        > .label {
+          margin: 0 0 8px;
+          display: inline-block;
+          font-weight: 600;
+        }
+        .expression-value {
+          visibility: hidden;
+          display:none;
+          height: 0;
+          margin: 0;
+          border: none;
         }
       }
     }

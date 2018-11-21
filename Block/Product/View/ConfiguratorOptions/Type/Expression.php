@@ -58,32 +58,36 @@ class Expression extends AbstractOptions
         $extensionAttributes = $this->getProduct()->getExtensionAttributes();
         $productExtension = $extensionAttributes ?
             $extensionAttributes : $this->extensionFactory->create();
-        $productOptions = $productExtension->getConfiguratorOptions();
-        if (!empty($productOptions)) {
-            foreach ($productOptions as &$option) {
-                try {
-                    $configuratorOption = $this->configuratorOptionRepository
-                        ->get($option->getConfiguratorOptionId());
-                } catch (NoSuchEntityException $exception) {
-                    $this->_logger->error($exception->getMessage());
-                    return null;
+        $productOptionsGroups = $productExtension->getConfiguratorOptions();
+        if (!empty($productOptionsGroups)) {
+            foreach ($productOptionsGroups as $productOptionsGroup) {
+                foreach ($productOptionsGroup['options'] as &$option) {
+                    try {
+                        $configuratorOption = $this->configuratorOptionRepository
+                            ->get($option->getConfiguratorOptionId());
+                    } catch (NoSuchEntityException $exception) {
+                        $this->_logger->error($exception->getMessage());
+                        return null;
+                    }
+                    $option->setAdditionalData($configuratorOption->getData());
                 }
-                $option->setAdditionalData($configuratorOption->getData());
             }
-            return $productOptions;
+            return $productOptionsGroups;
         }
-        return $productOptions;
+        return $productOptionsGroups;
     }
 
     public function getDependencyJsonConfig()
     {
         $config = [];
-        foreach ($this->getConfiguratorOptions() as $option) {
-            $id = $option->getId();
-            $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
-            $config[$id] = $option->getData();
-            $config[$id]['values'] = $valuesData;
-            unset($config[$id]['values_data']);
+        foreach ($this->getConfiguratorOptions() as $optionGroup) {
+            foreach ($optionGroup['options'] as $option) {
+                $id = $option->getId();
+                $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
+                $config[$id] = $option->getData();
+                $config[$id]['values'] = $valuesData;
+                unset($config[$id]['values_data']);
+            }
         }
 
         return $this->json->serialize($config);

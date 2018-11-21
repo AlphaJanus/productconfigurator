@@ -24,6 +24,10 @@
                        name="product.info.configurator.options.expression"
                        as="c-expression"
                        template="Netzexpert_ProductConfigurator::product/view/options/type/expression.phtml" />
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions"
+                       name="product.info.configurator.options.static"
+                       as="c-static"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/static.phtml" />
             </block>
         </referenceBlock>
     </body>

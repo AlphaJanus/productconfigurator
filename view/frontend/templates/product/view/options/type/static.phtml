@@ -1,0 +1,9 @@
+<?php
+/** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions $block */
+$option = $block->getOption();
+?>
+<div id="option-<?php echo $option->getId() ?>" class="field choice">
+    <div class="description">
+        <?php echo /* @escapeNotVerified */ $option->getData('description') ?>
+    </div>
+</div>
