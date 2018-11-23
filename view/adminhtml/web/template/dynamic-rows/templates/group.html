@@ -5,7 +5,8 @@
  */
 -->
 <style>
-    .group-name {display: inline-block;width: 80%;}
+    .trigger {display: inline-block; width: 5%;}
+    .group-name {display: inline-block;width: 75%;}
     .group-delete {display: inline-block;width: 19%;text-align:right;}
 </style>
 <div class="admin__field" visible="visible" disable="disabled" css="element.setClasses(element)">
@@ -44,13 +45,36 @@
                         <!-- ko if: $record().elems().length > 0 -->
                         <td attr="{'colspan': element.getColumnsCount()}"
                             class="admin__field-complex">
-                            <!-- ko foreach: { data: $record().elems(), as: 'elem'}  -->
-                            <div if="elem.template"
-                                 css="$parent.setClasses(elem)"
-                                 visible="elem.visible"
-                                 disable="elem.disabled"
-                                 template="elem.template"/>
-                            <!-- /ko -->
+                            <div class="admin__collapsible-block-wrapper" css="'_show': $record().opened, '_hide': !$record().opened()">
+
+                                <div class="fieldset-wrapper-title"
+                                     attr="tabindex: !$record().collapsible ? -1 : 0,
+                                                    'data-state-collapsible': $record().collapsible ? $record().opened() ? 'open' : 'closed' : null">
+                                    <div class="trigger" click="$record().toggleOpened.bind($record())">
+                                        <span css="'admin__collapsible-title': $record().collapsible,
+                                                  title: !$record().collapsible"></span>
+                                    </div>
+                                    <!-- ko foreach: { data: $record().elems(), as: 'elem'}  -->
+                                        <div if="elem.template && elem.index !== 'options_container'"
+                                             css="$parent.setClasses(elem)"
+                                             visible="elem.visible"
+                                             disable="elem.disabled"
+                                             template="elem.template"/>
+
+                                    <!-- /ko -->
+                                </div>
+                                <div css="'admin__collapsible-content': $record().collapsible, '_show': $record().opened, '_hide': !$record().opened()">
+                                <!-- ko foreach: { data: $record().elems(), as: 'elem'}  -->
+                                <div if="elem.template && elem.index === 'options_container'"
+                                     css="$parent.setClasses(elem)"
+                                     visible="elem.visible"
+                                     disable="elem.disabled"
+                                     template="elem.template"/>
+
+                                <!-- /ko -->
+                                </div>
+
+                            </div>
                         </td>
                         <!-- /ko -->
 

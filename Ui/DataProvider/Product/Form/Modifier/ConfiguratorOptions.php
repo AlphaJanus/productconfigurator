@@ -346,7 +346,8 @@ class ConfiguratorOptions extends AbstractModifier
                         'data' => [
                             'config' => [
                                 'componentType'     => Container::NAME,
-                                'component'         => 'Magento_Ui/js/dynamic-rows/record',
+                                //'component'         => 'Magento_Ui/js/dynamic-rows/record',
+                                'component'         => 'Netzexpert_ProductConfigurator/js/dynamic-rows/group-record',
                                 'positionProvider'  => static::FIELD_SORT_ORDER_NAME,
                                 'isTemplate'        => true,
                                 'is_collection'     => true,
@@ -640,7 +641,7 @@ class ConfiguratorOptions extends AbstractModifier
                         'dataScope' => '',
                         'additionalClasses' => 'admin__field-wide',
                         'collapsible' => true,
-                        'opened' => true,
+                        'opened' => false,
                         'sortOrder' => $sortOrder,
                     ]
                 ]
