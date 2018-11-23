@@ -118,7 +118,10 @@ class TypeExpression extends AbstractModifier
                     'children/' . $attribute->getAttributeCode() . '/' .$configPath,
                     $containerMeta,
                     [
-                    'component' => 'Netzexpert_ProductConfigurator/js/form/element/expression',
+                        'component' => 'Netzexpert_ProductConfigurator/js/form/element/expression',
+                        'deps'      => [
+                            'configurator_option_form.configurator_option_form.general.container_expression'
+                        ]
                     ]
                 );
             }
