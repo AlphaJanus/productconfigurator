@@ -28,7 +28,8 @@ class Plugin
         DataObject $request,
         Product $candidate
     ) {
-        if ($configuredPrice = $request->getData('configured_price')) {
+        $configuredPrice = $request->getData('configured_price');
+        if ($configuredPrice) {
             $request->setData('custom_price', $configuredPrice);
         }
         return [$item, $request, $candidate];

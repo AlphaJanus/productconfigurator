@@ -23,7 +23,8 @@ class AddConfiguratorOptionsToInvoicePdf
         $result
     ) {
         if ($subject->getItem()->getOrderItem()) {
-            if ($options = $subject->getItem()->getOrderItem()->getProductOptions()) {
+            $options = $subject->getItem()->getOrderItem()->getProductOptions();
+            if ($options) {
                 if (isset($options['configurator_options'])) {
                     $result = array_merge($result, $options['configurator_options']);
                 }

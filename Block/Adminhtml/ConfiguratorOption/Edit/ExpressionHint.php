@@ -39,7 +39,8 @@ class ExpressionHint extends \Magento\Framework\View\Element\Template
     public function getOptions()
     {
         $collection = $this->collectionFactory->create();
-        if ($currentId = $this->getData('current_id')) {
+        $currentId = $this->getData('current_id');
+        if ($currentId) {
             $collection->addFieldToFilter('entity_id', ['neq' => $currentId]);
         }
         return $collection;

@@ -21,7 +21,8 @@ class AddConfiguratorOptionsToInvoiceEmail
         DefaultItems $defaultItemsBlock,
         $result
     ) {
-        if ($options = $defaultItemsBlock->getItem()->getOrderItem()->getProductOptions()) {
+        $options = $defaultItemsBlock->getItem()->getOrderItem()->getProductOptions();
+        if ($options) {
             if (isset($options['configurator_options'])) {
                 $result = array_merge($result, $options['configurator_options']);
             }
