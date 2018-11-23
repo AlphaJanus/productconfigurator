@@ -138,7 +138,8 @@ class TypeSelect extends AbstractModifier
             $this->messageManager->addExceptionMessage($exception);
         }
         $option = $this->registry->registry('configurator_option');
-        if ($optionId = $option->getId()) {
+        $optionId = $option->getId();
+        if ($optionId) {
             /** @var Collection $variants */
             $variants = $this->variantsCollectionFactory->create()
                 ->addFieldToFilter('option_id', ['eq' => $optionId])->toArray();

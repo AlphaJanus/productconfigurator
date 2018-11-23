@@ -21,7 +21,8 @@ class AddConfiguratorOptionsToOrderItem
         DefaultColumn $defaultColumn,
         $result
     ) {
-        if ($options = $defaultColumn->getItem()->getProductOptions()) {
+        $options = $defaultColumn->getItem()->getProductOptions();
+        if ($options) {
             if (isset($options['configurator_options'])) {
                 $result = array_merge($result, $options['configurator_options']);
             }

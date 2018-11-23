@@ -21,7 +21,8 @@ class AddConfiguratorOptionsToOrderEmail
         DefaultOrder $defaultOrderBlock,
         $result
     ) {
-        if ($options = $defaultOrderBlock->getItem()->getProductOptions()) {
+        $options = $defaultOrderBlock->getItem()->getProductOptions();
+        if ($options) {
             if (isset($options['configurator_options'])) {
                 $result = array_merge($result, $options['configurator_options']);
             }

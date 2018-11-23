@@ -10,6 +10,7 @@ namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
@@ -37,7 +38,6 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
 
     /** @var Json  */
     private $json;
-
 
     /**
      * AbstractOptions constructor.
@@ -114,17 +114,22 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
             ->addFilter('product_id', $this->getProduct()->getId())
             ->addFilter('configurator_option_id', $parentId);
         $searchCriteria = $this->searchCriteriaBuilder->create();
-        $parentProductOptions = $this->productConfiguratorOptionRepository->getList($searchCriteria);
-        if ($parentProductOptions->getTotalCount()) {
-            $items = $parentProductOptions->getItems();
-            $parentProductOption = array_shift($items);
-            $configuredValue = $this->getProduct()
-                ->getPreconfiguredValues()
-                ->getData('configurator_options/' . $parentProductOption->getId());
-            if ($configuredValue) {
-                return $configuredValue;
+        try {
+            $parentProductOptions = $this->productConfiguratorOptionRepository->getList($searchCriteria);
+            if ($parentProductOptions->getTotalCount()) {
+                $items = $parentProductOptions->getItems();
+                $parentProductOption = array_shift($items);
+                $configuredValue = $this->getProduct()
+                    ->getPreconfiguredValues()
+                    ->getData('configurator_options/' . $parentProductOption->getId());
+                if ($configuredValue) {
+                    return $configuredValue;
+                }
             }
+        } catch (LocalizedException $exception) {
+            $this->_logger->error($exception->getMessage());
         }
+
         $defaultValue = null;
         if ($parentId != '0') {
             try {
@@ -133,7 +138,8 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
                 $this->_logger->error($exception->getMessage());
                 return $defaultValue;
             }
-            if (is_array($values = $parentOption->getValues())) {
+            $values = $parentOption->getValues();
+            if (is_array($values)) {
                 foreach ($values as $value) {
                     if ($value['is_default']) {
                         $defaultValue = $value['value_id'];

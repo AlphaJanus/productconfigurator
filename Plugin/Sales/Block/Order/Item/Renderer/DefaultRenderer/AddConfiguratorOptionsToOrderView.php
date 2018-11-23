@@ -22,13 +22,15 @@ class AddConfiguratorOptionsToOrderView
         $result
     ) {
         if ($defaultRenderer->getItem()->getOrderItem()) {
-            if ($options = $defaultRenderer->getItem()->getOrderItem()->getProductOptions()) {
+            $options = $defaultRenderer->getItem()->getOrderItem()->getProductOptions();
+            if ($options) {
                 if (isset($options['configurator_options'])) {
                     $result = array_merge($result, $options['configurator_options']);
                 }
             }
         }
-        if ($options = $defaultRenderer->getItem()->getProductOptions()) {
+        $options = $defaultRenderer->getItem()->getProductOptions();
+        if ($options) {
             if (isset($options['configurator_options'])) {
                 $result = array_merge($result, $options['configurator_options']);
             }
