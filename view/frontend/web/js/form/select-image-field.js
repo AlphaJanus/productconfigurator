@@ -32,7 +32,7 @@ define([
         updateValue: function (event) {
             var valueElement = $(event.currentTarget);
             this.value(valueElement.data('value'));
-            $('#' + this.options.select).find('option[data-id=\"' + valueElement.attr('id') + '\"]').prop('selected','selected');
+            $('#' + this.options.select).find('option[data-id="' + valueElement.attr('id') + '"]').prop('selected','selected');
             $('#' + this.options.select).val(valueElement.data('id').toString());
             $('#' + this.options.select).trigger('change');
             return this;
