@@ -54,7 +54,7 @@ define([
                             optionVal = $(option).val();
                             break;
                     }
-                    optionVal = (isNaN(optionVal)) ? '\"' + optionVal + '\"' : (optionVal) ? optionVal : 'false';
+                    optionVal = (isNaN(optionVal)) ? '"' + optionVal + '"' : (optionVal) ? optionVal : 'false';
                     tempExpr += "var " + $(option).data('code') + "=" + optionVal + ";\n";
                 //}
             });
