@@ -13,7 +13,12 @@ before_install:
 install:
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
   - composer require magento/marketplace-eqp
-  - composer install --prefer-dist
+  - composer require satooshi/php-coveralls:~1.0@stable # Require phpCoveralls
+  - composer install --prefer-dist# Run before the build
+
+before_script:
+  - mkdir -p build/logs # Create a folder to store clover files
+
 script:
   - php vendor/bin/phpcs . --config-set installed_paths vendor/magento/marketplace-eqp --standard="MEQP2"
   - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
