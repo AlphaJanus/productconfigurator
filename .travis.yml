@@ -1,3 +1,13 @@
 language: php
 php:
   - 7.1
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
+before_install:
+# Remove xdebug to speed up composer
+- phpenv config-rm xdebug.ini
