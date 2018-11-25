@@ -14,7 +14,7 @@ install:
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
   - composer install --prefer-dist
 script:
-  - php vendor/bin/phpcs . --standard=./ruleset.xml
+  - php vendor/bin/phpcs . --standard=MEQP2
   #- php vendor/bin/phpmd Api/,Block/,Controller/,Model/,Observer/,Plugin/,Setup/,Test/,Ui/ text cleancode,codesize,controversial,design,naming,unusedcode
 env:
   global:
