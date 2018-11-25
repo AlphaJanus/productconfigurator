@@ -15,7 +15,7 @@ install:
   - composer require magento/marketplace-eqp
   - composer install --prefer-dist
 script:
-  - php vendor/bin/phpcs . --standard=MEQP2
+  - php vendor/bin/phpcs . --config-set installed_paths vendor/magento/marketplace-eqp --standard="MEQP2"
   #- php vendor/bin/phpmd Api/,Block/,Controller/,Model/,Observer/,Plugin/,Setup/,Test/,Ui/ text cleancode,codesize,controversial,design,naming,unusedcode
 env:
   global:
