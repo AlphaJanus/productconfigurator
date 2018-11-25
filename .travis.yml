@@ -12,6 +12,7 @@ before_install:
   - phpenv config-rm xdebug.ini
 install:
   - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USERNAME}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
+  - composer require magento/marketplace-eqp
   - composer install --prefer-dist
 script:
   - php vendor/bin/phpcs . --standard=MEQP2
