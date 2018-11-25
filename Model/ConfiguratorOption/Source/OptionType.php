@@ -45,5 +45,4 @@ class OptionType extends AbstractSource implements OptionSourceInterface
         }
         return $this->_options;
     }
-
 }

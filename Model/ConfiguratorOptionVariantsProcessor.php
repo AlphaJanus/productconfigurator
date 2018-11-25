@@ -8,7 +8,6 @@
 
 namespace Netzexpert\ProductConfigurator\Model;
 
-
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;

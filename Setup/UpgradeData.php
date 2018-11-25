@@ -310,6 +310,6 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function upgradeVersionTwoZeroFourteen($eavSetup)
     {
-        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY,'expression','backend_type', 'text');
+        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY, 'expression', 'backend_type', 'text');
     }
 }
