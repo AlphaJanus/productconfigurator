@@ -7,7 +7,6 @@
 
 namespace Netzexpert\ProductConfigurator\Ui\Component;
 
-
 use Magento\Eav\Model\Attribute;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionAttributeInterface;
 
@@ -16,12 +15,12 @@ class ColumnFactory
     /**
      * @var \Magento\Framework\View\Element\UiComponentFactory
      */
-    protected $componentFactory;
+    private $componentFactory;
 
     /**
      * @var array
      */
-    protected $jsComponentMap = [
+    private $jsComponentMap = [
         'text' => 'Magento_Ui/js/grid/columns/column',
         'select' => 'Magento_Ui/js/grid/columns/select',
         'multiselect' => 'Magento_Ui/js/grid/columns/select',
@@ -31,7 +30,7 @@ class ColumnFactory
     /**
      * @var array
      */
-    protected $dataTypeMap = [
+    private $dataTypeMap = [
         'default' => 'text',
         'text' => 'text',
         'boolean' => 'select',
@@ -87,7 +86,7 @@ class ColumnFactory
      * @param string $dataType
      * @return string
      */
-    protected function getJsComponent($dataType)
+    private function getJsComponent($dataType)
     {
         return $this->jsComponentMap[$dataType];
     }
@@ -96,7 +95,7 @@ class ColumnFactory
      * @param ConfiguratorOptionAttributeInterface $attribute
      * @return string
      */
-    protected function getDataType($attribute)
+    private function getDataType($attribute)
     {
         return isset($this->dataTypeMap[$attribute->getFrontendInput()])
             ? $this->dataTypeMap[$attribute->getFrontendInput()]
@@ -109,7 +108,7 @@ class ColumnFactory
      * @param string $frontendInput
      * @return string
      */
-    protected function getFilterType($frontendInput)
+    private function getFilterType($frontendInput)
     {
         $filtersMap = ['date' => 'dateRange'];
         $result = array_replace_recursive($this->dataTypeMap, $filtersMap);

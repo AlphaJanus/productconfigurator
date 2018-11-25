@@ -23,6 +23,5 @@ class ResetTest extends GenericTest
             ],
             $this->getModel(Reset::class)->getButtonData()
         );
-
     }
 }

@@ -14,10 +14,10 @@ class Select extends AbstractOptions
 {
     public function getValuesHtml()
     {
-        $_option = $this->getOption();
+        $option = $this->getOption();
         $parentOptionDefaultValue = $this->getParentOptionDefaultValue();
         $extraParams = '';
-        $require = $_option->getIsRequired() ? ' required' : '';
+        $require = $option->getIsRequired() ? ' required' : '';
         $params = [];
 
         $value = $this->getDefaultValue();
@@ -26,11 +26,11 @@ class Select extends AbstractOptions
             \Magento\Framework\View\Element\Html\Select::class
         )->setData(
             [
-                'id' => 'select_' . $_option->getData('code'),
+                'id' => 'select_' . $option->getData('code'),
                 'class' => $require . ' product-configurator-option admin__control-select'
             ]
         );
-        $select->setName('configurator_options[' . $_option->getId(). ']')->addOption('', __('-- Please Select --'));
+        $select->setName('configurator_options[' . $option->getId(). ']')->addOption('', __('-- Please Select --'));
         foreach ($this->getValuesData() as $_value) {
             if ($_value['is_dependent'] && !in_array($parentOptionDefaultValue, $_value['allowed_variants'])) {
                 $params = ['disabled' => true];
@@ -44,7 +44,7 @@ class Select extends AbstractOptions
             }
         }
 
-        $extraParams .= ' data-selector="' . $select->getName() . '" data-code="' . $_option->getData('code') . '"';
+        $extraParams .= ' data-selector="' . $select->getName() . '" data-code="' . $option->getData('code') . '"';
         $select->setExtraParams($extraParams);
 
         if ($value != null) {

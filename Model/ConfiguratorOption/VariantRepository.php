@@ -49,7 +49,6 @@ class VariantRepository implements ConfiguratorOptionVariantRepositoryInterface
         VariantResource\CollectionFactory $collectionFactory,
         DataObjectHelper $dataObjectHelper,
         DataObjectProcessor $dataObjectProcessor
-
     ) {
         $this->variantResource      = $variantResource;
         $this->variantFactory       = $variantInterfaceFactory;

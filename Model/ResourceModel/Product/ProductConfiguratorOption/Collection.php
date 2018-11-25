@@ -23,5 +23,4 @@ class Collection extends AbstractCollection
             \Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption::class
         );
     }
-
 }

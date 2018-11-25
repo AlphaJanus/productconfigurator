@@ -104,8 +104,6 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function upgradeVersionTwoZeroThree($configuratorOptionSetup, $eavSetup)
     {
-
-
         $eavSetup->updateEntityType(
             ConfiguratorOption::ENTITY,
             'additional_attribute_table',
@@ -310,6 +308,6 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function upgradeVersionTwoZeroFourteen($eavSetup)
     {
-        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY,'expression','backend_type', 'text');
+        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY, 'expression', 'backend_type', 'text');
     }
 }

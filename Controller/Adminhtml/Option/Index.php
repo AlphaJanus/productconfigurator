@@ -41,5 +41,4 @@ class Index extends Action
         $resultPage->getConfig()->getTitle()->prepend(__('Configurator options'));
         return $resultPage;
     }
-
 }
