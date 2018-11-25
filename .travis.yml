@@ -21,6 +21,7 @@ before_script:
 
 script:
   - php vendor/bin/phpcs . --config-set installed_paths vendor/magento/marketplace-eqp --standard="MEQP2"
+  - ls -l
   - php vendor/bin/phpunit . --coverage-clover build/logs/clover.xml
 
 after_script:
