@@ -130,7 +130,7 @@ class TypeExpression extends AbstractModifier
             $meta['general']['children'][static::CONTAINER_PREFIX . $attribute->getAttributeCode()] = $containerMeta;
         }
 
-        $expressionPath = 'general/children/container_for_expression/children/expression';
+        $expressionPath = 'general/children/container_expression/children/expression';
         $meta = $this->arrayManager->merge(
             $expressionPath . '/arguments/data/config',
             $meta,
