@@ -7,7 +7,6 @@
 
 namespace Netzexpert\ProductConfigurator\Api\Data;
 
-
 /**
  * Interface ProductConfiguratorOptionInterface
  * @package Netzexpert\ProductConfigurator\Api\Data
