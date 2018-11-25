@@ -104,8 +104,6 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function upgradeVersionTwoZeroThree($configuratorOptionSetup, $eavSetup)
     {
-
-
         $eavSetup->updateEntityType(
             ConfiguratorOption::ENTITY,
             'additional_attribute_table',
