@@ -30,6 +30,12 @@
         "psr-4": {
             "Netzexpert\\ProductConfigurator\\": ""
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ]
 }
 
