@@ -9,5 +9,8 @@ addons:
     - mysql-client-5.6
 
 before_install:
-# Remove xdebug to speed up composer
-- phpenv config-rm xdebug.ini
+  # Remove xdebug to speed up composer
+  - phpenv config-rm xdebug.ini
+
+  # Get auth keys: http://devdocs.magento.com/guides/v2.0/install-gde/prereq/connect-auth.html
+  - composer config -g http-basic.repo.magento.com $M2_KEY_PUB $M2_KEY_PRIV
