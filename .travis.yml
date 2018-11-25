@@ -16,7 +16,11 @@ install:
   - composer install --prefer-dist
 script:
   - php vendor/bin/phpcs . --config-set installed_paths vendor/magento/marketplace-eqp --standard="MEQP2"
-  #- php vendor/bin/phpmd Api/,Block/,Controller/,Model/,Observer/,Plugin/,Setup/,Test/,Ui/ text cleancode,codesize,controversial,design,naming,unusedcode
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+
+after_script:
+  - php vendor/bin/coveralls
+
 env:
   global:
   - secure: JMBNvdMr4djn+rgdpEeTcFfauAvWkfBadQehuP2CqUvnsPRbNSOzKbJ311yw0LHb94/uYl9PH/DEZO/1fnfZhZ1/rSmeURzQV+0aja7YKh4lOXh8pNW/X9wOuPLA91BQ2a4N03UZWVCXaornH183PbEKdg7RjcF28UL3Yljq14DYMX+LeW3JAJhoTi5IC8gDrwES7xyxVz/7M0SbyG1/Oy+ju75NNICceshPcMQMT3vuS7OL1i/jWvlPIJ5eksAgSZvjO+zs0EusvCasAG89bkLLrZcqTBb2m8IqsyNWQm2Gd5V1EpeHE7wOPwEOm48ZQBusws2ohOaegoJf7ctnuYjvnR2sQbnvidNQQcbtpfHfCQuBzvJI74zD6BEcSL20TKkiE0s2gcAu5ackYEcS3u5s6dVvbZj+Im288OZ4CHbrGXBlZIoKxCpxgL58q8KNkWKL+eE/HyZ8vEG6dzlO6lR2bpvpxopbsx9A4dCdTJi8nfXiNGRQ+TIYa6eKah90kpqAtu3rXRmsMMy3+TV9510rnMZfNPU02uoS0GVC4iP+jV0dEOFjDpYR2VQvC0ryZ/TMV724DLi7HfnwIhxHl1Mtu3C1i7WA5u5PzDBKBC4ucPL/jT5NrBzHQ1oeldkxh4Y7NlaD3fTVlY9MxvnZtvG3gnlyWbs10lhwuMBJlAA=
