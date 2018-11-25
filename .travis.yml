@@ -24,7 +24,7 @@ script:
   ##- php vendor/bin/phpunit Test/ --coverage-clover build/logs/clover.xml --bootstrap vendor/autoload.php
 
 after_script:
-  - php vendor/bin/coveralls
+  #- php vendor/bin/coveralls
 
 env:
   global:
