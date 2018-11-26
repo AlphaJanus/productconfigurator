@@ -106,11 +106,16 @@ class Image extends AbstractOptions
         if ($configuredValue) {
             return $configuredValue;
         }
+        $default = null;
+        $fistActive = null;
         foreach ($this->getValuesData() as $value) {
-            if ($value['is_default']) {
-                return $value['value_id'];
+            if ($value['enabled'] && !$fistActive) {
+                $fistActive = $value['value_id'];
+            }
+            if ($value['is_default'] && $value['enabled']) {
+                $default = $value['value_id'];
             }
         }
-        return false;
+        return ($default) ? $default : $fistActive;
     }
 }
