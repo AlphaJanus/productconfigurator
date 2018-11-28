@@ -32,8 +32,6 @@
 
     <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionVariantInterface"
                 type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionVariant" />
-    <preference for="Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionVariantRepositoryInterface"
-                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionVariantRepository" />
 
     <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
         <arguments>
