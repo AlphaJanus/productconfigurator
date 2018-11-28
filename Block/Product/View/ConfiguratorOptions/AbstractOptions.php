@@ -152,11 +152,7 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
 
     public function getValuesData()
     {
-        $valuesData = $this->option->getValuesData();
-        if ($valuesData) {
-            return $this->json->unserialize($valuesData);
-        }
-        return $valuesData;
+        return $this->option->getValuesData();
     }
 
     public function getAvailableOptionsCount()

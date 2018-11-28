@@ -125,7 +125,7 @@ class Configurator extends AbstractView
         foreach ($this->getConfiguratorOptions() as $optionGroup) {
             foreach ($optionGroup['options'] as $option) {
                 $id = $option->getId();
-                $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
+                $valuesData = $option->getValuesData() ? $option->getValuesData() : null;
                 $config[$id] = $option->getData();
                 $config[$id]['values'] = $valuesData;
                 unset($config[$id]['values_data']);
