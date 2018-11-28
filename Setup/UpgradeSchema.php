@@ -68,6 +68,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.13') < 0) {
             $this->upgradeVersionTwoZeroThirteen($setup);
         }
+        if (version_compare($context->getVersion(), '2.0.15') < 0) {
+            $this->upgradeVersionTwoZeroFifteen($setup);
+        }
 
         $setup->endSetup();
     }
@@ -811,6 +814,198 @@ class UpgradeSchema implements UpgradeSchemaInterface
         } catch (\Zend_Db_Exception $exception) {
             $this->logger->error($exception->getMessage());
             $setup->endSetup();
+        }
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     */
+    private function upgradeVersionTwoZeroFifteen(SchemaSetupInterface $setup)
+    {
+        try {
+            $table = $setup->getConnection()->newTable(
+                $setup->getTable('catalog_product_configurator_options_variants')
+            );
+            $table->addColumn(
+                'variant_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'identity'  => true,
+                    'nullable'  => false,
+                    'primary'   => true,
+                    'unsigned'  => true
+                ],
+                'Record id'
+            )->addColumn(
+                'option_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true
+                ],
+                'Product configurator option id'
+            )->addColumn(
+                'configurator_option_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true
+                ],
+                'Configurator option entity id'
+            )->addColumn(
+                'value_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true
+                ],
+                'Configurator option variant id'
+            )->addColumn(
+                'product_id',
+                Table::TYPE_INTEGER,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true
+                ],
+                'Product entity id'
+            )->addColumn(
+                'enabled',
+                Table::TYPE_SMALLINT,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true,
+                    'default'   => 0
+                ],
+                'Is variant enabled for this product'
+            )->addColumn(
+                'is_dependent',
+                Table::TYPE_SMALLINT,
+                null,
+                [
+                    'nullable'  => false,
+                    'unsigned'  => true,
+                    'default'   => 0
+                ],
+                'Is variant dependent from parent option'
+            )->addColumn(
+                'allowed_variants',
+                Table::TYPE_TEXT,
+                '64k',
+                [],
+                'This variant is allowed for next variants of parent option'
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['option_id'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['option_id']
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['configurator_option_id'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['configurator_option_id']
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['value_id'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['value_id']
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['product_id'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['product_id']
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['enabled'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['enabled']
+            )->addIndex(
+                $setup->getIdxName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    ['is_dependent'],
+                    AdapterInterface::INDEX_TYPE_INDEX
+                ),
+                ['is_dependent']
+            )->addForeignKey(
+                $setup->getFkName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    'option_id',
+                    $setup->getTable('catalog_product_configurator_options'),
+                    'option_id'
+                ),
+                'option_id',
+                $setup->getTable('catalog_product_configurator_options'),
+                'option_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            )->addForeignKey(
+                $setup->getFkName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    'configurator_option_id',
+                    $setup->getTable('configurator_option_entity'),
+                    'entity_id'
+                ),
+                'configurator_option_id',
+                $setup->getTable('configurator_option_entity'),
+                'entity_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            )->addForeignKey(
+                $setup->getFkName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    'value_id',
+                    $setup->getTable('configurator_option_entity_variants'),
+                    'value_id'
+                ),
+                'value_id',
+                $setup->getTable('configurator_option_entity_variants'),
+                'value_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            )->addForeignKey(
+                $setup->getFkName(
+                    $setup->getTable('catalog_product_configurator_options_variants'),
+                    'product_id',
+                    $setup->getTable('catalog_product_entity'),
+                    'entity_id'
+                ),
+                'product_id',
+                $setup->getTable('catalog_product_entity'),
+                'entity_id',
+                AdapterInterface::FK_ACTION_CASCADE
+            );
+            $setup->getConnection()->createTable($table);
+            $setup->getConnection()
+                ->dropColumn(
+                    $setup->getTable('catalog_product_configurator_options'),
+                    'values_data'
+                );
+            $setup->getConnection()
+                ->changeColumn(
+                    $setup->getTable('configurator_option_entity_variants'),
+                    'option_id',
+                    'configurator_option_id',
+                    [
+                        'type'  => Table::TYPE_INTEGER,
+                        'size'  => null,
+                        'nullable' => false,
+                        'unsigned' => true
+                    ]
+                );
+        } catch (\Zend_Db_Exception $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 }

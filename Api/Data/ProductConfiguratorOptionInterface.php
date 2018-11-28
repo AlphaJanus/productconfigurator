@@ -52,7 +52,7 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
     public function getParentOption();
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getValuesData();
 

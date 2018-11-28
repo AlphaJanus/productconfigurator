@@ -10,29 +10,29 @@ namespace Netzexpert\ProductConfigurator\Plugin\Catalog\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Netzexpert\ProductConfigurator\Model\ProductConfiguratorOptionsProcessor;
+use Netzexpert\ProductConfigurator\Model\ProductSaveProcessor;
 
 class SavePlugin
 {
 
-    /** @var ProductConfiguratorOptionsProcessor  */
-    private $configuratorOptionsProcessor;
+    /** @var ProductSaveProcessor  */
+    private $productSaveProcessor;
 
     /**
      * SavePlugin constructor.
-     * @param ProductConfiguratorOptionsProcessor $configuratorOptionsProcessor
+     * @param ProductSaveProcessor $productSaveProcessor
      */
     public function __construct(
-        ProductConfiguratorOptionsProcessor $configuratorOptionsProcessor
+        ProductSaveProcessor $productSaveProcessor
     ) {
-        $this->configuratorOptionsProcessor = $configuratorOptionsProcessor;
+        $this->productSaveProcessor = $productSaveProcessor;
     }
 
     public function afterSave(
         ProductRepositoryInterface $productRepository,
         ProductInterface $product
     ) {
-        $product = $this->configuratorOptionsProcessor->process($product);
+        $product = $this->productSaveProcessor->process($product);
 
         return $product;
     }

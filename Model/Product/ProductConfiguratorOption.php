@@ -8,11 +8,44 @@
 
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Magento\Framework\Model\AbstractModel;
+use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant\Collection;
+use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant\CollectionFactory;
 
 class ProductConfiguratorOption extends AbstractModel implements ProductConfiguratorOptionInterface
 {
+    /** @var CollectionFactory  */
+    private $variantsCollectionFactory;
+
+    /**
+     * ProductConfiguratorOption constructor.
+     * @param Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param CollectionFactory $variantsCollectionFactory
+     * @param AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        \Magento\Framework\Registry $registry,
+        CollectionFactory $variantsCollectionFactory,
+        AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $registry,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+        $this->variantsCollectionFactory    = $variantsCollectionFactory;
+    }
 
     protected function _construct()
     {
@@ -71,7 +104,13 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
      */
     public function getValuesData()
     {
-        return $this->getData(self::VALUES_DATA);
+        $collection = $this->variantsCollectionFactory->create()
+            ->joinProductVariantsData()
+            ->addFieldToFilter('product_id', [['eq' => $this->getProductId()], ['null' => true]])
+            ->addFieldToFilter('main_table.configurator_option_id', $this->getConfiguratorOptionId())
+            ->setOrder('sort_order', Collection::SORT_ORDER_ASC);
+        $array = $collection->toArray();
+        return $array['items'];
     }
 
     /**

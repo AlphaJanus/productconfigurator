@@ -12,6 +12,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterfaceFactory;
@@ -72,6 +73,33 @@ class ProductConfiguratorOptionsGroupRepository implements ProductConfiguratorOp
             throw new CouldNotSaveException(__("Could not save option group: %1", $exception->getMessage()));
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__("Could not save option group: %1", $exception->getMessage()));
+        }
+    }
+
+    public function massSave($groupsData)
+    {
+        $connection = $this->resourceModel->getConnection();
+        try {
+            $table = $this->resourceModel->getMainTable();
+        } catch (LocalizedException $exception) {
+            throw new CouldNotSaveException(__("Could not save option groups: %1", $exception->getMessage()));
+        }
+        $fields = $this->resourceModel->getConnection()->describeTable($table);
+        $insertData = [];
+        $row = [];
+        foreach ($groupsData as $data) {
+            foreach ($fields as $field => $fieldData) {
+                $row[$field] = (!empty($data[$field])) ? $data[$field] : null;
+            }
+            $insertData[] = $row;
+        }
+        try {
+            $connection->beginTransaction();
+            $connection->insertOnDuplicate($table, $insertData, [$this->resourceModel->getIdFieldName()]);
+            $connection->commit();
+        } catch (\Exception $exception) {
+            $connection->rollBack();
+            throw new CouldNotSaveException(__("Could not save option groups: %1", $exception->getMessage()));
         }
     }
 

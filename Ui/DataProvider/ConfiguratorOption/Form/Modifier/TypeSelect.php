@@ -142,7 +142,7 @@ class TypeSelect extends AbstractModifier
         if ($optionId) {
             /** @var Collection $variants */
             $variants = $this->variantsCollectionFactory->create()
-                ->addFieldToFilter('option_id', ['eq' => $optionId])->toArray();
+                ->addFieldToFilter('configurator_option_id', ['eq' => $optionId])->toArray();
             $data[$optionId]['option']['values'] = $variants['items'];
         }
         if (!empty($data[$optionId]['option']['values'])) {

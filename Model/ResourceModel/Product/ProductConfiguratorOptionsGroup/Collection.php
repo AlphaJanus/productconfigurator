@@ -22,4 +22,18 @@ class Collection extends AbstractCollection
             \Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionsGroup::class
         );
     }
+
+    /**
+     * @param $id int
+     * @param $data array
+     * @return $this
+     */
+    public function setItemData($id, $data)
+    {
+        $this->load();
+        if (isset($this->_items[$id])) {
+            $this->_items[$id]->setData($data);
+        }
+        return $this;
+    }
 }

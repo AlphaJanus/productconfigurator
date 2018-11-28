@@ -10,21 +10,21 @@ namespace Netzexpert\ProductConfigurator\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Netzexpert\ProductConfigurator\Model\ProductConfiguratorOptionsProcessor;
+use Netzexpert\ProductConfigurator\Model\ProductSaveProcessor;
 
 class SaveProductEntityAfter implements ObserverInterface
 {
-    /** @var ProductConfiguratorOptionsProcessor  */
-    private $configuratorOptionsProcessor;
+    /** @var ProductSaveProcessor  */
+    private $productSaveProcessor;
 
     /**
      * SaveProductEntityAfter constructor.
-     * @param ProductConfiguratorOptionsProcessor $configuratorOptionsProcessor
+     * @param ProductSaveProcessor $productSaveProcessor
      */
     public function __construct(
-        ProductConfiguratorOptionsProcessor $configuratorOptionsProcessor
+        ProductSaveProcessor $productSaveProcessor
     ) {
-        $this->configuratorOptionsProcessor = $configuratorOptionsProcessor;
+        $this->productSaveProcessor = $productSaveProcessor;
     }
 
     /**
@@ -34,6 +34,6 @@ class SaveProductEntityAfter implements ObserverInterface
     {
         /** @var \Magento\Catalog\Model\Product $product */
         $product = $observer->getData('product');
-        $this->configuratorOptionsProcessor->process($product);
+        $this->productSaveProcessor->process($product);
     }
 }

@@ -75,17 +75,17 @@ class Variant extends AbstractExtensibleModel implements ConfiguratorOptionVaria
     /**
      * @inheritDoc
      */
-    public function getOptionId()
+    public function getConfiguratorOptionId()
     {
-        return $this->getData(self::OPTION_ID);
+        return $this->getData(self::CONFIGURATOR_OPTION_ID);
     }
 
     /**
      * @inheritDoc
      */
-    public function setOptionId($optionId)
+    public function setConfiguratorOptionId($configuratorOptionId)
     {
-        return $this->setData(self::OPTION_ID, $optionId);
+        return $this->setData(self::CONFIGURATOR_OPTION_ID, $configuratorOptionId);
     }
 
     /**
