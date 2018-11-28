@@ -32,7 +32,8 @@ class Select extends AbstractOptions
         );
         $select->setName('configurator_options[' . $option->getId(). ']')->addOption('', __('-- Please Select --'));
         foreach ($this->getValuesData() as $_value) {
-            if ($_value['is_dependent'] && !in_array($parentOptionDefaultValue, $_value['allowed_variants'])) {
+            if ($_value['is_dependent']
+                && !in_array($parentOptionDefaultValue, explode(',', $_value['allowed_variants']))) {
                 $params = ['disabled' => true];
             }
             if ($_value['enabled']) {

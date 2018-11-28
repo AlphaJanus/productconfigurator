@@ -152,7 +152,8 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
     {
         $availableOptions = [];
         foreach ($this->getValuesData() as $value) {
-            if ($value['is_dependent'] && !in_array($this->getParentOptionDefaultValue(), $value['allowed_variants'])) {
+            if ($value['is_dependent']
+                && !in_array($this->getParentOptionDefaultValue(), explode(',', $value['allowed_variants']))) {
                 continue;
             }
             $availableOptions[] = $value;
