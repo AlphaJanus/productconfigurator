@@ -45,7 +45,6 @@ class Expression extends AbstractOptions
             $configuratorOptionRepository,
             $productConfiguratorOptionRepository,
             $searchCriteriaBuilder,
-            $json,
             $data
         );
     }

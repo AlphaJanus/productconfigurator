@@ -40,50 +40,35 @@ class ProductConfiguratorOptionVariantProcessor
     public function process($product, $options)
     {
         $productId = $product->getId();
-        /** @var ProductConfiguratorOption $option */
-        foreach ($options as $option) {
-            /** @var Collection $collection */
-            $collection = $this->collectionFactory->create()
-                ->addFieldToFilter('product_id', $productId)
-                ->addFieldToFilter('option_id', $option->getId());
-            foreach ($option->getData('values') as $variant) {
-                if (!empty($variant['variant_id'])) {
-                    $collection->getItemById($variant['variant_id'])
-                        ->setData($variant)
-                        ->setProductId($productId)
-                        ->setOptionId($option->getId())
-                        ->setConfiguratorOptionId($option->getConfiguratorOptionId());
-                } else {
-                    $variant = $this->variantFactory->create()
-                        ->setData($variant)
-                        ->setProductId($productId)
-                        ->setOptionId($option->getId())
-                        ->setConfiguratorOptionId($option->getConfiguratorOptionId());
-                    try {
-                        $collection->addItem($variant);
-                    } catch (\Exception $exception) {
-                        $this->logger->error($exception->getMessage());
+        if (!empty($options)) {
+            /** @var ProductConfiguratorOption $option */
+            foreach ($options as $option) {
+                /** @var Collection $collection */
+                $collection = $this->collectionFactory->create()
+                    ->addFieldToFilter('product_id', $productId)
+                    ->addFieldToFilter('option_id', $option->getId());
+                foreach ($option->getData('values') as $variant) {
+                    if (!empty($variant['variant_id'])) {
+                        $collection->getItemById($variant['variant_id'])
+                            ->setData($variant)
+                            ->setProductId($productId)
+                            ->setOptionId($option->getId())
+                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                    } else {
+                        $variant = $this->variantFactory->create()
+                            ->setData($variant)
+                            ->setProductId($productId)
+                            ->setOptionId($option->getId())
+                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                        try {
+                            $collection->addItem($variant);
+                        } catch (\Exception $exception) {
+                            $this->logger->error($exception->getMessage());
+                        }
                     }
                 }
-            }
-            $collection->walk('save');
-        }
-    }
-
-    private function deepSearch($array, $key, $value)
-    {
-        $results = [];
-
-        if (is_array($array)) {
-            if (isset($array[$key]) && $array[$key] == $value) {
-                $results[] = $array;
-            }
-
-            foreach ($array as $subarray) {
-                $results = array_merge($results, $this->deepSearch($subarray, $key, $value));
+                $collection->walk('save');
             }
         }
-
-        return $results;
     }
 }
