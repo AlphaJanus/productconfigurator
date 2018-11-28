@@ -18,7 +18,7 @@ $disabled = false;
         $valuesData = $block->getValuesData();
         foreach ($valuesData as $item) {
             $disabled = false;
-            if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, $item['allowed_variants'])) {
+            if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, explode(',', $item['allowed_variants']))) {
                 $disabled = true;
             }
             if ($item['enabled']) {
@@ -51,7 +51,7 @@ $disabled = false;
             <?php
             foreach ($valuesData as $item) {
                 $disabled = false;
-                if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, $item['allowed_variants'])) {
+                if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, explode(',', $item['allowed_variants']))) {
                     $disabled = true;
                 }
                 if ($item['value_id'] == $defaultValue) {

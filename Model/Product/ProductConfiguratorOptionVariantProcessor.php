@@ -53,13 +53,19 @@ class ProductConfiguratorOptionVariantProcessor
                             ->setData($variant)
                             ->setProductId($productId)
                             ->setOptionId($option->getId())
-                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                            ->setAllowedVariants(
+                                (!empty($variant['allowed_variants'])) ?
+                                    implode(',', $variant['allowed_variants']) : null
+                            )->setConfiguratorOptionId($option->getConfiguratorOptionId());
                     } else {
                         $variant = $this->variantFactory->create()
                             ->setData($variant)
                             ->setProductId($productId)
                             ->setOptionId($option->getId())
-                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                            ->setAllowedVariants(
+                                (!empty($variant['allowed_variants'])) ?
+                                    implode(',', $variant['allowed_variants']) : null
+                            )->setConfiguratorOptionId($option->getConfiguratorOptionId());
                         try {
                             $collection->addItem($variant);
                         } catch (\Exception $exception) {
