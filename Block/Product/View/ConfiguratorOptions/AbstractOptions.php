@@ -12,7 +12,6 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
@@ -36,16 +35,12 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
     /** @var SearchCriteriaBuilder  */
     private $searchCriteriaBuilder;
 
-    /** @var Json  */
-    private $json;
-
     /**
      * AbstractOptions constructor.
      * @param Template\Context $context
      * @param ConfiguratorOptionRepositoryInterface $configuratorOptionRepository
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
-     * @param Json $json
      * @param array $data
      */
     public function __construct(
@@ -53,13 +48,11 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        Json $json,
         array $data = []
     ) {
         $this->configuratorOptionRepository         = $configuratorOptionRepository;
         $this->productConfiguratorOptionRepository  = $productConfiguratorOptionRepository;
         $this->searchCriteriaBuilder                = $searchCriteriaBuilder;
-        $this->json                                 = $json;
         parent::__construct($context, $data);
     }
 
