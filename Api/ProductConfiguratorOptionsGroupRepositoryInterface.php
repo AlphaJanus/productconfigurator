@@ -25,6 +25,13 @@ interface ProductConfiguratorOptionsGroupRepositoryInterface
     public function save(ProductConfiguratorOptionsGroupInterface $optionsGroup);
 
     /**
+     * @param $groupsData
+     * @return bool true on success
+     * @throws CouldNotSaveException
+     */
+    public function massSave($groupsData);
+
+    /**
      * @param int $id
      * @return ProductConfiguratorOptionsGroupInterface
      * @throws NoSuchEntityException

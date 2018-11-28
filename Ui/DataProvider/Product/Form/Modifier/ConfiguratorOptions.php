@@ -26,6 +26,7 @@ use Magento\Ui\Component\Form\Field;
 use Magento\Ui\Component\Form\Fieldset;
 use Magento\Ui\Component\Modal;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 use Psr\Log\LoggerInterface;
 
@@ -114,6 +115,7 @@ class ConfiguratorOptions extends AbstractModifier
                     $options = [];
                     $groupOptions = $configuratorOptionsGroups[$optionsGroup->getId()]['options'];
                     if (!empty($groupOptions)) {
+                        /** @var ProductConfiguratorOptionInterface $option */
                         foreach ($groupOptions as $option) {
                             try {
                                 $configuratorOption = $this->configuratorOptionRepository
@@ -121,17 +123,8 @@ class ConfiguratorOptions extends AbstractModifier
                             } catch (NoSuchEntityException $exception) {
                                 $this->logger->error($exception->getMessage());
                             }
-                            $values = $configuratorOption->getValues();
-                            $valuesData = [];
-                            $vData = $option->getValuesData();
-                            if ($vData) {
-                                $valuesData = $this->json->unserialize($vData);
-                            }
-                            foreach ($valuesData as &$val) {
-                                unset($val['initialize']);
-                            }
-                            $valuesData = array_replace_recursive($values, $valuesData);
-                            $configuratorOption->setValues($valuesData);
+                            $values = $option->getValuesData();
+                            $configuratorOption->setValues($values);
                             $options[] = array_merge(
                                 $option->getData(),
                                 $configuratorOption->getData()
@@ -222,29 +215,7 @@ class ConfiguratorOptions extends AbstractModifier
                         ),
                     ],
                 ],
-            ],
-            /*'children' => [
-                static::BUTTON_ADD => [
-                    'arguments' => [
-                        'data' => [
-                            'config' => [
-                                'title' => __('Add Option'),
-                                'formElement' => Container::NAME,
-                                'componentType' => Container::NAME,
-                                'component' => 'Magento_Ui/js/form/components/button',
-                                'sortOrder' => 10,
-                                'actions' => [
-                                    [
-                                        'targetName' => 'ns=' . static::FORM_NAME . ', index='
-                                            . static::ADD_OPTION_MODAL,
-                                        'actionName' => 'openModal',
-                                    ],
-                                ],
-                            ]
-                        ],
-                    ],
-                ],
-            ],*/
+            ]
         ];
     }
 
@@ -326,7 +297,8 @@ class ConfiguratorOptions extends AbstractModifier
                     'config' => [
                         'addButtonLabel'            => __('Add Group'),
                         'componentType'             => DynamicRows::NAME,
-                        'component'                 => 'Netzexpert_ProductConfigurator/js/dynamic-rows/dynamic-rows-groups',
+                        'component'                 =>
+                            'Netzexpert_ProductConfigurator/js/dynamic-rows/dynamic-rows-groups',
                         'template'                  => 'Netzexpert_ProductConfigurator/dynamic-rows/templates/group',
                         'deleteProperty'            => static::FIELD_IS_DELETE,
                         'deleteValue'               => '1',
@@ -346,7 +318,6 @@ class ConfiguratorOptions extends AbstractModifier
                         'data' => [
                             'config' => [
                                 'componentType'     => Container::NAME,
-                                //'component'         => 'Magento_Ui/js/dynamic-rows/record',
                                 'component'         => 'Netzexpert_ProductConfigurator/js/dynamic-rows/group-record',
                                 'positionProvider'  => static::FIELD_SORT_ORDER_NAME,
                                 'isTemplate'        => true,
@@ -450,7 +421,6 @@ class ConfiguratorOptions extends AbstractModifier
                                     ],
                                 ],
                                 static::GRID_OPTIONS_NAME => $this->getOptionsGridConfig(30),
-                                //static::ADD_OPTION_MODAL => $this->getAddOptionModalConfig()
                             ]
                         ]
                     ]
@@ -681,6 +651,9 @@ class ConfiguratorOptions extends AbstractModifier
                                 'map'   => [
                                     'value_id' => 'value_id',
                                     'enabled' => 'enabled'
+                                ],
+                                'dndConfig' => [
+                                    'enabled' => false,
                                 ],
                                 'identificationProperty'    => 'value_id',
                                 'identificationDRProperty'    => 'value_id',

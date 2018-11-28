@@ -7,6 +7,7 @@
 
 namespace Netzexpert\ProductConfigurator\Model;
 
+use Magento\Framework\Data\Collection;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
@@ -62,7 +63,7 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     }
 
     /**
-     * Initialize customer model
+     * Initialize configurator option model
      *
      * @return void
      */
@@ -132,7 +133,9 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     {
         if (!$this->variants) {
             $this->variants = $this->variantCollectionFactory->create()
-                ->addFieldToFilter('option_id', ['eq' => $this->getId()]);
+                ->joinProductVariantsData()
+                ->addFieldToFilter('main_table.configurator_option_id', ['eq' => $this->getId()])
+                ->setOrder('sort_order', Collection::SORT_ORDER_ASC);
         }
         return $this->variants;
     }
@@ -150,8 +153,6 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
         $this->optionVariantsProcessor->processVariants($this);
         return parent::afterSave();
     }
-
-
 
     /**
      * @return array

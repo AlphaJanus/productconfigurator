@@ -11,14 +11,14 @@ use \Magento\Framework\Api\ExtensibleDataInterface;
 
 interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
 {
-    const ID            = 'value_id';
-    const OPTION_ID     = 'option_id';
-    const TITLE         = 'title';
-    const VALUE         = 'value';
-    const SORT_ORDER    = 'sort_order';
-    const PRICE         = 'price';
-    const IS_DEFAULT    = 'is_default';
-    const IMAGE         = 'image';
+    const ID                        = 'value_id';
+    const CONFIGURATOR_OPTION_ID    = 'configurator_option_id';
+    const TITLE                     = 'title';
+    const VALUE                     = 'value';
+    const SORT_ORDER                = 'sort_order';
+    const PRICE                     = 'price';
+    const IS_DEFAULT                = 'is_default';
+    const IMAGE                     = 'image';
 
     /**
      * @return int
@@ -34,13 +34,13 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
     /**
      * @return int
      */
-    public function getOptionId();
+    public function getConfiguratorOptionId();
 
     /**
-     * @param int $optionId
+     * @param int $configuratorOptionId
      * @return $this
      */
-    public function setOptionId($optionId);
+    public function setConfiguratorOptionId($configuratorOptionId);
 
     /**
      * @return string

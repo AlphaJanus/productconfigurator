@@ -104,7 +104,7 @@ class LoadProductEntityAfter implements ObserverInterface
                     }
                 }
             }
-            if (count($configuratorOptions)) {
+            if (!empty($configuratorOptions)) {
                 $extensionAttributes = $product->getExtensionAttributes();
                 $productExtension = $extensionAttributes ?
                     $extensionAttributes : $this->productExtensionFactory->create();

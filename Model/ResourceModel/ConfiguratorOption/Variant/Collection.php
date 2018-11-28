@@ -21,4 +21,21 @@ class Collection extends AbstractCollection
             '\Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant'
         );
     }
+
+    public function joinProductVariantsData()
+    {
+        $this->getSelect()->joinLeft(
+            ['cpcov' => $this->getTable('catalog_product_configurator_options_variants')],
+            'main_table.value_id = cpcov.value_id',
+            [
+                'cpcov.variant_id',
+                'cpcov.configurator_option_id',
+                'cpcov.product_id',
+                'cpcov.enabled',
+                'cpcov.is_dependent',
+                'cpcov.allowed_variants'
+            ]
+        );
+        return $this;
+    }
 }
