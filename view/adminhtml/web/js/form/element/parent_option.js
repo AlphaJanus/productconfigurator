@@ -3,7 +3,7 @@ define([
     'underscore',
     'uiRegistry',
     'Magento_Ui/js/form/element/select'
-],function($, _, registry, Select){
+], function ($, _, registry, Select) {
     'use strict';
 
     /**
@@ -11,9 +11,11 @@ define([
      *     as caption
      *
      * @param  {Array} nodes
+     * @param {string} captionValue
      * @return {Object}
      */
-    function parseOptions(nodes, captionValue) {
+    function parseOptions(nodes, captionValue)
+    {
         var caption,
             value;
 
@@ -36,11 +38,14 @@ define([
         };
     }
 
-    function compare(a,b) {
-        if (a.position < b.position)
+    function compare(a,b)
+    {
+        if (a.position < b.position) {
             return -1;
-        if (a.position > b.position)
+        }
+        if (a.position > b.position) {
             return 1;
+        }
         return 0;
     }
 
@@ -51,7 +56,8 @@ define([
      * @param {Object} result
      * @returns {Object}
      */
-    function indexOptions(data, result) {
+    function indexOptions(data, result)
+    {
         var value;
 
         result = result || {};
@@ -77,7 +83,7 @@ define([
             }
         },
 
-        initialize: function(){
+        initialize: function () {
             this._super();
             return this;
         },

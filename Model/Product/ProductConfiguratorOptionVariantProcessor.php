@@ -48,6 +48,9 @@ class ProductConfiguratorOptionVariantProcessor
                     ->addFieldToFilter('product_id', $productId)
                     ->addFieldToFilter('option_id', $option->getId());
                 foreach ($option->getData('values') as $variant) {
+                    if (!$option->getParentOption()) {
+                        unset($variant['allowed_variants']);
+                    }
                     if (!empty($variant['variant_id'])) {
                         $collection->getItemById($variant['variant_id'])
                             ->setData($variant)
