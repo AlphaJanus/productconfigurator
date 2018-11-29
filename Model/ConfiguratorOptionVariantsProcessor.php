@@ -78,7 +78,7 @@ class ConfiguratorOptionVariantsProcessor
                 } else {
                     $variant->setImage(null);
                 }
-                $variant->setOptionId($option->getId());
+                $variant->setConfiguratorOptionId($option->getId());
                 $this->variantRepository->save($variant);
             } catch (CouldNotSaveException $exception) {
                 $this->messageManager->addExceptionMessage($exception);
