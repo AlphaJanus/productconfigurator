@@ -12,6 +12,7 @@ use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterfaceFactory;
+use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\Collection;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\CollectionFactory;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionsGroup\Collection
@@ -60,11 +61,11 @@ class ProductConfiguratorOptionsProcessor
             foreach ($groups as $group) {
                 if (!empty($group->getData('assigned_configurator_options'))) {
                     $this->deleteOptions($originalOptions, $group);
-                    return $this->saveOptions($product, $group);
                 } else {
                     $this->deleteOptions($originalOptions, $group);
                 }
             }
+            return $this->saveOptions($product, $groups);
         }
         return null;
     }
@@ -104,35 +105,38 @@ class ProductConfiguratorOptionsProcessor
 
     /**
      * @param $product ProductInterface
-     * @param $group ProductConfiguratorOptionsGroup
+     * @param $groups GroupCollection
      * @return Collection
      */
-    private function saveOptions($product, $group)
+    private function saveOptions($product, $groups)
     {
         $collection = $this->collectionFactory
             ->create()
             ->addFieldToFilter('product_id', $product->getId());
-        foreach ($group->getData('assigned_configurator_options') as $option) {
-            if (!is_array($option) || empty($option['configurator_option_id'])) {
-                continue;
-            }
-            $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
-            if ($option['option_id']) {
-                $collection->getItemById($option['option_id'])
-                    ->setData($option)
-                    ->setParentOption($parentOption);
-            } else {
-                $optionEntity = $this->optionFactory->create();
-                $optionEntity->setData($option)->setGroupId($group->getId());
-                if (!$option['option_id']) {
-                    $optionEntity->setId(null);
+        /** @var ProductConfiguratorOptionsGroupInterface $group */
+        foreach ($groups as $group) {
+            foreach ($group->getData('assigned_configurator_options') as $option) {
+                if (!is_array($option) || empty($option['configurator_option_id'])) {
+                    continue;
                 }
-                $optionEntity->setProductId($product->getId())
-                    ->setParentOption($parentOption);
-                try {
-                    $collection->addItem($optionEntity);
-                } catch (\Exception $exception) {
-                    $this->logger->error($exception->getMessage());
+                $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
+                if ($option['option_id']) {
+                    $collection->getItemById($option['option_id'])
+                        ->setData($option)
+                        ->setParentOption($parentOption);
+                } else {
+                    $optionEntity = $this->optionFactory->create();
+                    $optionEntity->setData($option)->setGroupId($group->getId());
+                    if (!$option['option_id']) {
+                        $optionEntity->setId(null);
+                    }
+                    $optionEntity->setProductId($product->getId())
+                        ->setParentOption($parentOption);
+                    try {
+                        $collection->addItem($optionEntity);
+                    } catch (\Exception $exception) {
+                        $this->logger->error($exception->getMessage());
+                    }
                 }
             }
         }
