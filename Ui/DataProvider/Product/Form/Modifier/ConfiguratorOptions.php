@@ -27,6 +27,7 @@ use Magento\Ui\Component\Form\Fieldset;
 use Magento\Ui\Component\Modal;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
+use Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOption;
 use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 use Psr\Log\LoggerInterface;
 
@@ -112,25 +113,8 @@ class ConfiguratorOptions extends AbstractModifier
             if (!empty($optionsGroups)) {
                 foreach ($optionsGroups as $optionsGroup) {
                     $group = $optionsGroup->getData();
-                    $options = [];
                     $groupOptions = $configuratorOptionsGroups[$optionsGroup->getId()]['options'];
-                    if (!empty($groupOptions)) {
-                        /** @var ProductConfiguratorOptionInterface $option */
-                        foreach ($groupOptions as $option) {
-                            try {
-                                $configuratorOption = $this->configuratorOptionRepository
-                                    ->get($option->getConfiguratorOptionId());
-                            } catch (NoSuchEntityException $exception) {
-                                $this->logger->error($exception->getMessage());
-                            }
-                            $values = $option->getValuesData();
-                            $configuratorOption->setValues($values);
-                            $options[] = array_merge(
-                                $option->getData(),
-                                $configuratorOption->getData()
-                            );
-                        }
-                    }
+                    $options = $this->mergeOptionsData($groupOptions);
                     $group['assigned_configurator_options'] = $options;
                     $assignedOptions[] = $options;
                     $groups[] = $group;
@@ -151,6 +135,36 @@ class ConfiguratorOptions extends AbstractModifier
             );
         }
         return $data;
+    }
+
+    /**
+     * @param ProductConfiguratorOption[] $groupOptions
+     * @return array
+     */
+    private function mergeOptionsData($groupOptions)
+    {
+        $options = [];
+        if (!empty($groupOptions)) {
+            /** @var ProductConfiguratorOptionInterface $option */
+            foreach ($groupOptions as $option) {
+                try {
+                    $configuratorOption = $this->configuratorOptionRepository
+                        ->get($option->getConfiguratorOptionId());
+                } catch (NoSuchEntityException $exception) {
+                    $this->logger->error($exception->getMessage());
+                }
+                $values = $option->getValuesData();
+                foreach ($values as &$value) {
+                    $value['allowed_variants'] = explode(',', $value['allowed_variants']);
+                }
+                $configuratorOption->setValues($values);
+                $options[] =  array_merge(
+                    $option->getData(),
+                    $configuratorOption->getData()
+                );
+            }
+        }
+        return $options;
     }
 
     /**

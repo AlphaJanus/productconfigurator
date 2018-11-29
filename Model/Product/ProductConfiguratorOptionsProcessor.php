@@ -116,15 +116,19 @@ class ProductConfiguratorOptionsProcessor
             if (!is_array($option) || empty($option['configurator_option_id'])) {
                 continue;
             }
+            $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
             if ($option['option_id']) {
-                $collection->getItemById($option['option_id'])->setData($option);
+                $collection->getItemById($option['option_id'])
+                    ->setData($option)
+                    ->setParentOption($parentOption);
             } else {
                 $optionEntity = $this->optionFactory->create();
                 $optionEntity->setData($option)->setGroupId($group->getId());
                 if (!$option['option_id']) {
                     $optionEntity->setId(null);
                 }
-                $optionEntity->setProductId($product->getId());
+                $optionEntity->setProductId($product->getId())
+                    ->setParentOption($parentOption);
                 try {
                     $collection->addItem($optionEntity);
                 } catch (\Exception $exception) {

@@ -108,7 +108,7 @@ define([
          */
         initElements: function (data) {
             data = data[this.groupIndex];
-            if(!Array.isArray(data)) {
+            if (!Array.isArray(data)) {
                 data = Object.values(data);
             }
             var newData = this.getNewData(data);
@@ -300,7 +300,7 @@ define([
                 recData = this.recordData()[this.groupIndex] ? this.recordData()[this.groupIndex] : [],
                 tmpObj = {};
 
-            if(!Array.isArray(recData)) {
+            if (!Array.isArray(recData)) {
                 recData = Object.values(recData);
             }
 
@@ -360,12 +360,10 @@ define([
             this.trigger('sortOrderChanged', {'position': position, 'elem': elem});
         },
 
-        updateParentOptions: function(position, elem) {
+        updateParentOptions: function (position, elem) {
             var option,
-                value,
                 self = this,
-                recData  = self.recordData()[this.groupIndex],
-                parentOptionElem = registry.get(elem.name + '.dependency_container.parent_option');
+                recData  = self.recordData()[this.groupIndex];
             var options = [];
             $.each(this.elems(), function (index, row) {
                 var item = _.findWhere(recData, {entity_id: row.recordId});
@@ -380,12 +378,25 @@ define([
                     options.push(option);
                 }
             });
+            this.setParentOptionOptions(elem,options)
+        },
+
+        setParentOptionOptions: function (elem, options) {
+            var value,
+                self = this,
+                parentOptionElem = elem.getChild('dependency_container').getChild('parent_option');
             if (typeof(parentOptionElem) !== 'undefined') {
                 value = parentOptionElem.value();
                 parentOptionElem.setOptions(options);
                 if (typeof(_.findWhere(parentOptionElem.options(), {value: value})) !== "undefined") {
                     parentOptionElem.value(value);
                 }
+                self.showSpinner(false);
+            } else {
+                self.showSpinner(true);
+                setTimeout(function () {
+                    self.setParentOptionOptions(elem,options)
+                }, 100);
             }
         },
 
