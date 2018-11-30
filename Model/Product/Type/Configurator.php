@@ -100,7 +100,7 @@ class Configurator extends AbstractType
     {
         parent::beforeSave($product);
 
-        if ($product->getData('assigned_configurator_options')) {
+        if ($product->getData('configurator_option_groups')) {
             $product->setTypeHasOptions(true);
             $product->setTypeHasRequiredOptions(true);
         }
