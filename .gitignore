@@ -1,0 +1,6 @@
+.github
+.gitignore
+.coveralls.yml
+.travis.yml
+_config.yml
+ruleset.xml
