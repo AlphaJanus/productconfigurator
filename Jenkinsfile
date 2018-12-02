@@ -7,6 +7,7 @@ node {
         }
         stage ('Build') {
             sh "echo 'shell scripts to build project...'"
+            sh "~/bin/composer install"
         }
     } catch (err) {
         currentBuild.result = 'FAILED'
