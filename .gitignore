@@ -3,4 +3,5 @@
 .coveralls.yml
 .travis.yml
 _config.yml
+Jenkinsfile
 ruleset.xml
