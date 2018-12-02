@@ -4,7 +4,8 @@ node {
     try {
         stage ('Clone') {
             sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
-            sh "mkdir -p module && cd module"
+            sh "mkdir -p module"
+            dir module
             sh "ls -la"
             //checkout scm
         }
