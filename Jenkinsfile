@@ -8,7 +8,7 @@ node {
             dir ('module') {
                 sh 'pwd'
                 sh "ls -la"
-                //checkout scm
+                checkout scm
             }
         }
         stage ('Build') {
