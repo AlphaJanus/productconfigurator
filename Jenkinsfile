@@ -5,9 +5,13 @@ node {
         stage ('Clone') {
             sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
             sh "mkdir -p module"
-            dir module
-            sh "ls -la"
-            //checkout scm
+            steps {
+                dir (module) {
+                    sh 'pwd'
+                    sh "ls -la"
+                    //checkout scm
+                }
+            }
         }
         stage ('Build') {
             sh "echo 'shell scripts to build project...'"
