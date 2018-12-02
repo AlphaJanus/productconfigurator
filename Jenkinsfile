@@ -3,7 +3,7 @@ node {
     deleteDir()
     try {
         stage ('Clone') {
-            //sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
+            sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
             sh "mkdir -p module"
             sh "ls -la"
             //checkout scm
