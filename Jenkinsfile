@@ -3,10 +3,18 @@ node {
     deleteDir()
     try {
         stage ('Clone') {
-            checkout scm
+            sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
+            sh "mkdir -p module"
+            dir ('module') {
+                checkout scm
+            }
         }
         stage ('Build') {
             sh "echo 'shell scripts to build project...'"
+            dir ('module') {
+                sh 'pwd'
+                sh "../magento-coding-standard/vendor/bin/phpcs ./ --standard=MEQP2 --severity=10"
+            }
         }
     } catch (err) {
         currentBuild.result = 'FAILED'
