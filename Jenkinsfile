@@ -15,6 +15,10 @@ node {
             dir ('magento-build') {
                 sh 'pwd'
                 sh "../magento-coding-standard/vendor/bin/phpcs ./ --standard=MEQP2 --severity=10 --config-set m2-path ./"
+            }
+        }
+        stage ('Test') {
+            dir ('magento-build') {
                 sh "vendor/bin/phpunit app/code/ -c dev/tests/unit/phpunit.xml.dist --coverage-clover clover.xml"
             }
         }
