@@ -13,7 +13,7 @@ node {
             sh "echo 'shell scripts to build project...'"
             dir ('module') {
                 sh 'pwd'
-                sh "../magento-coding-standard/vendor/bin/phpcs ./ --standard=MEQP2"
+                sh "../magento-coding-standard/vendor/bin/phpcs ./ --standard=MEQP2 --severity=10"
             }
         }
     } catch (err) {
