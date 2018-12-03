@@ -82,7 +82,7 @@ class Expression extends AbstractOptions
         foreach ($this->getConfiguratorOptions() as $optionGroup) {
             foreach ($optionGroup['options'] as $option) {
                 $id = $option->getId();
-                $valuesData = $option->getValuesData() ? $this->json->unserialize($option->getValuesData()) : null;
+                $valuesData = $option->getValuesData() ? $option->getValuesData() : [];
                 $config[$id] = $option->getData();
                 $config[$id]['values'] = $valuesData;
                 unset($config[$id]['values_data']);
