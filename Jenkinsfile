@@ -2,11 +2,9 @@ node {
     // Clean workspace before doing anything
     deleteDir()
     try {
-        stage ('Preparing') {
+        stage ('Clone') {
             sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
             sh "composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.2.7 magento-build"
-        }
-        stage ('Cloning') {
             sh "mkdir -p magento-build/app/code/Netzexpert/ProductConfigurator"
             dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
                 checkout scm
