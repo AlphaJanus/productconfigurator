@@ -10,7 +10,7 @@ node {
                 checkout scm
             }
         }
-        stage ('Build) {
+        stage ('Build') {
             sh "echo 'shell scripts to build project...'"
             dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
                 sh 'pwd'
