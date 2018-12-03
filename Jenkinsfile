@@ -19,7 +19,7 @@ node {
         }
         stage ('Test') {
             dir ('magento-build') {
-                sh "vendor/bin/phpunit app/code/ -c dev/tests/unit/phpunit.xml.dist --coverage-clover ../reports/coverage/clover.xml"
+                sh "vendor/bin/phpunit app/code/ -c dev/tests/unit/phpunit.xml.dist --coverage-html ../reports/coverage/ --coverage-clover ../reports/coverage/clover.xml"
             }
             step ([
                 $class: 'CloverPublisher',
