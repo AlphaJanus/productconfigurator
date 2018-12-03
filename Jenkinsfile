@@ -30,9 +30,6 @@ node {
                 failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]     // optional, default is none
             ])
         }
-        stage('Publishing coverage') {
-
-        }
     } catch (err) {
         currentBuild.result = 'FAILED'
         throw err
