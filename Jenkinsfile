@@ -1,10 +1,14 @@
 node {
+    environment {
+        CODACY_PROJECT_TOKEN = '65f6a75ca23a4b449b72a48dbafcb7fd'
+    }
     // Clean workspace before doing anything
     deleteDir()
     try {
         stage ('Clone') {
             sh "composer create-project --repository=https://repo.magento.com magento/marketplace-eqp magento-coding-standard"
             sh "composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.2.7 magento-build"
+            sh "composer create-project codacy/coverage cc-reporter"
             sh "mkdir -p magento-build/app/code/Netzexpert/ProductConfigurator"
             dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
                 checkout scm
@@ -29,6 +33,18 @@ node {
                 unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50], // optional, default is none
                 failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]     // optional, default is none
             ])
+            dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
+                commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
+            }
+            sh '''
+                export CODACY_PROJECT_TOKEN=65f6a75ca23a4b449b72a48dbafcb7fd
+                echo $CODACY_PROJECT_TOKEN
+            '''
+            withEnv(["CODACY_PROJECT_TOKEN=65f6a75ca23a4b449b72a48dbafcb7fd"]) {
+                echo env.CODACY_PROJECT_TOKEN
+                sh "cc-reporter/bin/codacycoverage clover reports/coverage/clover.xml --git-commit=${commitId}"
+            }
+
         }
     } catch (err) {
         currentBuild.result = 'FAILED'
