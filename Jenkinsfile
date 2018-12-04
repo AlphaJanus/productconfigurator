@@ -17,7 +17,6 @@ node {
         stage ('Build') {
             sh "echo 'shell scripts to build project...'"
             dir ('magento-build') {
-                sh 'pwd'
                 sh "../magento-coding-standard/vendor/bin/phpcs ./ --standard=MEQP2 --severity=10 --config-set m2-path ./"
             }
         }
@@ -36,10 +35,6 @@ node {
             dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
                 commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
             }
-            sh '''
-                export CODACY_PROJECT_TOKEN=65f6a75ca23a4b449b72a48dbafcb7fd
-                echo $CODACY_PROJECT_TOKEN
-            '''
             withEnv(["CODACY_PROJECT_TOKEN=65f6a75ca23a4b449b72a48dbafcb7fd"]) {
                 echo env.CODACY_PROJECT_TOKEN
                 sh "cc-reporter/bin/codacycoverage clover reports/coverage/clover.xml --git-commit=${commitId}"
