@@ -2,7 +2,7 @@
 /** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Select $block */
 $option = $block->getOption();
 $required = $option->getData('is_required') ? ' required' : '';
-$isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' hide' : '';
+$isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' hidden' : '';
 ?>
 <div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $required . $isHidden; ?>">
     <label class="label"
