@@ -12,12 +12,13 @@ define([
         /**
          * @private
          */
-        _init: function initPriceBundle() {
+        _init: function initPriceBundle()
+        {
             $(this.options.optionsSelector, this.element).trigger('change');
         },
 
         _create: function () {
-            var form = document.getElementById('product_addtocart_form')
+            var form = document.getElementById('product_addtocart_form');
             this.currentOptions = $(this.options.optionsSelector, form);
             this.optionsData = this.options.dependencyConfig;
             this.input = document.getElementById(this.options.input);
@@ -26,7 +27,7 @@ define([
             this.currentOptions.on('change', this._recalculateValue.bind(this));
         },
 
-        _recalculateValue: function() {
+        _recalculateValue: function () {
             var optionVal,
                 optionId,
                 parts,
@@ -36,14 +37,14 @@ define([
                 self = this,
                 tempExpr = '';
 
-            $.each(this.currentOptions, function(index, option){
+            $.each(this.currentOptions, function (index, option) {
                 //if($(option).val()) {
                     switch (option.type) {
                         case 'select-one':
                             parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
                             optionId = parts[2];
                             valueData = _.findWhere(self.optionsData[optionId].values, {'value_id': $(option).val().toString()});
-                            if(typeof(valueData) != "undefined") {
+                            if (typeof(valueData) != "undefined") {
                                 optionVal = valueData.value;
                             } else {
                                 optionVal = false;
@@ -64,7 +65,9 @@ define([
             } catch (err) {
                 console.log($t('*** Problem when evaluating the expression for the option "' + $(this.input).data('code') + '": ') + err);
             }
-            if(parseInt(self.optionsData[self.optionId].add_to_price) === 1) {
+            //Rounding value to 2 decimals
+            val = Math.round(val * 100) / 100;
+            if (parseInt(self.optionsData[self.optionId].add_to_price) === 1) {
                 var changes = {};
                 changes[this.input.name] = {
                     basePrice: {
