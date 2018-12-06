@@ -17,6 +17,7 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Registry;
 use Magento\Framework\Stdlib\ArrayManager;
 use Magento\Ui\Component\Form;
+use Magento\Ui\Component\Form\Element\Wysiwyg as WysiwygElement;
 use Magento\Ui\Component\Form\Field;
 use Magento\Ui\DataProvider\Mapper\FormElement as FormElementMapper;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionAttributeRepositoryInterface;
@@ -110,9 +111,9 @@ abstract class AbstractModifier implements ModifierInterface
         $this->eavAttributeFactory      = $eavAttributeFactory;
         $this->dataPersistor            = $dataPersistor;
         $this->registry                 = $registry;
-        $this->attributesToDisable      = $attributesToDisable;
         $this->eavConfig                = $eavConfig;
         $this->optionTypeSource         = $optionTypeSource;
+        $this->attributesToDisable      = $attributesToDisable;
     }
 
     /**
@@ -193,10 +194,10 @@ abstract class AbstractModifier implements ModifierInterface
             case 'boolean':
                 $meta = $this->customizeCheckbox($attribute, $meta);
                 break;
-            /*case 'textarea':
+            case 'textarea':
                 $meta = $this->customizeWysiwyg($attribute, $meta);
                 break;
-            case 'price':
+            /*case 'price':
                 $meta = $this->customizePriceAttribute($attribute, $meta);
                 break;
             case 'gallery':
@@ -257,6 +258,32 @@ abstract class AbstractModifier implements ModifierInterface
             ];
             $meta = $this->arrayManager->merge('arguments/data/config', $meta, $config);
         }
+
+        return $meta;
+    }
+
+    /**
+     * Add wysiwyg properties
+     *
+     * @param EavAttribute $attribute
+     * @param array $meta
+     * @return array
+     */
+    private function customizeWysiwyg(EavAttribute $attribute, array $meta)
+    {
+        if ($attribute->getAttributeCode() !== 'description') {
+            return $meta;
+        }
+
+        $meta['arguments']['data']['config']['formElement'] = WysiwygElement::NAME;
+        $meta['arguments']['data']['config']['wysiwyg'] = true;
+        $meta['arguments']['data']['config']['wysiwygConfigData'] = [
+            'add_variables' => false,
+            'add_widgets' => false,
+            'add_directives' => true,
+            'use_container' => true,
+            'container_class' => 'hor-scroll',
+        ];
 
         return $meta;
     }

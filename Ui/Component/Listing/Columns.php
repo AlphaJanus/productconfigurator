@@ -66,6 +66,9 @@ class Columns extends \Magento\Ui\Component\Listing\Columns
                 if ($attribute->getData('is_filterable_in_grid')) {
                     $config['filter'] = $this->getFilterType($attribute->getFrontendInput());
                 }
+                if ($attribute->getAttributeCode() == 'description') {
+                    $config['bodyTmpl'] = 'ui/grid/cells/html';
+                }
                 $column = $this->columnFactory->create($attribute, $this->getContext(), $config);
                 $column->prepare();
                 $this->addComponent($attribute->getAttributeCode(), $column);
