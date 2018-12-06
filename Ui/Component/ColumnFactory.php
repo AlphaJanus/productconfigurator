@@ -7,8 +7,10 @@
 
 namespace Netzexpert\ProductConfigurator\Ui\Component;
 
-use Magento\Eav\Model\Attribute;
-use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionAttributeInterface;
+use Magento\Eav\Model\Entity\Attribute;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Element\UiComponentInterface;
+use Psr\Log\LoggerInterface;
 
 class ColumnFactory
 {
@@ -16,6 +18,9 @@ class ColumnFactory
      * @var \Magento\Framework\View\Element\UiComponentFactory
      */
     private $componentFactory;
+
+    /** @var LoggerInterface  */
+    private $logger;
 
     /**
      * @var array
@@ -42,16 +47,19 @@ class ColumnFactory
     /**
      * @param \Magento\Framework\View\Element\UiComponentFactory $componentFactory
      */
-    public function __construct(\Magento\Framework\View\Element\UiComponentFactory $componentFactory)
-    {
+    public function __construct(
+        \Magento\Framework\View\Element\UiComponentFactory $componentFactory,
+        LoggerInterface $logger
+    ) {
         $this->componentFactory = $componentFactory;
+        $this->logger           = $logger;
     }
 
     /**
-     * @param ConfiguratorOptionAttributeInterface | Attribute $attribute
+     * @param Attribute $attribute
      * @param \Magento\Framework\View\Element\UiComponent\ContextInterface $context
      * @param array $config
-     * @return \Magento\Ui\Component\Listing\Columns\ColumnInterface
+     * @return UiComponentInterface
      */
     public function create($attribute, $context, array $config = [])
     {
@@ -67,7 +75,11 @@ class ColumnFactory
         ], $config);
 
         if ($attribute->usesSource()) {
-            $config['options'] = $attribute->getSource()->getAllOptions();
+            try {
+                $config['options'] = $attribute->getSource()->getAllOptions();
+            } catch (LocalizedException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
 
         $config['component'] = $this->getJsComponent($config['dataType']);
@@ -79,7 +91,12 @@ class ColumnFactory
             'context' => $context,
         ];
 
-        return $this->componentFactory->create($columnName, 'column', $arguments);
+        try {
+            return $this->componentFactory->create($columnName, 'column', $arguments);
+        } catch (LocalizedException $exception) {
+            $this->logger->error($exception->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -92,7 +109,7 @@ class ColumnFactory
     }
 
     /**
-     * @param ConfiguratorOptionAttributeInterface $attribute
+     * @param Attribute $attribute
      * @return string
      */
     private function getDataType($attribute)

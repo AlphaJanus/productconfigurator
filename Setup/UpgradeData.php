@@ -48,29 +48,12 @@ class UpgradeData implements UpgradeDataInterface
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        /** @var ConfiguratorOptionSetup $configuratorOptionSetup */
-        $configuratorOptionSetup = $this->configuratorOptionSetupFactory->create(['setup' => $setup]);
 
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.3', '<')) {
-            $this->upgradeVersionTwoZeroThree($configuratorOptionSetup, $eavSetup);
-        }
-        if (version_compare($context->getVersion(), '2.0.4', '<')) {
-            $this->upgradeVersionTwoZeroFour($eavSetup);
-        }
-        if (version_compare($context->getVersion(), '2.0.5', '<')) {
-            $this->upgradeVersionTwoZeroFive($configuratorOptionSetup);
-        }
-        if (version_compare($context->getVersion(), '2.0.8', '<')) {
-            $this->upgradeVersionTwoZeroEight($eavSetup);
-        }
-        if (version_compare($context->getVersion(), '2.0.12', '<')) {
-            $this->upgradeVersionTwoZeroTwelve($eavSetup);
-        }
         if (version_compare($context->getVersion(), '2.0.14', '<')) {
-            $this->upgradeVersionTwoZeroFourteen($eavSetup);
+            $this->upgradeVersionTwoZeroFourteen($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -98,54 +81,167 @@ class UpgradeData implements UpgradeDataInterface
     }
 
     /**
-     * @param ConfiguratorOptionSetup $configuratorOptionSetup
+     * @param ModuleDataSetupInterface $setup
      * @param EavSetup $eavSetup
-     * @return void
+     * @param ModuleContextInterface $context
      */
-    private function upgradeVersionTwoZeroThree($configuratorOptionSetup, $eavSetup)
-    {
-        $eavSetup->updateEntityType(
-            ConfiguratorOption::ENTITY,
-            'additional_attribute_table',
-            'configurator_option_eav_attribute'
-        );
+    private function upgradeVersionTwoZeroFourteen(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '2.0.12', '<')) {
+            $this->upgradeVersionTwoZeroTwelve($setup, $eavSetup, $context);
+        }
+        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY, 'expression', 'backend_type', 'text');
+    }
 
-        $entityAttributes = [
-            'name' => [
-                'sort_order'            => 10,
-                'is_visible_in_grid'    => 1,
-                'is_filterable_in_grid' => 1,
-            ],
-            'type' => [
-                'sort_order'            => 20,
-                'is_visible_in_grid'    => 1,
-                'is_filterable_in_grid' => 1,
-            ],
-            'description' => [
-                'sort_order'            => 30,
-                'is_visible_in_grid'    => 1,
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeVersionTwoZeroTwelve(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+
+    ) {
+        if (version_compare($context->getVersion(), '2.0.8', '<')) {
+            $this->upgradeVersionTwoZeroEight($setup, $eavSetup, $context);
+        }
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'add_to_price',
+            [
+                'group'                 => 'General',
+                'type'                  => 'int',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Add value to price',
+                'input'                 => 'boolean',
+                'class'                 => '',
+                'required'              => false,
+                'position'              => 95,
+                'is_visible_in_grid'    => 0,
                 'is_filterable_in_grid' => 0,
-            ],
-            'is_required' => [
-                'sort_order'            => 40,
-                'is_visible_in_grid'    => 1,
-                'is_filterable_in_grid' => 1,
-            ],
-            'is_visible' => [
-                'sort_order'            => 50,
+                'apply_to'              => 'expression',
+                'source'                => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
+            ]
+        );
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeVersionTwoZeroEight(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '2.0.5', '<')) {
+            $this->upgradeVersionTwoZeroFive($setup, $eavSetup, $context);
+        }
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'expression',
+            [
+                'group'                 => 'General',
+                'type'                  => 'varchar',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Expression',
+                'input'                 => 'textarea',
+                'class'                 => '',
+                'required'              => true,
+                'position'              => 90,
+                'is_visible_in_grid'    => 0,
+                'is_filterable_in_grid' => 0,
+                'apply_to'              => 'expression'
+            ]
+        );
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'code',
+            [
+                'group'                 => 'General',
+                'type'                  => 'static',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Code',
+                'input'                 => 'text',
+                'class'                 => 'validate-data',
+                'unique'                => true,
+                'required'              => true,
+                'position'              => 90,
                 'is_visible_in_grid'    => 1,
                 'is_filterable_in_grid' => 1,
             ]
+        );
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeVersionTwoZeroFive(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+
+    ) {
+        if (version_compare($context->getVersion(), '2.0.4', '<')) {
+            $this->upgradeVersionTwoZeroFour($setup, $eavSetup, $context);
+        }
+
+        /** @var ConfiguratorOptionSetup $configuratorOptionSetup */
+        $configuratorOptionSetup = $this->configuratorOptionSetupFactory->create(['setup' => $setup]);
+        $entityAttributes = [
+            'name' => [
+                'apply_to'  => null
+            ],
+            'type' => [
+                'apply_to'  => null
+            ],
+            'description' => [
+                'apply_to'  => null
+            ],
+            'is_required' => [
+                'apply_to'  => null
+            ],
+            'is_visible' => [
+                'apply_to'  => null
+            ],
+            'min_value' => [
+                'apply_to'  => 'text'
+            ],
+            'max_value' => [
+                'apply_to'  => 'text'
+            ],
+            'default_value' => [
+                'apply_to'  => 'text'
+            ]
+
         ];
         $this->upgradeAttributes($entityAttributes, $configuratorOptionSetup);
     }
 
     /**
+     * @param ModuleDataSetupInterface $setup
      * @param EavSetup $eavSetup
-     * @return void
+     * @param ModuleContextInterface $context
      */
-    private function upgradeVersionTwoZeroFour($eavSetup)
-    {
+    private function upgradeVersionTwoZeroFour(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '2.0.3', '<')) {
+            $this->upgradeVersionTwoZeroThree($setup, $eavSetup);
+        }
         $eavSetup->addAttribute(
             ConfiguratorOption::ENTITY,
             'min_value',
@@ -199,115 +295,50 @@ class UpgradeData implements UpgradeDataInterface
         );
     }
 
-    private function upgradeVersionTwoZeroFive($configuratorOptionSetup)
-    {
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     */
+    private function upgradeVersionTwoZeroThree(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup
+    ) {
+
+        /** @var ConfiguratorOptionSetup $configuratorOptionSetup */
+        $configuratorOptionSetup = $this->configuratorOptionSetupFactory->create(['setup' => $setup]);
+        $eavSetup->updateEntityType(
+            ConfiguratorOption::ENTITY,
+            'additional_attribute_table',
+            'configurator_option_eav_attribute'
+        );
+
         $entityAttributes = [
             'name' => [
-                'apply_to'  => null
+                'sort_order'            => 10,
+                'is_visible_in_grid'    => 1,
+                'is_filterable_in_grid' => 1,
             ],
             'type' => [
-                'apply_to'  => null
+                'sort_order'            => 20,
+                'is_visible_in_grid'    => 1,
+                'is_filterable_in_grid' => 1,
             ],
             'description' => [
-                'apply_to'  => null
+                'sort_order'            => 30,
+                'is_visible_in_grid'    => 1,
+                'is_filterable_in_grid' => 0,
             ],
             'is_required' => [
-                'apply_to'  => null
+                'sort_order'            => 40,
+                'is_visible_in_grid'    => 1,
+                'is_filterable_in_grid' => 1,
             ],
             'is_visible' => [
-                'apply_to'  => null
-            ],
-            'min_value' => [
-                'apply_to'  => 'text'
-            ],
-            'max_value' => [
-                'apply_to'  => 'text'
-            ],
-            'default_value' => [
-                'apply_to'  => 'text'
-            ]
-
-        ];
-        $this->upgradeAttributes($entityAttributes, $configuratorOptionSetup);
-    }
-
-    /**
-     * @param EavSetup $eavSetup
-     * @return void
-     */
-    private function upgradeVersionTwoZeroEight($eavSetup)
-    {
-        $eavSetup->addAttribute(
-            ConfiguratorOption::ENTITY,
-            'expression',
-            [
-                'group'                 => 'General',
-                'type'                  => 'varchar',
-                'backend'               => '',
-                'frontend'              => '',
-                'label'                 => 'Expression',
-                'input'                 => 'textarea',
-                'class'                 => '',
-                'required'              => true,
-                'position'              => 90,
-                'is_visible_in_grid'    => 0,
-                'is_filterable_in_grid' => 0,
-                'apply_to'              => 'expression'
-            ]
-        );
-        $eavSetup->addAttribute(
-            ConfiguratorOption::ENTITY,
-            'code',
-            [
-                'group'                 => 'General',
-                'type'                  => 'static',
-                'backend'               => '',
-                'frontend'              => '',
-                'label'                 => 'Code',
-                'input'                 => 'text',
-                'class'                 => 'validate-data',
-                'unique'                => true,
-                'required'              => true,
-                'position'              => 90,
+                'sort_order'            => 50,
                 'is_visible_in_grid'    => 1,
                 'is_filterable_in_grid' => 1,
             ]
-        );
-    }
-
-    /**
-     * @param EavSetup $eavSetup
-     * @return void
-     */
-    private function upgradeVersionTwoZeroTwelve($eavSetup)
-    {
-        $eavSetup->addAttribute(
-            ConfiguratorOption::ENTITY,
-            'add_to_price',
-            [
-                'group'                 => 'General',
-                'type'                  => 'int',
-                'backend'               => '',
-                'frontend'              => '',
-                'label'                 => 'Add value to price',
-                'input'                 => 'boolean',
-                'class'                 => '',
-                'required'              => false,
-                'position'              => 95,
-                'is_visible_in_grid'    => 0,
-                'is_filterable_in_grid' => 0,
-                'apply_to'              => 'expression',
-                'source'                => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
-            ]
-        );
-    }
-
-    /**
-     * @param EavSetup $eavSetup
-     * @return void
-     */
-    private function upgradeVersionTwoZeroFourteen($eavSetup)
-    {
-        $eavSetup->updateAttribute(ConfiguratorOption::ENTITY, 'expression', 'backend_type', 'text');
+        ];
+        $this->upgradeAttributes($entityAttributes, $configuratorOptionSetup);
     }
 }
