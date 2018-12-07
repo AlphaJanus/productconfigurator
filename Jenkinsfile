@@ -35,8 +35,7 @@ node {
             dir ('magento-build/app/code/Netzexpert/ProductConfigurator') {
                 commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
             }
-            withEnv(["CODACY_PROJECT_TOKEN=65f6a75ca23a4b449b72a48dbafcb7fd"]) {
-                echo env.CODACY_PROJECT_TOKEN
+            withEnv(["CODACY_PROJECT_TOKEN=f4359a5796054100922032556b5436df"]) {
                 sh "cc-reporter/bin/codacycoverage clover reports/coverage/clover.xml --git-commit=${commitId}"
             }
 
