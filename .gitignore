@@ -4,4 +4,3 @@
 .travis.yml
 _config.yml
 Jenkinsfile
-.phpcs.xml
