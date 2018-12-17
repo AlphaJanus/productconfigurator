@@ -50,6 +50,7 @@ class Configurator extends AbstractView
      * @param PricingHelper $pricingHelper
      * @param CatalogHelper $catalogHelper
      * @param Json $json
+     * @param DataObjectFactory $dataObjectFactory
      * @param array $data
      */
     public function __construct(

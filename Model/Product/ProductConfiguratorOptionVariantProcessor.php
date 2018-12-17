@@ -35,7 +35,7 @@ class ProductConfiguratorOptionVariantProcessor
 
     /**
      * @param $product ProductInterface
-     * @param $option OptionsCollection
+     * @param $options OptionsCollection
      */
     public function process($product, $options)
     {

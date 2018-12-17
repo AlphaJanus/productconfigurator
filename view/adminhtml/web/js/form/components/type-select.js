@@ -2,7 +2,7 @@ define([
     'jquery',
     "Magento_Ui/js/form/components/fieldset",
     'uiRegistry',
-], function($, Component, registry) {
+], function ($, Component, registry) {
     'use strict';
 
     return Component.extend({
@@ -50,14 +50,11 @@ define([
                     var visible = self.applicableTo.includes(optionType);
                     self.visible(visible);
                     var rowsComponent = registry.get('configurator_option_form.configurator_option_form.general.container_values.values');
-                    if(visible){
+                    if (visible) {
                         rowsComponent.addChild();
-                        setTimeout(
-                            function()
-                            {
+                        setTimeout(function () {
                                 rowsComponent.showSpinner(false);
                             }, 500);
-
                     } else {
                         rowsComponent.clear();
                     }
@@ -65,5 +62,4 @@ define([
             );
         }
     });
-}
-);
+});

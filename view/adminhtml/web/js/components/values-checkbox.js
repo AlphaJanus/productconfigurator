@@ -52,7 +52,7 @@ define([
             records.elems.each(function (record) {
                 record.elems.filter(function (comp) {
                     return comp.index === index && comp.uid !== uid
-                }).every(function(elem){
+                }).every(function (elem) {
                     elem.clearing = true;
                     elem.clear();
                     elem.clearing = false;

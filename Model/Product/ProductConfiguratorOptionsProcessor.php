@@ -115,6 +115,9 @@ class ProductConfiguratorOptionsProcessor
             ->addFieldToFilter('product_id', $product->getId());
         /** @var ProductConfiguratorOptionsGroupInterface $group */
         foreach ($groups as $group) {
+            if (!$group->getData('assigned_configurator_options')) {
+                continue;
+            }
             foreach ($group->getData('assigned_configurator_options') as $option) {
                 if (!is_array($option) || empty($option['configurator_option_id'])) {
                     continue;

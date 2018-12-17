@@ -44,7 +44,7 @@ class GenericTest extends TestCase
 
     /**
      * @param string $class
-     * @return Generic
+     * @return Generic | object
      */
     protected function getModel($class = Generic::class)
     {

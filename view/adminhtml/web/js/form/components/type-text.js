@@ -1,7 +1,7 @@
 define([
     'jquery',
     "Magento_Ui/js/form/components/group"
-], function($, Component){
+], function ($, Component) {
     'use strict';
 
     return Component.extend({
@@ -44,7 +44,7 @@ define([
                 function (optionType) {
                     var visible = optionType === 'text';
                     self.visible(visible);
-                    if(!visible) {
+                    if (!visible) {
                         $.each(self.elems(), function (index, elem) {
                             elem.value(null);
                         });

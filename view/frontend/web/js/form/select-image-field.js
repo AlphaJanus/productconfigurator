@@ -13,8 +13,8 @@ define([
         _init: function () {
             var self = this;
             $(this.element.context).find('.value').on('click', this.updateValue.bind(this));
-            var disabledObserver = new MutationObserver(function(mutations){
-                mutations.forEach(function(mutation){
+            var disabledObserver = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
                     if (mutation.attributeName === "disabled") {
                         self.updateImages(mutation.target);
                     }
@@ -22,31 +22,33 @@ define([
             });
             var config = { attributes: true };
             // Start observing myElem
-            $(this.element.context).find('select option').each(function(index, el){
+            $(this.element.context).find('select option').each(function (index, el) {
                 disabledObserver.observe(el, config);
             });
-            $('#' + this.options.select).on('change', this.updateSelected.bind(this));
-            $('#' + this.options.select).on('visibilityChanged', this.updateSelected.bind(this));
+            var selectEl = $('#' + this.options.select);
+            selectEl.on('change', this.updateSelected.bind(this));
+            selectEl.on('visibilityChanged', this.updateSelected.bind(this));
         },
 
         updateValue: function (event) {
             var valueElement = $(event.currentTarget);
             this.value(valueElement.data('value'));
-            $('#' + this.options.select).find('option[data-id="' + valueElement.attr('id') + '"]').prop('selected','selected');
-            $('#' + this.options.select).val(valueElement.data('id').toString());
-            $('#' + this.options.select).trigger('change');
+            var selectEl = $('#' + this.options.select);
+            selectEl.find('option[data-id="' + valueElement.attr('id') + '"]').prop('selected','selected');
+            selectEl.val(valueElement.data('id').toString());
+            selectEl.trigger('change');
             return this;
         },
 
-        updateImages: function(option){
-            if($(option).prop('disabled')){
+        updateImages: function (option) {
+            if ($(option).prop('disabled')) {
                 $(this.element.context).find('.value[data-id="' + option.value + '"]').addClass('hide');
             } else {
                 $(this.element.context).find('.value[data-id="' + option.value + '"]').removeClass('hide');
             }
         },
 
-        updateSelected: function(event){
+        updateSelected: function (event) {
             $(this.element.context).find('.value').removeClass('selected');
             $(this.element.context).find('.value[data-id="' + event.target.value + '"]').addClass('selected');
         }

@@ -3,10 +3,10 @@ define([
     'jquery/ui',
     'jquery/validate',
     'mage/translate'
-], function($){
+], function ($) {
     'use strict';
 
-    return function() {
+    return function () {
         $.validator.addMethod(
             "lte",
             function (value, element, params) {

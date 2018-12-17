@@ -62,7 +62,7 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     public function setType($type);
 
     /**
-     * @return []
+     * @return array
      */
     public function getValues();
 
@@ -117,7 +117,7 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     public function getOrigData($key = null);
 
     /**
-     * @return []
+     * @return array
      */
     public function getTypesWithVariants();
 }

@@ -43,6 +43,7 @@ class Configurator extends AbstractType
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Psr\Log\LoggerInterface $logger
      * @param ProductRepositoryInterface $productRepository
+     * @param ConfiguratorOptionRepositoryInterface $configuratorOptionRepository
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param ConfiguratorOptionVariantRepositoryInterface $optionVariantRepository
      * @param StripTags $filter

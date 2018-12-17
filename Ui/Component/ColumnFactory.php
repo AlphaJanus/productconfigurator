@@ -45,7 +45,9 @@ class ColumnFactory
     ];
 
     /**
+     * ColumnFactory constructor.
      * @param \Magento\Framework\View\Element\UiComponentFactory $componentFactory
+     * @param LoggerInterface $logger
      */
     public function __construct(
         \Magento\Framework\View\Element\UiComponentFactory $componentFactory,

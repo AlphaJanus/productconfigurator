@@ -13,6 +13,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Registry;
@@ -352,7 +353,7 @@ class TypeSelect extends AbstractModifier
      * Get currency symbol
      *
      * @return string
-     * @since 101.0.0
+     * @throws NoSuchEntityException
      */
     private function getCurrencySymbol()
     {

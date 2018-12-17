@@ -91,7 +91,6 @@ class ProductConfiguratorOptionsGroupsProcessor
     /**
      * @param $product ProductInterface
      * @param $options_groups array
-     * @param $originalOptions array
      * @return Collection
      */
     private function saveGroups($product, $options_groups)
