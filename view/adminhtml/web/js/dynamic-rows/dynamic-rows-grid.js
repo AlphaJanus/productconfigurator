@@ -353,7 +353,7 @@ define([
         },
 
         sort: function (position, elem) {
-            var that = this,
+            var /*that = this,*/ //HardFix #1 By Andrew Stepanchuk
                 sorted,
                 updatedCollection;
 
@@ -366,7 +366,7 @@ define([
             if (!elem.containers.length) {
                 /*registry.get(elem.name, function () {
                     that.sort(position, elem);
-                });*/ //By Andrew Stepanchuk with those strings sort goes in infinite recursion
+                });*/ // HardFix #1 By Andrew Stepanchuk with those strings sort goes in infinite recursion
 
                 return false;
             }
