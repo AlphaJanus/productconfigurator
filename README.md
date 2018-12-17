@@ -4,5 +4,3 @@
 [![Build Status](https://jenkins.eve.netzexpert.de/job/productconfigurator/job/master/badge/icon?style=plastic)](https://jenkins.eve.netzexpert.de/job/productconfigurator/master)
 
 Magento 2 product configurator 
-
-If you get an error "invalid form key" while saving product, increase `max_input_vars` setting
