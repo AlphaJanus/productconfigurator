@@ -5,12 +5,12 @@ define([
 
     return Grid.extend({
 
-        initialize: function(){
+        initialize: function () {
             this._super();
             this.visible(this.recordData().length);
             return this;
         },
-        initObservable: function(){
+        initObservable: function () {
             this._super();
 
             this.observe(['recordData']);

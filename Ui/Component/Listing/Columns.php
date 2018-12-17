@@ -39,6 +39,7 @@ class Columns extends \Magento\Ui\Component\Listing\Columns
     /**
      * Columns constructor.
      * @param ContextInterface $context
+     * @param ColumnFactory $columnFactory
      * @param RepositoryInterface $attributeRepository
      * @param array $components
      * @param array $data

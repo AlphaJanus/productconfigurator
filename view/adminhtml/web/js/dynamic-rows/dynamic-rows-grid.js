@@ -79,10 +79,8 @@ define([
                 if (insertData.length) {
                     this.source.set(this.dataProvider, insertData);
                 }
-            }
-            /** This is workaround for deleting last record. Not sure. (By Andrew Stepanchuk) */
-            else {
-                this.source.set(this.dataProvider, insertData)
+            } else {
+                this.source.set(this.dataProvider, insertData) // This is workaround for deleting last record. Not sure. (By Andrew Stepanchuk)
             }
         },
 
@@ -355,9 +353,31 @@ define([
         },
 
         sort: function (position, elem) {
-            this._super(position, elem);
+            var that = this,
+                sorted,
+                updatedCollection;
+
+            if (this.elems().filter(function (el) {
+                return el.position || el.position === 0;
+            }).length !== this.getChildItems().length) {
+                return false;
+            }
+
+            if (!elem.containers.length) {
+                /*registry.get(elem.name, function () {
+                    that.sort(position, elem);
+                });*/ //By Andrew Stepanchuk with those strings sort goes in infinite recursion
+
+                return false;
+            }
+
+            sorted = this.elems().sort(function (propOne, propTwo) {
+                return ~~propOne.position - ~~propTwo.position;
+            });
+
+            updatedCollection = this.updatePosition(sorted, position, elem.name);
+            this.elems(updatedCollection);
             this.updateParentOptions(position, elem);
-            this.trigger('sortOrderChanged', {'position': position, 'elem': elem});
         },
 
         updateParentOptions: function (position, elem) {
@@ -384,7 +404,11 @@ define([
         setParentOptionOptions: function (elem, options) {
             var value,
                 self = this,
-                parentOptionElem = elem.getChild('dependency_container').getChild('parent_option');
+                dependencyContainer = elem.getChild('dependency_container');
+
+            if (!_.isUndefined(dependencyContainer)) {
+                var parentOptionElem = dependencyContainer.getChild('parent_option');
+            }
             if (typeof(parentOptionElem) !== 'undefined') {
                 value = parentOptionElem.value();
                 parentOptionElem.setOptions(options);
@@ -437,6 +461,22 @@ define([
             startIndex = page || this.startIndex;
 
             return dataRecord.slice(startIndex, this.startIndex + this.pageSize);
-        }
+        },
+
+        /**
+         * Set initial property to records data
+         *
+         * @returns {Object} Chainable.
+         */
+        setInitialProperty: function () {
+            var recordData = this.recordData();
+            if (_.isArray(recordData[this.groupIndex])) {
+                recordData[this.groupIndex].each(function (data, index) {
+                    this.source.set(this.dataScope + '.' + this.index + '.' + index + '.initialize', true);
+                }, this);
+            }
+
+            return this;
+        },
     });
 });

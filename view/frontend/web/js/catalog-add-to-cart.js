@@ -18,7 +18,7 @@ define([
             var configuratedPrice;
 
 
-            if(priceBox.data('magePriceBox') &&
+            if (priceBox.data('magePriceBox') &&
                 priceBox.data('magePriceBox').cache &&
                 priceBox.data('magePriceBox').cache.displayPrices &&
                 priceBox.data('magePriceBox').cache.displayPrices.finalPrice) {

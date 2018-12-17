@@ -65,7 +65,7 @@ class DeleteTest extends GenericTest
 
     /**
      * @param string $class
-     * @return Delete
+     * @return Delete | object
      */
     protected function getModel($class = Delete::class)
     {

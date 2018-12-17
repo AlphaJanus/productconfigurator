@@ -112,7 +112,7 @@ abstract class AbstractModifierTest extends TestCase
     }
 
     /**
-     * @return
+     * @return object
      */
     abstract protected function getModel();
 

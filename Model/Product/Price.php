@@ -7,6 +7,11 @@
 
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
+/**
+ * Class Price
+ * @package Netzexpert\ProductConfigurator\Model\Product
+ * @codingStandardsIgnoreStart
+ */
 class Price extends \Magento\Catalog\Model\Product\Type\Price
 {
 

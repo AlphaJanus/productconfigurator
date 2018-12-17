@@ -27,7 +27,8 @@ define([
      * @param  {Object} optionsConfig - part of config
      * @return {Object}
      */
-    function defaultGetOptionValue(element, optionsConfig) {
+    function defaultGetOptionValue(element, optionsConfig)
+    {
         var changes = {},
             optionValue = element.val(),
             optionId = utils.findOptionId(element[0]),
@@ -78,7 +79,8 @@ define([
         /**
          * @private
          */
-        _init: function initPriceBundle() {
+        _init: function initPriceBundle()
+        {
             $(this.options.optionsSelector, this.element).trigger('change');
         },
 
@@ -87,7 +89,8 @@ define([
          * Triggered once.
          * @private
          */
-        _create: function createConfiguratorOptions() {
+        _create: function createConfiguratorOptions()
+        {
             var form = this.element,
                 options = $(this.options.optionsSelector, form),
                 priceBox = $(this.options.priceHolderSelector, $(this.options.optionsSelector).element);
@@ -105,7 +108,7 @@ define([
             this._applyOptionNodeFix(options);
 
             options.on('change', this._onOptionChanged.bind(this));
-            form.on('invalid-form', function(event,data){
+            form.on('invalid-form', function (event,data) {
                 data.errorList[0].element.scrollIntoView(false);
             });
         },
@@ -115,7 +118,8 @@ define([
          * @param {Event} event
          * @private
          */
-        _onOptionChanged: function onOptionChanged(event) {
+        _onOptionChanged: function onOptionChanged(event)
+        {
             var changes,
                 option = $(event.target),
                 handler = this.options.optionHandlers[option.data('role')];
@@ -138,7 +142,8 @@ define([
          * @param {jQuery} options
          * @private
          */
-        _applyOptionNodeFix: function applyOptionNodeFix(options) {
+        _applyOptionNodeFix: function applyOptionNodeFix(options)
+        {
             var config = this.options,
                 format = config.priceFormat,
                 template = config.optionTemplate;
@@ -173,7 +178,8 @@ define([
                         _.each(prices, function (price, type) {
                             var value = +price.amount;
 
-                            value += _.reduce(price.adjustments, function (sum, x) { //eslint-disable-line
+                            value += _.reduce(price.adjustments, function (sum, x) {
+                                //eslint-disable-line
                                 return sum + x;
                             }, 0);
                             toTemplate.data[type] = {
@@ -188,7 +194,7 @@ define([
             });
         },
 
-        updateOptions: function(event){
+        updateOptions: function (event) {
             var optionId,
                 parts,
                 tempId,
@@ -213,13 +219,13 @@ define([
                     $.each(option.options, function (n, optionHtml) {
                         var optionValue = $(optionHtml).val();
                         valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
-                        if(valueConfig) {
+                        if (valueConfig) {
                             allowedVariants = valueConfig.allowed_variants;
                         }
-                        if(optionValue && parseInt(valueConfig.is_dependent) && !allowedVariants.includes(parentElement.val().toString()) ||
+                        if (optionValue && parseInt(valueConfig.is_dependent) && !allowedVariants.includes(parentElement.val().toString()) ||
                             (optionValue && !parseInt(valueConfig.enabled))) {
                             $(optionHtml).attr('disabled','disabled');
-                            if(optionHtml.parentElement.value === optionValue) {
+                            if (optionHtml.parentElement.value === optionValue) {
                                 optionHtml.parentElement.value = '';
                                 $(optionHtml.parentElement).trigger('change');
                             }
@@ -228,17 +234,17 @@ define([
                             /*if(typeof(valueConfig) !== "undefined" && valueConfig.is_default == "1"){
                                 optionHtml.parentElement.value = optionValue;
                             }*/
-                            var availableOptions = _.filter(optionHtml.parentElement.options, function(el){
+                            var availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
                                 return (el.value !== "" && !el.disabled);
                             });
-                            if(availableOptions.length == 1){
+                            if (availableOptions.length == 1) {
                                 optionHtml.parentElement.value = availableOptions[0].value
                             }
                         }
                     });
                 }
-                if(option.type ==="select-one"){
-                    if (_.where(option.options, {disabled: true}).length + 1 >= option.options.length){
+                if (option.type ==="select-one") {
+                    if (_.where(option.options, {disabled: true}).length + 1 >= option.options.length) {
                         $(option).parents('.field').addClass('hidden');
                         $(option).addClass('hidden');
                     } else {
@@ -251,7 +257,7 @@ define([
             });
         },
 
-        getDependencyConfig: function(optionId){
+        getDependencyConfig: function (optionId) {
             return this.options.dependencyConfig[optionId];
         }
     });

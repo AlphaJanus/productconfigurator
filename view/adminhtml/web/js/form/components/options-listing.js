@@ -35,19 +35,18 @@ define([
 
             value = this.externalValue();
             rowIds = _.pluck(rows, this.indexField);
-            if(typeof(value) === 'undefined'){
+            if (typeof(value) === 'undefined') {
                 value = [];
             }
-            $.each(value, function(index, item){
+            $.each(value, function (index, item) {
                 valueIds[index] = _.pluck(item,'entity_id');
             });
 
             newValue[this.callerIndex] = [];
-            selected.forEach(function(selectedId){
-                if(_.contains(rowIds,selectedId)){
-
-                    rows.forEach(function(row){
-                        if(row[this.indexField] === selectedId) {
+            selected.forEach(function (selectedId) {
+                if (_.contains(rowIds,selectedId)) {
+                    rows.forEach(function (row) {
+                        if (row[this.indexField] === selectedId) {
                             newValue[this.callerIndex].push(row);
                         }
                     }, this)
@@ -55,10 +54,10 @@ define([
 
 
             }, this);
-            $.each(value, function(index, group){
-                group.forEach(function(val){
-                    if(_.contains(selected, val[self.indexField])) {
-                        if(typeof(newValue[index]) === 'undefined') {
+            $.each(value, function (index, group) {
+                group.forEach(function (val) {
+                    if (_.contains(selected, val[self.indexField])) {
+                        if (typeof(newValue[index]) === 'undefined') {
                             newValue[index] = [];
                         }
                         newValue[index].push(val);
@@ -209,6 +208,43 @@ define([
                 .fail(this.onError);
 
             return request;
+        },
+
+        /**
+         * Set listing rows data to the externalValue,
+         * or if externalData is configured with the names of particular columns,
+         * filter rows data to have only these columns, and then set to the externalValue
+         *
+         * @param {Object} newValue - rows data
+         *
+         */
+        setExternalValue: function (newValue) {
+            var keys = this.externalData,
+                value = this.externalValue(),
+                self = this,
+                selectedIds = [];
+
+            newValue.forEach(function (group) {
+                selectedIds = _.union(selectedIds, _.pluck(group, 'entity_id'));
+            });
+
+            if (_.isArray(keys) && !_.isEmpty(keys)) {
+                newValue = _.map(newValue, function (item) {
+                    return _.pick(item, keys);
+                }, this);
+            } else if (keys && _.isString(keys) && !_.isEmpty(newValue)) {
+                newValue = newValue[0][keys];
+            }
+
+            if (this.externalFilterMode) {
+                value.forEach(function (group, index) {
+                    newValue[index] = _.union(newValue[index], _.filter(group, function (item) {
+                        return !_.isUndefined(item) && !_.contains(selectedIds, item[self.indexField]);
+                    }, this));
+                });
+            }
+
+            this.set('externalValue', newValue);
         },
 
     });

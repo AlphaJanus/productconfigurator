@@ -1,7 +1,7 @@
 define([
     'jquery',
     'Magento_Ui/js/dynamic-rows/dnd'
-], function($, Dnd){
+], function ($, Dnd) {
     'use strict';
 
     return Dnd.extend({

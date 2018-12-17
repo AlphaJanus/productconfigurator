@@ -1,7 +1,7 @@
 define([
     'ko',
     'Magento_Ui/js/dynamic-rows/record'
-], function(ko, Record){
+], function (ko, Record) {
     'use strict';
     return Record.extend({
         defaults: {
