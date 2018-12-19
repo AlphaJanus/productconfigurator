@@ -93,7 +93,6 @@ class ConfiguratorOptionTest extends AbstractModelTest
     {
         $this->model->setData(ConfiguratorOption::NAME, 'test');
         $this->assertEquals('test', $this->model->getName());
-
     }
 
     public function testGetVariants()

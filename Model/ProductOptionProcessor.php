@@ -69,7 +69,7 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
      */
     public function convertToBuyRequest(ProductOptionInterface $productOption)
     {
-        $this->logger->info(gettype($productOption));
+        $this->logger->info(get_class($productOption));
         $object = $this->objectFactory->create();
 
         return $object;
@@ -84,12 +84,12 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
         if (!empty($options) && is_array($options)) {
             $data = [];
             foreach ($options as $optionId => $optionValue) {
-                // phpcs:disable Generic.Commenting.Todo.Found
+                // @codingStandardsIgnoreStart
                 /*if (is_array($optionValue)) {
                     $optionValue = $this->processFileOptionValue($optionValue);
                     $optionValue = implode(',', $optionValue);
                 }*/ //toDo Implement file upload functionality
-                // phpcs:enable
+                // @codingStandardsIgnoreEnd
 
                 /** @var ConfiguratorItemOptionValueInterface $option */
                 $option = $this->optionValueInterfaceFactory->create();
@@ -103,7 +103,6 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
                     } else {
                         $option->setOptionValue($optionValue);
                     }
-
                 } catch (NoSuchEntityException $exception) {
                     $this->logger->error($exception->getMessage());
                     $option->setOptionId($optionId)->setOptionValue($optionValue);
@@ -114,5 +113,4 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
         }
         return [];
     }
-
 }
