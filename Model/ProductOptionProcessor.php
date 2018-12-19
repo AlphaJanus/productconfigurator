@@ -69,6 +69,7 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
      */
     public function convertToBuyRequest(ProductOptionInterface $productOption)
     {
+        $this->logger->info(gettype($productOption));
         $object = $this->objectFactory->create();
 
         return $object;

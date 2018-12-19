@@ -66,9 +66,6 @@ abstract class AbstractModifierTest extends TestCase
     /** @var OptionType */
     protected $optionTypeSourceMock;
 
-    /** @var ConfiguratorOptionAttributeInterface[] */
-    private $attributes = [];
-
     public function setUp()
     {
         $this->objectManager = new ObjectManager($this);

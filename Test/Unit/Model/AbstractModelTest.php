@@ -42,8 +42,7 @@ class AbstractModelTest extends TestCase
         return $mockBuilder->getMock();
     }
 
-    public function test_construct()
+    public function testAfterSave()
     {
-
     }
 }

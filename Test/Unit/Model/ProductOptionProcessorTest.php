@@ -22,7 +22,6 @@ use Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionReposi
 use Netzexpert\ProductConfigurator\Model\ProductOptionProcessor;
 use Psr\Log\LoggerInterface;
 
-
 class ProductOptionProcessorTest extends AbstractModelTest
 {
 
@@ -76,9 +75,9 @@ class ProductOptionProcessorTest extends AbstractModelTest
         $this->optionValueInterfaceFactory =
             $this->getMock(ConfiguratorItemOptionValueInterfaceFactory::class, ['create']);
         $this->optionValueInterface = $this->getMock(
-                ConfiguratorItemOptionValue::class,
-                ['setOptionId', 'setOptionTitle', 'setOptionValue']
-            );
+            ConfiguratorItemOptionValue::class,
+            ['setOptionId', 'setOptionTitle', 'setOptionValue']
+        );
         $this->optionRepository = $this->getMock(ConfiguratorOptionRepository::class, ['get']);
         $this->option = $this->getMock(ConfiguratorOptionInterface::class);
         $this->productConfiguratorOptionRepository =

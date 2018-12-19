@@ -41,7 +41,6 @@ class ConfiguratorItemOptionValueTest extends AbstractModelTest
                 null,
                 []
             ]
-
         );
     }
 
