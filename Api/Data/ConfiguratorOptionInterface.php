@@ -78,6 +78,11 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     public function getVariants();
 
     /**
+     * @return bool
+     */
+    public function hasVariants();
+
+    /**
      * Object data getter
      *
      * If $key is not defined will return all the data as an array.

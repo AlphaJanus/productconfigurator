@@ -4,4 +4,10 @@
         <attribute code="configurator_options" type="[]" />
         <attribute code="configurator_options_groups" type="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface[]" />
     </extension_attributes>
+    <extension_attributes for="Magento\Quote\Api\Data\ProductOptionInterface">
+        <attribute code="configurator_options" type="\Netzexpert\ProductConfigurator\Api\Data\ConfiguratorItemOptionValueInterface[]" />
+    </extension_attributes>
+    <extension_attributes for="Magento\Catalog\Api\Data\ProductOptionInterface">
+        <attribute code="configurator_options" type="\Netzexpert\ProductConfigurator\Api\Data\ConfiguratorItemOptionValueInterface[]" />
+    </extension_attributes>
 </config>

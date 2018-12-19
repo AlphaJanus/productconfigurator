@@ -129,6 +129,9 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
         return ($this->getData(self::VALUES)) ? $this->getData(self::VALUES) : [];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getVariants()
     {
         if (!$this->variants) {
@@ -143,11 +146,22 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     /**
      * @inheritdoc
      */
+    public function hasVariants()
+    {
+        return in_array($this->getType(), $this->getTypesWithVariants());
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setValues($values)
     {
         return $this->setData(self::VALUES, $values);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterSave()
     {
         $this->optionVariantsProcessor->processVariants($this);

@@ -33,6 +33,9 @@
     <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionVariantInterface"
                 type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionVariant" />
 
+    <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorItemOptionValueInterface"
+                type="Netzexpert\ProductConfigurator\Model\Quote\Item\ConfiguratorItemOptionValue" />
+
     <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
         <arguments>
             <argument name="resource"
@@ -80,5 +83,12 @@
     <type name="Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface">
         <plugin name="get_option_variants"
                 type="Netzexpert\ProductConfigurator\Plugin\Configurator\Option\GetPlugin" />
+    </type>
+    <type name="Magento\Sales\Api\OrderItemRepositoryInterface">
+        <arguments>
+            <argument name="processorPool" xsi:type="array">
+                <item name="configurator" xsi:type="object">Netzexpert\ProductConfigurator\Model\ProductOptionProcessor</item>
+            </argument>
+        </arguments>
     </type>
 </config>
