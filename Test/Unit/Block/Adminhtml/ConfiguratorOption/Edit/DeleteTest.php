@@ -12,7 +12,6 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\Delete;
-use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class DeleteTest extends GenericTest
