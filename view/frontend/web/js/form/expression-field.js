@@ -67,7 +67,7 @@ define([
             }
             //Rounding value to 2 decimals
             val = Math.round(val * 100) / 100;
-            if (parseInt(self.optionsData[self.optionId].add_to_price) === 1) {
+            if (parseInt(self.optionsData[self.optionId].add_to_price, 10) === 1) {
                 var changes = {};
                 changes[this.input.name] = {
                     basePrice: {

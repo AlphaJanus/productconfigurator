@@ -1,7 +1,8 @@
 define([
     "uiRegistry",
+    'underscore',
     'Magento_Ui/js/dynamic-rows/dynamic-rows'
-], function (registry, Rows) {
+], function (registry, _, Rows) {
     'use strict';
 
     return Rows.extend({

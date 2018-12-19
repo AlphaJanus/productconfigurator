@@ -212,7 +212,7 @@ define([
                 parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
                 optionId = parts[2];
                 dependencyConfig = self.getDependencyConfig(optionId);
-                tempId = parseInt(dependencyConfig.parent_option);
+                tempId = parseInt(dependencyConfig.parent_option, 10);
                 if (tempId) {
                     parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()})
                     parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
@@ -222,8 +222,8 @@ define([
                         if (valueConfig) {
                             allowedVariants = valueConfig.allowed_variants;
                         }
-                        if (optionValue && parseInt(valueConfig.is_dependent) && !allowedVariants.includes(parentElement.val().toString()) ||
-                            (optionValue && !parseInt(valueConfig.enabled))) {
+                        if (optionValue && parseInt(valueConfig.is_dependent, 10) && !allowedVariants.includes(parentElement.val().toString()) ||
+                            (optionValue && !parseInt(valueConfig.enabled, 10))) {
                             $(optionHtml).attr('disabled','disabled');
                             if (optionHtml.parentElement.value === optionValue) {
                                 optionHtml.parentElement.value = '';
@@ -237,7 +237,7 @@ define([
                             var availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
                                 return (el.value !== "" && !el.disabled);
                             });
-                            if (availableOptions.length == 1) {
+                            if (availableOptions.length === 1) {
                                 optionHtml.parentElement.value = availableOptions[0].value
                             }
                         }

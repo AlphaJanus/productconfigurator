@@ -49,7 +49,7 @@ define([
         },
 
         refreshDisable: function () {
-            if (parseInt(this.isEnabled()) && parseInt(this.isDependent())) {
+            if (parseInt(this.isEnabled(), 10) && parseInt(this.isDependent(), 10)) {
                 this.disabled(false);
             } else {
                 this.disabled(true);
