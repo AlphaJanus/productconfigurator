@@ -37,7 +37,7 @@ define([
         },
 
         initConfig: function (config) {
-            config.groupIndex = config.dataScope.slice(-1);
+            config.groupIndex = config.dataScope.replace(/data.product.configurator_option_groups./, "");
             config.links.insertData =  config.provider + ':data.product.assign_configurator_option_grid';
             config.links.recordData =  config.provider + ':data.product.' + config.index;
             config.dataProvider = 'data.product.assign_configurator_option_grid.' + config.groupIndex;
