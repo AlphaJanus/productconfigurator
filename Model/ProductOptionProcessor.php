@@ -84,10 +84,12 @@ class ProductOptionProcessor implements ProductOptionProcessorInterface
         if (!empty($options) && is_array($options)) {
             $data = [];
             foreach ($options as $optionId => $optionValue) {
+                // phpcs:disable Generic.Commenting.Todo.Found
                 /*if (is_array($optionValue)) {
                     $optionValue = $this->processFileOptionValue($optionValue);
                     $optionValue = implode(',', $optionValue);
                 }*/ //toDo Implement file upload functionality
+                // phpcs:enable
 
                 /** @var ConfiguratorItemOptionValueInterface $option */
                 $option = $this->optionValueInterfaceFactory->create();
