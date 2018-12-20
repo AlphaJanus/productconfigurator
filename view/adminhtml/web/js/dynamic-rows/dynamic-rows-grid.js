@@ -353,7 +353,7 @@ define([
         },
 
         sort: function (position, elem) {
-            var /*that = this,*/ //HardFix #1 By Andrew Stepanchuk
+            var that = this,
                 sorted,
                 updatedCollection;
 
@@ -364,9 +364,9 @@ define([
             }
 
             if (!elem.containers.length) {
-                /*registry.get(elem.name, function () {
+                registry.get(elem.name, function () {
                     that.sort(position, elem);
-                });*/ // HardFix #1 By Andrew Stepanchuk with those strings sort goes in infinite recursion
+                });
 
                 return false;
             }
@@ -377,10 +377,13 @@ define([
 
             updatedCollection = this.updatePosition(sorted, position, elem.name);
             this.elems(updatedCollection);
-            this.updateParentOptions(position, elem);
+            updatedCollection.forEach(function (el) {
+                that.updateParentOptions(el);
+            });
+
         },
 
-        updateParentOptions: function (position, elem) {
+        updateParentOptions: function (elem) {
             var option,
                 self = this,
                 recData  = self.recordData()[this.groupIndex];
