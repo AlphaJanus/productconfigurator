@@ -8,8 +8,8 @@ define([
     return Multiselect.extend({
         defaults: {
             imports: {
-                rows: '${ $ .provider }:${ $ .dataScope.replace(/.[(0-9)+].values.[(0-9)+].allowed_variants/, "") }',
-                parentOption: '${ $ .provider }:${ $ .dataScope.replace(/.values.[(0-9)+].allowed_variants/, "") }.parent_option',
+                rows: '${ $ .provider }:${ $ .dataScope.replace(/.[(0-9)]+.values.[(0-9)]+.allowed_variants/, "") }',
+                parentOption: '${ $ .provider }:${ $ .dataScope.replace(/.values.[(0-9)]+.allowed_variants/, "") }.parent_option',
                 isDependent: '${ $ .provider }:${ $ .parentScope }.is_dependent',
                 isEnabled: '${ $ .provider }:${ $ .parentScope }.enabled',
             }
