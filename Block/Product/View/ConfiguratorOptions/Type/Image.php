@@ -9,6 +9,7 @@
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type;
 
 use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
@@ -37,6 +38,7 @@ class Image extends AbstractOptions
      * @param ConfiguratorOptionRepositoryInterface $configuratorOptionRepository
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterProvider $filterProvider
      * @param Filesystem $filesystem
      * @param AdapterFactory $imageFactory
      * @param ImageHelper $imageHelper
@@ -47,6 +49,7 @@ class Image extends AbstractOptions
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterProvider $filterProvider,
         Filesystem $filesystem,
         AdapterFactory $imageFactory,
         ImageHelper $imageHelper,
@@ -60,6 +63,7 @@ class Image extends AbstractOptions
             $configuratorOptionRepository,
             $productConfiguratorOptionRepository,
             $searchCriteriaBuilder,
+            $filterProvider,
             $data
         );
     }

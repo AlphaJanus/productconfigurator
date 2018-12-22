@@ -9,6 +9,7 @@
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type;
 
 use Magento\Catalog\Api\Data\ProductExtensionFactory;
+use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Serialize\Serializer\Json;
@@ -28,11 +29,23 @@ class Expression extends AbstractOptions
     /** @var Json  */
     private $json;
 
+    /**
+     * Expression constructor.
+     * @param Template\Context $context
+     * @param ConfiguratorOptionRepositoryInterface $configuratorOptionRepository
+     * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterProvider $filterProvider
+     * @param Json $json
+     * @param ProductExtensionFactory $extensionFactory
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterProvider $filterProvider,
         Json $json,
         ProductExtensionFactory $extensionFactory,
         array $data = []
@@ -45,6 +58,7 @@ class Expression extends AbstractOptions
             $configuratorOptionRepository,
             $productConfiguratorOptionRepository,
             $searchCriteriaBuilder,
+            $filterProvider,
             $data
         );
     }
@@ -66,7 +80,7 @@ class Expression extends AbstractOptions
                             ->get($option->getConfiguratorOptionId());
                     } catch (NoSuchEntityException $exception) {
                         $this->_logger->error($exception->getMessage());
-                        return null;
+                        continue;
                     }
                     $option->setAdditionalData($configuratorOption->getData());
                 }

@@ -14,50 +14,57 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
         <?php echo /* @escapeNotVerified */ $option->getData('description') ?>
     </div>
     <div class="control">
-        <?php if ($option->getType() == \Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType::TYPE_TEXT) { ?>
-            <?php $_textValidate = null;
-            if ($option->getIsRequired()) {
-                $_textValidate['required'] = true;
-            }
-            if ($min = $option->getData('min_value')) {
-                $_textValidate['gte'] = (float)$min;
-            }
-            if ($max = $option->getData('max_value')) {
-                $_textValidate['lte'] = (float)$max;
-            }
-            if ($option->getMaxCharacters()) {
-                $_textValidate['maxlength'] = $option->getMaxCharacters();
-            }
-            ?>
+        <?php if ($option->getType() == \Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType::TYPE_TEXT) {
+    ?>
+            <?php
+            $_textValidate = null;
+    if ($option->getIsRequired()) {
+        $_textValidate['required'] = true;
+    }
+    if ($min = $option->getData('min_value')) {
+        $_textValidate['gte'] = (float)$min;
+    }
+    if ($max = $option->getData('max_value')) {
+        $_textValidate['lte'] = (float)$max;
+    }
+    if ($option->getMaxCharacters()) {
+        $_textValidate['maxlength'] = $option->getMaxCharacters();
+    } ?>
             <input type="text"
                    id="options_<?php echo /* @escapeNotVerified */ $option->getId() ?>_text"
                    class="input-text product-configurator-option"
-                <?php if (!empty($_textValidate)) {?>
+                <?php if (!empty($_textValidate)) {
+        ?>
                     data-validate="<?php echo $block->escapeHtml(json_encode($_textValidate)) ?>"
-                <?php } ?>
+                <?php
+    } ?>
                    name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                    data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
-                   data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
+                   data-code="<?php echo /* @escapeNotVerified */ $option->getCode() ?>"
                    value="<?php echo $block->escapeHtml($block->getDefaultValue()) ?>"/>
-        <?php } elseif ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) { ?>
+        <?php
+} elseif ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) {
+        ?>
             <?php $_textAreaValidate = null;
-            if ($option->getIsRequired()) {
-                $_textAreaValidate['required'] = true;
-            }
-            if ($option->getMaxCharacters()) {
-                $_textAreaValidate['maxlength'] = $option->getMaxCharacters();
-            }
-            ?>
+        if ($option->getIsRequired()) {
+            $_textAreaValidate['required'] = true;
+        }
+        if ($option->getMaxCharacters()) {
+            $_textAreaValidate['maxlength'] = $option->getMaxCharacters();
+        } ?>
             <textarea id="options_<?php echo /* @escapeNotVerified */ $option->getId() ?>_text"
                       class="product-custom-option"
-                <?php if (!empty($_textAreaValidate)) {?>
+                <?php if (!empty($_textAreaValidate)) {
+            ?>
                     data-validate="<?php echo $block->escapeHtml(json_encode($_textAreaValidate)) ?>"
-                <?php } ?>
+                <?php
+        } ?>
                       name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                       data-selector="options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                       rows="5"
                       cols="25"><?php echo $block->escapeHtml($option->getDefaultValue()) ?></textarea>
-        <?php } ?>
+        <?php
+    } ?>
         <?php if ($option->getMaxCharacters()): ?>
             <p class="note"><?php echo /* @escapeNotVerified */ __('Maximum number of characters:') ?>
                 <strong><?php echo /* @escapeNotVerified */ $option->getMaxCharacters() ?></strong></p>
