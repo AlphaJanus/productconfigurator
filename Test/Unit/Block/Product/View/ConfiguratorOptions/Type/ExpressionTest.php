@@ -30,6 +30,7 @@ class ExpressionTest extends AbstractOptionsTest
         $this->json = new \Magento\Framework\Serialize\Serializer\Json();
         $this->productExtension = $this->getMockBuilder(ProductExtensionInterface::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getConfiguratorOptions'])
             ->getMockForAbstractClass();
         $this->extensionFactory = $this->getMockBuilder(ProductExtensionFactory::class)
             ->disableOriginalConstructor()
