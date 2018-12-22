@@ -72,16 +72,6 @@ class ColumnsTest extends TestCase
      */
     private function getModel()
     {
-        /*return $this->objectManager->getObject(
-            Columns::class,
-            [
-                $this->contextInterface,
-                $this->columnFactory,
-                $this->attributeRepository,
-                [],
-                []
-            ]
-        );*/
         return new Columns(
             $this->contextInterface,
             $this->columnFactory,

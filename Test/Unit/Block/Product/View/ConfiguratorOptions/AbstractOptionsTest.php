@@ -26,6 +26,12 @@ use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Abstra
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Class AbstractOptionsTest
+ * @package Netzexpert\ProductConfigurator\Test\Unit\Block\Product\View\ConfiguratorOptions
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ */
 class AbstractOptionsTest extends TestCase
 {
     /** @var ObjectManager */
@@ -188,7 +194,6 @@ class AbstractOptionsTest extends TestCase
         $model = $this->getModel();
         $model->setProduct($this->product);
         $this->assertEquals($this->product, $model->getProduct());
-
     }
 
     public function testGetOptionDescription()

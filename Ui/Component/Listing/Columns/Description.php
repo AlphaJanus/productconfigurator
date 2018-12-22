@@ -58,5 +58,4 @@ class Description extends Column
         }
         return parent::prepareDataSource($dataSource);
     }
-
 }
