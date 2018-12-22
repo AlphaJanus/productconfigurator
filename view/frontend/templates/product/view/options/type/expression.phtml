@@ -10,7 +10,7 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
            class="input-text product-configurator-option expression-value"
            name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
            data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
-           data-code="<? echo /* @escapeNotVerified */ $option->getCode() ?>"
+           data-code="<?php echo /* @escapeNotVerified */ $option->getCode() ?>"
            value=""
            disabled="disabled" />
     <div class="label" >

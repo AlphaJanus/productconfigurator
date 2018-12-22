@@ -9,6 +9,7 @@
 namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions;
 
 use Magento\Catalog\Model\Product;
+use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -35,12 +36,16 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
     /** @var SearchCriteriaBuilder  */
     private $searchCriteriaBuilder;
 
+    /** @var FilterProvider  */
+    private $filterProvider;
+
     /**
      * AbstractOptions constructor.
      * @param Template\Context $context
      * @param ConfiguratorOptionRepositoryInterface $configuratorOptionRepository
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param FilterProvider $filterProvider
      * @param array $data
      */
     public function __construct(
@@ -48,11 +53,13 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
+        FilterProvider $filterProvider,
         array $data = []
     ) {
         $this->configuratorOptionRepository         = $configuratorOptionRepository;
         $this->productConfiguratorOptionRepository  = $productConfiguratorOptionRepository;
         $this->searchCriteriaBuilder                = $searchCriteriaBuilder;
+        $this->filterProvider                       = $filterProvider;
         parent::__construct($context, $data);
     }
 
@@ -159,5 +166,15 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
             $availableOptions[] = $value;
         }
         return count($availableOptions);
+    }
+
+    public function getOptionDescription()
+    {
+        try {
+            return $this->filterProvider->getPageFilter()->filter($this->option->getData('description'));
+        } catch (\Exception $exception) {
+            $this->_logger->error($exception->getMessage());
+            return $this->option->getData('description');
+        }
     }
 }
