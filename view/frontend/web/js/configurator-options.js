@@ -201,6 +201,7 @@ define([
                 dependencyConfig,
                 valueConfig,
                 allowedVariants,
+                allowedPVariants,
                 parentOption,
                 parentElement,
                 options = $(this.options.optionsSelector),
@@ -216,6 +217,17 @@ define([
                 if (tempId) {
                     parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()})
                     parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
+                    if (parentOption) {
+                        allowedPVariants = dependencyConfig.allowed_variants.split(',');
+                        if (allowedPVariants.indexOf(parentElement.val()) === -1) {
+                            $(option).parents('.field').addClass('hide');
+                            if (option.type === 'text') {
+                                option.value = dependencyConfig.default_value;
+                            }
+                        } else {
+                            $(option).parents('.field').removeClass('hide');
+                        }
+                    }
                     $.each(option.options, function (n, optionHtml) {
                         var optionValue = $(optionHtml).val();
                         valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});

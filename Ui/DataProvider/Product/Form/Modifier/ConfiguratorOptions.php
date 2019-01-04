@@ -639,6 +639,7 @@ class ConfiguratorOptions extends AbstractModifier
                                 'componentType' => Field::NAME,
                                 'formElement' => Select::NAME,
                                 'dataType' => Select::NAME,
+                                'cssclass' => 'parent-option',
                                 'default' => 0,
                                 'component' => 'Netzexpert_ProductConfigurator/js/form/element/parent_option',
                                 'dataScope' => static::FIELD_PARENT_OPTION,
@@ -648,6 +649,7 @@ class ConfiguratorOptions extends AbstractModifier
                         ]
                     ]
                 ],
+                static::ALLOWED_VARIANTS => $this->getAllowedVariantsConfig(1, true),
                 'values' => [
                     'arguments' => [
                         'data' => [
@@ -671,7 +673,7 @@ class ConfiguratorOptions extends AbstractModifier
                                 ],
                                 'identificationProperty'    => 'value_id',
                                 'identificationDRProperty'    => 'value_id',
-                                'sortOrder'                 => 1
+                                'sortOrder'                 => 2
                             ]
                         ]
                     ],
@@ -752,26 +754,37 @@ class ConfiguratorOptions extends AbstractModifier
                                         ],
                                     ],
                                 ],
-                                static::ALLOWED_VARIANTS => [
-                                    'arguments' => [
-                                        'data' => [
-                                            'config' => [
-                                                'label' => __('Allowed for parent values'),
-                                                'componentType' => Field::NAME,
-                                                'component' =>
-                                                    'Netzexpert_ProductConfigurator/js/form/element/allowed_variants',
-                                                'formElement' => MultiSelect::NAME,
-                                                'dataType' => Select::NAME,
-                                                'default' => [],
-                                                'dataScope' => static::ALLOWED_VARIANTS,
-                                                'sortOrder' => 3
-                                            ]
-                                        ]
-                                    ]
-                                ]
+                                static::ALLOWED_VARIANTS => $this->getAllowedVariantsConfig(3)
                             ],
                         ],
                     ],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param int $sortOrder
+     * @param bool $parent
+     * @return array
+     */
+    private function getAllowedVariantsConfig($sortOrder, $parent = false)
+    {
+        $component = ($parent) ? 'Netzexpert_ProductConfigurator/js/form/element/parent_allowed_variants' :
+            'Netzexpert_ProductConfigurator/js/form/element/allowed_variants';
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'label' => __('Allowed for parent values'),
+                        'componentType' => Field::NAME,
+                        'component' => $component,
+                        'formElement' => MultiSelect::NAME,
+                        'dataType' => Select::NAME,
+                        'default' => [],
+                        'dataScope' => static::ALLOWED_VARIANTS,
+                        'sortOrder' => $sortOrder
+                    ]
                 ]
             ]
         ];
