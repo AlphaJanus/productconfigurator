@@ -13,13 +13,14 @@ namespace Netzexpert\ProductConfigurator\Api\Data;
  */
 interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
-    const ID                        = 'option_id';
-    const PRODUCT_ID                = 'product_id';
-    const CONFIGURATOR_OPTION_ID    = 'configurator_option_id';
-    const GROUP_ID                  = 'group_id';
-    const POSITION                  = 'position';
-    const PARENT_OPTION             = 'parent_option';
-    const VALUES_DATA               = 'values_data';
+    const ID                            = 'option_id';
+    const PRODUCT_ID                    = 'product_id';
+    const CONFIGURATOR_OPTION_ID        = 'configurator_option_id';
+    const GROUP_ID                      = 'group_id';
+    const POSITION                      = 'position';
+    const PARENT_OPTION                 = 'parent_option';
+    const ENABLED_ON_PARENT_VARIANTS    = 'allowed_variants';
+    const VALUES_DATA                   = 'values_data';
 
     /**
      * @return int | null
@@ -50,6 +51,11 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
      * @return int
      */
     public function getParentOption();
+
+    /**
+     * @return array
+     */
+    public function getEnabledOnParentVariants();
 
     /**
      * @return array
@@ -93,7 +99,13 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
     public function setParentOption($parentOption);
 
     /**
-     * @param $valuesData
+     * @param array $variants
+     * @return $this
+     */
+    public function setEnabledOnParentVariants($variants);
+
+    /**
+     * @param array $valuesData
      * @return $this
      */
     public function setValuesData($valuesData);

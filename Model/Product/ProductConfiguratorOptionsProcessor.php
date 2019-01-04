@@ -123,10 +123,13 @@ class ProductConfiguratorOptionsProcessor
                     continue;
                 }
                 $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
+                $variants = (!empty($option['allowed_variants'])) ? $option['allowed_variants'] : [];
                 if ($option['option_id']) {
-                    $collection->getItemById($option['option_id'])
-                        ->setData($option)
-                        ->setParentOption($parentOption);
+                    /** @var ProductConfiguratorOptionInterface $productOption */
+                    $productOption = $collection->getItemById($option['option_id']);
+                    $productOption->setData($option)
+                        ->setParentOption($parentOption)
+                        ->setEnabledOnParentVariants($variants);
                 } else {
                     $optionEntity = $this->optionFactory->create();
                     $optionEntity->setData($option)->setGroupId($group->getId());
@@ -134,7 +137,8 @@ class ProductConfiguratorOptionsProcessor
                         $optionEntity->setId(null);
                     }
                     $optionEntity->setProductId($product->getId())
-                        ->setParentOption($parentOption);
+                        ->setParentOption($parentOption)
+                        ->setEnabledOnParentVariants($variants);
                     try {
                         $collection->addItem($optionEntity);
                     } catch (\Exception $exception) {

@@ -102,6 +102,14 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     /**
      * @inheritDoc
      */
+    public function getEnabledOnParentVariants()
+    {
+        return explode(',', $this->getData(self::ENABLED_ON_PARENT_VARIANTS));
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getValuesData()
     {
         $collection = $this->variantsCollectionFactory->create()
@@ -159,6 +167,14 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     public function setParentOption($parentOption)
     {
         return $this->setData(self::PARENT_OPTION, $parentOption);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setEnabledOnParentVariants($variants)
+    {
+        return $this->setData(self::ENABLED_ON_PARENT_VARIANTS, implode(',', $variants));
     }
 
     /**

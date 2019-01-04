@@ -71,6 +71,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.15') < 0) {
             $this->upgradeVersionTwoZeroFifteen($setup);
         }
+        if (version_compare($context->getVersion(), '2.0.16') < 0) {
+            $this->upgradeVersionTwoZeroSixteen($setup);
+        }
 
         $setup->endSetup();
     }
@@ -1007,5 +1010,23 @@ class UpgradeSchema implements UpgradeSchemaInterface
         } catch (\Zend_Db_Exception $exception) {
             $this->logger->error($exception->getMessage());
         }
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     */
+    public function upgradeVersionTwoZeroSixteen(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable('catalog_product_configurator_options'),
+            'allowed_variants',
+            [
+                'type'      => Table::TYPE_TEXT,
+                'length'    => 255,
+                'nullable'  => true,
+                'default'   => null,
+                'comment'   => 'Enabled on parent option variants'
+            ]
+        );
     }
 }
