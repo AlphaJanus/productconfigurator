@@ -74,7 +74,7 @@ class ProductConfiguratorOptionTest extends AbstractModelTest
             '3,4,5',
             $this->model->getData(ProductConfiguratorOption::ENABLED_ON_PARENT_VARIANTS)
         );
-        $this->assertEquals([3,4,5],$this->model->getEnabledOnParentVariants());
+        $this->assertEquals([3,4,5], $this->model->getEnabledOnParentVariants());
     }
 
     public function testSetValuesData()
@@ -147,13 +147,13 @@ class ProductConfiguratorOptionTest extends AbstractModelTest
         $this->model->setAdditionalData($data, $value);
         if (is_array($data)) {
             $this->assertTrue(is_array($expected));
-            foreach ($data as $key => $val) {
+            foreach (array_keys($data) as $key) {
                 $this->assertEquals($expected[$key], $this->model->getData($key));
             }
-        } else {
-            $this->assertEquals(true, $this->model->hasDataChanges());
-            $this->assertEquals($expected, $this->model->getData($data));
+            return;
         }
+        $this->assertEquals(true, $this->model->hasDataChanges());
+        $this->assertEquals($expected, $this->model->getData($data));
     }
 
     public function testSetProductId()
@@ -190,7 +190,7 @@ class ProductConfiguratorOptionTest extends AbstractModelTest
         $this->collection->expects($this->once())
             ->method('toArray')
             ->willReturn(['totalRecords' => 0, 'items' => []]);
-        $this->assertEquals([],$this->model->getValuesData());
+        $this->assertEquals([], $this->model->getValuesData());
     }
 
     public function testSetConfiguratorOptionId()
@@ -205,7 +205,8 @@ class ProductConfiguratorOptionTest extends AbstractModelTest
         $this->assertEquals(1, $this->model->getData(ProductConfiguratorOption::PARENT_OPTION));
     }
 
-    public function additionalDataProvider(){
+    public function additionalDataProvider()
+    {
         return [
             [
                 [
