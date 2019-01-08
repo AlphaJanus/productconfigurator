@@ -392,7 +392,7 @@ define([
             $.each(this.elems(), function (index, row) {
                 var item = _.findWhere(recData, {entity_id: row.recordId});
                 var pos = (typeof(row.position) !== 'undefined') ? row.position : item.position;
-                if (typeof(item) !== 'undefined' && parseInt(pos) < parseInt(elem.position) && typesWithVariants.indexOf(item.type) !== -1 ) {
+                if (typeof(item) !== 'undefined' && parseInt(pos) < parseInt(elem.position, 10) && typesWithVariants.indexOf(item.type) !== -1 ) {
                     option = {
                         value: item.configurator_option_id,
                         label: item.name,

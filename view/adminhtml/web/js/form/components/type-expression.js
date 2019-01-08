@@ -50,7 +50,9 @@ define([
 
             this.visible(this.optionType() === 'expression');
             if (!self.visible()) {
-                isRequiredSwitch.checked(false);
+                if (!isRequiredSwitch.value()) {
+                    isRequiredSwitch.checked(false);
+                }
                 isRequiredSwitch.disabled(false);
             } else {
                 if (self.optionType() === 'expression') {
