@@ -8,6 +8,7 @@
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\Collection
     as OptionsCollection;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionVariant\Collection;
@@ -34,7 +35,7 @@ class ProductConfiguratorOptionVariantProcessor
     }
 
     /**
-     * @param $product ProductInterface
+     * @param $product ProductInterface | Product
      * @param $options OptionsCollection
      */
     public function process($product, $options)
@@ -54,7 +55,7 @@ class ProductConfiguratorOptionVariantProcessor
                     if (!$option->getParentOption()) {
                         unset($variant['allowed_variants']);
                     }
-                    if (!empty($variant['variant_id'])) {
+                    if (!empty($variant['variant_id']) && !$product->getData('is_duplicate')) {
                         $collection->getItemById($variant['variant_id'])
                             ->setData($variant)
                             ->setProductId($productId)
@@ -72,6 +73,9 @@ class ProductConfiguratorOptionVariantProcessor
                                 (!empty($variant['allowed_variants'])) ?
                                     implode(',', $variant['allowed_variants']) : null
                             )->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                        if (!$variant['variant_id'] || $product->getData('is_duplicate')) {
+                            $variant->setId(null);
+                        }
                         try {
                             $collection->addItem($variant);
                         } catch (\Exception $exception) {

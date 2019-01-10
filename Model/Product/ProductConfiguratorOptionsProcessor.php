@@ -8,11 +8,13 @@
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterfaceFactory;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface;
+use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\Collection;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\CollectionFactory;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionsGroup\Collection
@@ -21,7 +23,7 @@ use Psr\Log\LoggerInterface;
 
 class ProductConfiguratorOptionsProcessor
 {
-    /** @var ProductConfiguratorOptionRepository */
+    /** @var ProductConfiguratorOptionRepositoryInterface */
     private $optionRepository;
 
     /** @var ProductConfiguratorOptionInterfaceFactory  */
@@ -32,13 +34,13 @@ class ProductConfiguratorOptionsProcessor
 
     /**
      * ProductConfiguratorOptionsProcessor constructor.
-     * @param ProductConfiguratorOptionRepository $optionRepository
+     * @param ProductConfiguratorOptionRepositoryInterface $optionRepository
      * @param ProductConfiguratorOptionInterfaceFactory $optionFactory
      * @param CollectionFactory $collectionFactory
      * @param LoggerInterface $logger
      */
     public function __construct(
-        ProductConfiguratorOptionRepository $optionRepository,
+        ProductConfiguratorOptionRepositoryInterface $optionRepository,
         ProductConfiguratorOptionInterfaceFactory $optionFactory,
         CollectionFactory $collectionFactory,
         LoggerInterface $logger
@@ -52,18 +54,14 @@ class ProductConfiguratorOptionsProcessor
     /**
      * @param $product ProductInterface
      * @param $groups GroupCollection
-     * @param $originalOptions ProductConfiguratorOptionInterface[]
+     * @param $originalOptions array
      * @return Collection | null
      */
     public function process($product, $groups, $originalOptions)
     {
         if (!empty($groups)) {
             foreach ($groups as $group) {
-                if (!empty($group->getData('assigned_configurator_options'))) {
-                    $this->deleteOptions($originalOptions, $group);
-                } else {
-                    $this->deleteOptions($originalOptions, $group);
-                }
+                $this->deleteOptions($originalOptions, $group);
             }
             return $this->saveOptions($product, $groups);
         }
@@ -78,8 +76,9 @@ class ProductConfiguratorOptionsProcessor
     {
         $assignedIds = [];
         $groupId = $group->getId();
-        if (!empty($group->getData('assigned_configurator_options'))) {
-            foreach ($group->getData('assigned_configurator_options') as $option) {
+        $assignedOptions = $group->getData('assigned_configurator_options');
+        if (!empty($assignedOptions)) {
+            foreach ($assignedOptions as $option) {
                 if (!empty($option['option_id'])) {
                     $assignedIds[] = $option['option_id'];
                 }
@@ -104,7 +103,7 @@ class ProductConfiguratorOptionsProcessor
     }
 
     /**
-     * @param $product ProductInterface
+     * @param $product ProductInterface | Product
      * @param $groups GroupCollection
      * @return Collection
      */
@@ -115,7 +114,7 @@ class ProductConfiguratorOptionsProcessor
             ->addFieldToFilter('product_id', $product->getId());
         /** @var ProductConfiguratorOptionsGroupInterface $group */
         foreach ($groups as $group) {
-            if (!$group->getData('assigned_configurator_options')) {
+            if (empty($group->getData('assigned_configurator_options'))) {
                 continue;
             }
             foreach ($group->getData('assigned_configurator_options') as $option) {
@@ -124,7 +123,7 @@ class ProductConfiguratorOptionsProcessor
                 }
                 $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
                 $variants = (!empty($option['allowed_variants'])) ? $option['allowed_variants'] : [];
-                if ($option['option_id']) {
+                if ($option['option_id'] && !$product->getData('is_duplicate')) {
                     /** @var ProductConfiguratorOptionInterface $productOption */
                     $productOption = $collection->getItemById($option['option_id']);
                     $productOption->setData($option)
@@ -133,7 +132,10 @@ class ProductConfiguratorOptionsProcessor
                 } else {
                     $optionEntity = $this->optionFactory->create();
                     $optionEntity->setData($option)->setGroupId($group->getId());
-                    if (!$option['option_id']) {
+                    if ($product->getData('is_duplicate')) {
+                        $collection->removeItemByKey($option['option_id']);
+                    }
+                    if (!$option['option_id'] || $product->getData('is_duplicate')) {
                         $optionEntity->setId(null);
                     }
                     $optionEntity->setProductId($product->getId())

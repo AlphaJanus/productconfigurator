@@ -136,7 +136,6 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     {
         if (!$this->variants) {
             $this->variants = $this->variantCollectionFactory->create()
-                ->joinProductVariantsData()
                 ->addFieldToFilter('main_table.configurator_option_id', ['eq' => $this->getId()])
                 ->setOrder('sort_order', Collection::SORT_ORDER_ASC);
         }

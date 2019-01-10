@@ -215,10 +215,10 @@ define([
                 dependencyConfig = self.getDependencyConfig(optionId);
                 tempId = parseInt(dependencyConfig.parent_option, 10);
                 if (tempId) {
-                    parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()})
+                    parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()});
                     parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
                     if (parentOption) {
-                        allowedPVariants = dependencyConfig.allowed_variants.split(',');
+                        allowedPVariants = (!_.isNull(dependencyConfig.allowed_variants)) ? dependencyConfig.allowed_variants.split(',') : [];
                         if (allowedPVariants.indexOf(parentElement.val()) === -1) {
                             $(option).parents('.field').addClass('hide');
                             if (option.type === 'text') {
