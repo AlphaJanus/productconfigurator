@@ -32,6 +32,7 @@ class AbstractModelTest extends TestCase
         $this->context = $this->getMock(Context::class);
         $this->registry = $this->getMock(Registry::class);
     }
+
     protected function getMock($class, $methods = null)
     {
         $mockBuilder =  $this->getMockBuilder($class)

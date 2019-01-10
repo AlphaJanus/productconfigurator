@@ -8,6 +8,7 @@
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionsGroupInterface;
@@ -89,7 +90,7 @@ class ProductConfiguratorOptionsGroupsProcessor
     }
 
     /**
-     * @param $product ProductInterface
+     * @param $product ProductInterface | Product
      * @param $options_groups array
      * @return Collection
      */
@@ -101,7 +102,7 @@ class ProductConfiguratorOptionsGroupsProcessor
             ->addFieldToFilter('product_id', $product->getId());
         foreach ($options_groups as &$options_group) {
             $options_group['product_id'] = $product->getId();
-            if ($options_group['group_id']) {
+            if ($options_group['group_id'] && !$product->getData('is_duplicate')) {
                 $collection->getItemById($options_group['group_id'])->setData($options_group);
             } else {
                 unset($options_group['group_id']);
