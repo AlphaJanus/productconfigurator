@@ -61,6 +61,8 @@ class Save extends Action
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
