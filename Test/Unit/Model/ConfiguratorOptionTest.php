@@ -29,7 +29,7 @@ class ConfiguratorOptionTest extends AbstractModelTest
     /** @var ResourceModel | \PHPUnit_Framework_MockObject_MockObject */
     private $resourceModel;
 
-    /** @var ConfiguratorOption | \PHPUnit_Framework_MockObject_MockObject*/
+    /** @var ConfiguratorOption | \PHPUnit_Framework_MockObject_MockObject */
     private $model;
 
     /** @var ConfiguratorOption */
@@ -170,5 +170,33 @@ class ConfiguratorOptionTest extends AbstractModelTest
     {
         $this->model->setCode('test');
         $this->assertEquals('test', $this->model->getCode());
+    }
+
+    public function testCreatedAt()
+    {
+        $date = date("Y-m-d");
+        $this->model->setCreatedAt($date);
+        $this->assertEquals($date, $this->model->getCreatedAt());
+    }
+
+    public function testUpdatedAt()
+    {
+        $date = date("Y-m-d");
+        $this->model->setUpdatedAt($date);
+        $this->assertEquals($date, $this->model->getUpdatedAt());
+    }
+
+    public function testIsDuplicate()
+    {
+        $isDuplicate = true;
+        $this->model->setIsDuplicate($isDuplicate);
+        $this->assertEquals($isDuplicate, $this->model->isDuplicate());
+    }
+
+    public function testOriginalLinkId()
+    {
+        $id = 1;
+        $this->model->setOriginalLinkId($id);
+        $this->assertEquals($id, $this->model->getOriginalLinkId());
     }
 }

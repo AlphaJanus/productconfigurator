@@ -11,11 +11,16 @@ use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Varian
 
 interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
-    const NAME =  'name';
-    const CODE = 'code';
+    const NAME              = 'name';
+    const CODE              = 'code';
+    const CREATED_AT        = 'created_at';
+    const UPDATED_AT        = 'updated_at';
 
-    const TYPE  = 'type';
-    const VALUES = 'values';
+    const TYPE              = 'type';
+    const VALUES            = 'values';
+
+    const IS_DUPLICATE      = 'is_duplicate';
+    const ORIGINAL_LINK_ID  = "original_link_id";
 
     /**
      * @return int|null
@@ -49,6 +54,28 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
      * @return ConfiguratorOptionInterface
      */
     public function setCode($code);
+
+    /**
+     * @return string | null
+     */
+    public function getCreatedAt();
+
+    /**
+     * @param $createdAt string | null
+     * @return $this
+     */
+    public function setCreatedAt($createdAt);
+
+    /**
+     * @return string | null
+     */
+    public function getUpdatedAt();
+
+    /**
+     * @param $updatedAt string | null
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt);
 
     /**
      * @return string
@@ -125,4 +152,26 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
      * @return array
      */
     public function getTypesWithVariants();
+
+    /**
+     * @return bool
+     */
+    public function isDuplicate();
+
+    /**
+     * @param $isDuplicate bool
+     * @return $this
+     */
+    public function setIsDuplicate($isDuplicate);
+
+    /**
+     * @return int
+     */
+    public function getOriginalLinkId();
+
+    /**
+     * @param $id int
+     * @return $this
+     */
+    public function setOriginalLinkId($id);
 }

@@ -105,6 +105,38 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getCreatedAt()
+    {
+        return $this->getData(self::CREATED_AT);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCreatedAt($createdAt)
+    {
+        return $this->setData(self::CREATED_AT, $createdAt);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUpdatedAt()
+    {
+        return $this->getData(self::UPDATED_AT);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        return $this->setData(self::UPDATED_AT, $updatedAt);
+    }
+
+    /**
      * @inheritdoc
      */
     public function getType()
@@ -177,5 +209,37 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
             OptionType::TYPE_RADIO,
             OptionType::TYPE_IMAGE,
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isDuplicate()
+    {
+        return $this->getData(self::IS_DUPLICATE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setIsDuplicate($isDuplicate)
+    {
+        return $this->setData(self::IS_DUPLICATE, $isDuplicate);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOriginalLinkId()
+    {
+        return $this->getData(self::ORIGINAL_LINK_ID);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOriginalLinkId($id)
+    {
+        return $this->setData(self::ORIGINAL_LINK_ID, $id);
     }
 }

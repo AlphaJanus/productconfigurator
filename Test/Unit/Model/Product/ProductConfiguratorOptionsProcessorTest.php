@@ -111,10 +111,6 @@ class ProductConfiguratorOptionsProcessorTest extends AbstractModelTest
     {
         // for deleteOptions()
         $iteratorMock = new \ArrayIterator([$this->group]);
-        /*$this->groupCollection->expects($this->once())
-            ->method('getItemById')
-            ->with($groupData['id'])
-            ->willReturn($this->group);*/
         $this->group->expects($this->any())
             ->method('getId')
             ->willReturn($groupData['id']);

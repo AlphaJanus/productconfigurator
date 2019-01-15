@@ -16,6 +16,7 @@ use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterfaceFactory;
+use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Copier;
 use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class Save extends Action
@@ -34,32 +35,40 @@ class Save extends Action
     /** @var ConfiguratorOptionInterfaceFactory  */
     private $optionFactory;
 
+    /** @var ConfiguratorOptionVariantRepositoryInterface  */
     private $variantRepository;
 
     /** @var DataPersistorInterface  */
     private $dataPersistor;
+
+    private $optionCopier;
 
     public function __construct(
         Action\Context $context,
         ConfiguratorOptionRepositoryInterface $optionRepository,
         ConfiguratorOptionInterfaceFactory $optionFactory,
         ConfiguratorOptionVariantRepositoryInterface $variantRepository,
-        DataPersistorInterface $dataPersistor
+        DataPersistorInterface $dataPersistor,
+        Copier $optionCopier
     ) {
         $this->optionRepository     = $optionRepository;
         $this->optionFactory        = $optionFactory;
         $this->variantRepository    = $variantRepository;
         $this->dataPersistor        = $dataPersistor;
+        $this->optionCopier         = $optionCopier;
         parent::__construct($context);
     }
 
     /**
      * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
+        $redirectBack = $this->getRequest()->getParam('back');
         $data = $this->getRequest()->getParams();
         $dataToUnset = [];
         if (!empty($data) && isset($data['option'])) {
@@ -83,9 +92,8 @@ class Save extends Action
                 $this->optionRepository->save($option);
                 $this->messageManager->addSuccessMessage(__('Option was successfully saved'));
                 $this->dataPersistor->clear('configurator_option');
-
-                if ($this->getRequest()->getParam('back')) {
-                    return $resultRedirect->setPath('*/*/edit', ['id' => $option->getId(), '_current' => true]);
+                if ($redirectBack === "duplicate") {
+                    $newOption = $this->optionCopier->copy($option);
                 }
             } catch (CouldNotSaveException $exception) {
                 $this->messageManager->addErrorMessage(
@@ -93,6 +101,16 @@ class Save extends Action
                 );
                 $this->dataPersistor->set('configurator_option', $data);
             }
+        }
+        if ($redirectBack === "duplicate" && !empty($newOption)) {
+            $this->messageManager->addSuccessMessage(__('You duplicated the option.'));
+            return $resultRedirect->setPath(
+                '*/*/edit',
+                ['id' => $newOption->getId(), 'back' => null, '_current' => true]
+            );
+        }
+        if ($redirectBack) {
+            return $resultRedirect->setPath('*/*/edit', ['id' => $option->getId(), '_current' => true]);
         }
         return $resultRedirect->setPath('*/*/');
     }
