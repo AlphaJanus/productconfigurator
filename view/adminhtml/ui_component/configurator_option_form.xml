@@ -11,6 +11,7 @@
     <settings>
         <buttons>
             <button name="save_and_continue" class="Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\SaveAndContinue"/>
+            <button name="save_and_duplicate" class="Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\SaveAndDuplicate"/>
             <button name="save" class="Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\Save"/>
             <button name="reset" class="Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\Reset"/>
             <button name="delete" class="Netzexpert\ProductConfigurator\Block\Adminhtml\ConfiguratorOption\Edit\Delete"/>

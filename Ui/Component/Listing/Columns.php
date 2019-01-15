@@ -62,7 +62,10 @@ class Columns extends \Magento\Ui\Component\Listing\Columns
         /** @var Attribute $attribute */
         foreach ($this->attributeRepository->getList() as $attribute) {
             $config = [];
-            if (!isset($this->components[$attribute->getAttributeCode()]) && $attribute->getData('is_visible_in_grid')) {
+            if (
+                !isset($this->components[$attribute->getAttributeCode()])
+                && $attribute->getData('is_visible_in_grid')
+            ) {
                 $config['sortOrder'] = ++$columnSortOrder;
                 if ($attribute->getData('is_filterable_in_grid')) {
                     $config['filter'] = $this->getFilterType($attribute->getFrontendInput());
