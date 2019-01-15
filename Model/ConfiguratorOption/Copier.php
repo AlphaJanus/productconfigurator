@@ -48,7 +48,6 @@ class Copier
         $duplicate->setUpdatedAt(null);
         $duplicate->setId(null);
         $isDuplicateSaved = false;
-
         do {
             $code = $duplicate->getCode();
             $code = preg_match('/(.*)-(\d+)$/', $code, $matches)
@@ -59,6 +58,7 @@ class Copier
                 $this->optionRepository->save($duplicate);
                 $isDuplicateSaved = true;
             } catch (CouldNotSaveException $exception) {
+                 continue;
             }
         } while (!$isDuplicateSaved);
 
