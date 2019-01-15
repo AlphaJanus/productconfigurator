@@ -6,7 +6,7 @@ define([
     return Checkbox.extend({
         defaults: {
             imports: {
-                parentOption: '${ $ .provider }:${ $ .dataScope.replace(/.values.[(0-9)+].is_dependent/, "") }.parent_option',
+                parentOption: '${ $ .provider }:${ $ .dataScope.replace(/.values.[(0-9)]+.is_dependent/, "") }.parent_option',
                 isEnabled: '${ $ .provider }:${ $ .parentScope }.enabled'
             }
         },
