@@ -190,7 +190,7 @@ class ConfiguratorOptionTest extends AbstractModelTest
     {
         $isDuplicate = true;
         $this->model->setIsDuplicate($isDuplicate);
-        $this->assertEquals($isDuplicate, $this->model->getIsDuplicate());
+        $this->assertEquals($isDuplicate, $this->model->isDuplicate());
     }
 
     public function testOriginalLinkId()

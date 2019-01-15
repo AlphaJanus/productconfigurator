@@ -61,7 +61,7 @@ class ConfiguratorOptionVariantsProcessor
     private function saveVariants($option)
     {
         foreach ($option->getValues() as $value) {
-            if ($value['value_id'] && !$option->getIsDuplicate()) {
+            if ($value['value_id'] && !$option->isDuplicate()) {
                 try {
                     $variant = $this->variantRepository->get($value['value_id']);
                 } catch (NoSuchEntityException $exception) {

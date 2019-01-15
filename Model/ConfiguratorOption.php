@@ -214,7 +214,7 @@ class ConfiguratorOption extends AbstractModel implements ConfiguratorOptionInte
     /**
      * @inheritDoc
      */
-    public function getIsDuplicate()
+    public function isDuplicate()
     {
         return $this->getData(self::IS_DUPLICATE);
     }

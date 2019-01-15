@@ -156,7 +156,7 @@ interface ConfiguratorOptionInterface extends \Magento\Framework\Api\ExtensibleD
     /**
      * @return bool
      */
-    public function getIsDuplicate();
+    public function isDuplicate();
 
     /**
      * @param $isDuplicate bool
