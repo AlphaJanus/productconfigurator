@@ -28,6 +28,10 @@
                        name="product.info.configurator.options.static"
                        as="c-static"
                        template="Netzexpert_ProductConfigurator::product/view/options/type/static.phtml" />
+                <block class="Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\File"
+                       name="product.info.configurator.options.file"
+                       as="c-file"
+                       template="Netzexpert_ProductConfigurator::product/view/options/type/file.phtml" />
             </block>
         </referenceBlock>
     </body>

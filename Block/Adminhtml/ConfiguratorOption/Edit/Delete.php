@@ -72,12 +72,15 @@ class Delete extends Generic
      */
     public function getOptionId()
     {
-        try {
-            return $this->optionRepository->get(
-                $this->context->getRequestParam('id')
-            )->getId();
-        } catch (NoSuchEntityException $exception) {
-            $this->logger->error($exception->getMessage());
+        $id = $this->context->getRequestParam('id');
+        if ($id) {
+            try {
+                return $this->optionRepository->get(
+                    $id
+                )->getId();
+            } catch (NoSuchEntityException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
         return null;
     }

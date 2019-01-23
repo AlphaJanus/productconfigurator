@@ -24,10 +24,6 @@ use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class Eav extends AbstractModifier
 {
-
-    /** @var ArrayManager  */
-    private $arrayManager;
-
     /** @var DataPersistorInterface */
     private $dataPersistor;
 

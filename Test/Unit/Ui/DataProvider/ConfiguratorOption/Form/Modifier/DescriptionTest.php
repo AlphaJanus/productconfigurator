@@ -23,7 +23,7 @@ class DescriptionTest extends AbstractModifierTest
             [
                 'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
                 'attributeRepository'   => $this->attributeRepositoryMock,
-                'arrayManager'          => $this->arrayManagerMock,
+                'arrayManager'          => $this->arrayManager,
                 'formElementMapper'     => $this->formElementMapperMock,
                 'eavAttributeFactory'   => $this->eavAttributeFactoryMock,
                 'dataPersistor'         => $this->dataPersistorMock,
@@ -54,16 +54,9 @@ class DescriptionTest extends AbstractModifierTest
         ];
         $descriptionPath = 'general/children/container_description/arguments/data/config';
         $configPath = ltrim($descriptionPath, ArrayManager::DEFAULT_PATH_DELIMITER);
-        $this->arrayManagerMock->expects($this->once())
-            ->method('merge')
-            ->with(
-                $configPath,
-                $meta,
-                [
-                    'component' => 'Magento_Ui/js/form/components/group',
-                ]
-            )->willReturnArgument(2);
-        $this->assertArrayHasKey('component', $this->getModel()->modifyMeta($meta));
+
+        $meta = $this->getModel()->modifyMeta($meta);
+        $this->assertArrayHasKey('component', $this->arrayManager->get($configPath, $meta));
     }
 
     public function testModifyData()

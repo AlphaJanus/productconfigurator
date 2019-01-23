@@ -19,10 +19,6 @@ use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class Description extends AbstractModifier
 {
-
-    /** @var ArrayManager  */
-    private $arrayManager;
-
     /**
      * Description constructor.
      * @param SearchCriteriaBuilder $searchCriteriaBuilder

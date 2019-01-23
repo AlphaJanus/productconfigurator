@@ -51,9 +51,6 @@ class TypeSelect extends AbstractModifier
     const FIELD_SORT_ORDER_NAME = 'sort_order';
     const FIELD_IS_DEFAULT_NAME = 'is_default';
 
-    /** @var ArrayManager  */
-    private $arrayManager;
-
     /** @var StoreManagerInterface  */
     private $storeManager;
 

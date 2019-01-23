@@ -43,7 +43,8 @@ define([
                         case 'select-one':
                             parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
                             optionId = parts[2];
-                            valueData = _.findWhere(self.optionsData[optionId].values, {'value_id': $(option).val().toString()});
+                            var valueId = (!_.isNull($(option).val())) ? $(option).val().toString() : '';
+                            valueData = _.findWhere(self.optionsData[optionId].values, {'value_id': valueId});
                             if (typeof(valueData) != "undefined") {
                                 optionVal = valueData.value;
                             } else {

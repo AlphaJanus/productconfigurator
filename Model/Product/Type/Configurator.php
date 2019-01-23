@@ -18,7 +18,9 @@ use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterf
 class Configurator extends AbstractType
 {
 
-    const TYPE_ID = 'configurator';
+    const TYPE_ID                       = 'configurator';
+
+    const CONFIGURATOR_OPTION_PREFIX    = 'configurator_option_';
 
     /** @var ConfiguratorOptionRepositoryInterface  */
     private $configuratorOptionRepository;

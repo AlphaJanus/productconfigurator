@@ -53,7 +53,6 @@ class DeleteTest extends GenericTest
         $this->loggerMock = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->contextMock->expects($this->any())->method('getRequestParam')->with('id')->willReturn(1);
         $this->optionRepositoryMock->expects($this->any())
             ->method('get')->willReturn($this->option);
         $this->option->expects($this->any())->method('getId')->willReturn(1);
@@ -75,9 +74,15 @@ class DeleteTest extends GenericTest
         ]);
     }
 
-    public function testGetOptionId()
+    /**
+     * @param $data int
+     * @param $expected int
+     * @dataProvider optionIdProvider
+     */
+    public function testGetOptionId($data, $expected)
     {
-        $this->assertEquals(1, $this->getModel()->getOptionId());
+        $this->contextMock->expects($this->any())->method('getRequestParam')->with('id')->willReturn($data);
+        $this->assertEquals($expected, $this->getModel()->getOptionId());
     }
 
     public function testGetDeleteUrl()
@@ -91,6 +96,7 @@ class DeleteTest extends GenericTest
     }
     public function testGetButtonData()
     {
+        $this->contextMock->expects($this->any())->method('getRequestParam')->with('id')->willReturn(1);
         $this->assertEquals(
             [
                 'label' => __('Delete Option'),
@@ -104,10 +110,18 @@ class DeleteTest extends GenericTest
         );
     }
 
-    public function testGetOptionIdExceprion()
+    public function testGetOptionIdException()
     {
         $this->optionRepositoryMock->expects($this->any())
             ->method('get')->willThrowException($this->noSuchEntityException);
         $this->assertEquals(null, $this->getModel()->getOptionId());
+    }
+
+    public function optionIdProvider()
+    {
+        return [
+            [1,1],
+            [null,null]
+        ];
     }
 }

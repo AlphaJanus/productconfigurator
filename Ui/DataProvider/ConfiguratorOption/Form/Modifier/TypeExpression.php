@@ -23,8 +23,6 @@ use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class TypeExpression extends AbstractModifier
 {
-    /** @var ArrayManager  */
-    private $arrayManager;
 
     /** @var LayoutFactory  */
     private $layoutFactory;

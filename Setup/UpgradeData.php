@@ -52,8 +52,8 @@ class UpgradeData implements UpgradeDataInterface
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.14', '<')) {
-            $this->upgradeVersionTwoZeroFourteen($setup, $eavSetup, $context);
+        if (version_compare($context->getVersion(), '2.0.17', '<')) {
+            $this->upgradeVersionTwoZeroSeventeen($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -78,6 +78,40 @@ class UpgradeData implements UpgradeDataInterface
                 $this->logger->error($exception->getMessage());
             }
         }
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeVersionTwoZeroSeventeen(
+        ModuleDataSetupInterface $setup,
+        EavSetup $eavSetup,
+        ModuleContextInterface $context
+
+    ) {
+        if (version_compare($context->getVersion(), '2.0.14', '<')) {
+            $this->upgradeVersionTwoZeroFourteen($setup, $eavSetup, $context);
+        }
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'extensions',
+            [
+                'group'                 => 'General',
+                'type'                  => 'text',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Allowed Extensions',
+                'input'                 => 'text',
+                'class'                 => '',
+                'required'              => true,
+                'position'              => 100,
+                'is_visible_in_grid'    => 0,
+                'is_filterable_in_grid' => 0,
+                'apply_to'              => 'file'
+            ]
+        );
     }
 
     /**

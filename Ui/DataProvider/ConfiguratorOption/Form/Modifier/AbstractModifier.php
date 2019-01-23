@@ -50,7 +50,7 @@ abstract class AbstractModifier implements ModifierInterface
     private $attributeRepository;
 
     /** @var ArrayManager  */
-    private $arrayManager;
+    protected $arrayManager;
 
     /** @var FormElementMapper  */
     private $formElementMapper;
