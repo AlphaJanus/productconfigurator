@@ -91,6 +91,8 @@ class FileProcessor
      * @throws Exception
      * @throws LocalizedException
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function validate($option, $optionEntity, $product)
     {
