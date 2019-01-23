@@ -21,9 +21,19 @@ use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 
 class TypeText extends AbstractModifier
 {
-    /** @var ArrayManager  */
-    private $arrayManager;
-
+    /**
+     * TypeText constructor.
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param ConfiguratorOptionAttributeRepositoryInterface $attributeRepository
+     * @param ArrayManager $arrayManager
+     * @param FormElementMapper $formElementMapper
+     * @param EavAttributeFactory $eavAttributeFactory
+     * @param DataPersistorInterface $dataPersistor
+     * @param Registry $registry
+     * @param Config $eavConfig
+     * @param OptionType $optionTypeSource
+     * @param array $attributesToDisable
+     */
     public function __construct(
         SearchCriteriaBuilder $searchCriteriaBuilder,
         ConfiguratorOptionAttributeRepositoryInterface $attributeRepository,

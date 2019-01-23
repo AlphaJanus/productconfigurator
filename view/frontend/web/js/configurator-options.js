@@ -67,7 +67,7 @@ define([
 
             case 'file':
                 // Checking for 'disable' property equal to checking DOMNode with id*="change-"
-                changes[optionHash] = optionValue || element.prop('disabled') ? optionConfig.prices : {};
+                //changes[optionHash] = optionValue || element.prop('disabled') ? optionConfig.prices : {};
                 break;
         }
 
@@ -243,9 +243,6 @@ define([
                             }
                         } else {
                             $(optionHtml).removeAttr('disabled');
-                            /*if(typeof(valueConfig) !== "undefined" && valueConfig.is_default == "1"){
-                                optionHtml.parentElement.value = optionValue;
-                            }*/
                             var availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
                                 return (el.value !== "" && !el.disabled);
                             });

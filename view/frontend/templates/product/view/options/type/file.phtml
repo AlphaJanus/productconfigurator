@@ -1,0 +1,64 @@
+<?php
+/** @var $block \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\File */
+
+$option = $block->getOption();
+/** @var \Magento\Framework\DataObject $fileInfo */
+$fileInfo = $block->getFileInfo();
+$fileExists = $fileInfo->hasData();
+$fileName = 'configurator_options_' . $option->getId() . '_file';
+$fieldNameAction = $fileName . '_action';
+$fieldValueAction = $fileExists ? 'save_old' : 'save_new';
+$fileNamed = $fileName . '_name';
+$class = ($option->getData('is_required')) ? ' required' : '';
+$textValidate = null;
+if ($option->getData('is_required')) {
+    $textValidate['required'] = true;
+}
+if ($option->getData('extensions')) {
+    $textValidate['fileextensions'] = $option->getData('extensions');
+}
+?>
+<div class="field file<?= /* @escapeNotVerified */ $class ?>">
+    <label class="label" for="<?= /* @noEscape */ $fileName ?>" id="<?= /* @noEscape */ $fileName ?>-label">
+        <span><?= $block->escapeHtml($option->getData('title')) ?></span>
+        <?= /* @escapeNotVerified */ $block->getFormattedPrice() ?>
+    </label>
+    <?php if ($fileExists): ?>
+        <div class="control">
+            <span class="<?= /* @noEscape */ $fileNamed ?>"><?= $block->escapeHtml($fileInfo->getData('title')) ?></span>
+            <a href="javascript:void(0)" class="label" id="change-<?= /* @noEscape */ $fileName ?>" >
+                <?= /* @escapeNotVerified */ __('Change') ?>
+            </a>
+            <?php if (!$option->getData('is_required')): ?>
+                <input type="checkbox" id="delete-<?= /* @escapeNotVerified */ $fileName ?>" />
+                <span class="label"><?= /* @escapeNotVerified */ __('Delete') ?></span>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+    <div class="control" id="input-box-<?= /* @escapeNotVerified */ $fileName ?>"
+         data-mage-init='{"priceOptionFile":{
+                "fileName":"<?= /* @noEscape */ $fileName ?>",
+                "fileNamed":"<?= /* @noEscape */ $fileNamed ?>",
+                "fieldNameAction":"<?= /* @escapeNotVerified */ $fieldNameAction ?>",
+                "changeFileSelector":"#change-<?= /* @escapeNotVerified */ $fileName ?>",
+                "deleteFileSelector":"#delete-<?= /* @escapeNotVerified */ $fileName ?>"}
+             }'
+        <?= $fileExists ? 'style="display:none"' : '' ?>>
+        <input type="file"
+               name="<?= /* @escapeNotVerified */ $fileName ?>"
+               id="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+               data-validate="<?php echo $block->escapeHtml(json_encode($textValidate)) ?>"
+               class="product-configurator-option<?= $option->getData('is_required') ? ' required' : '' ?>"
+               data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+            <?= $fileExists ? 'disabled="disabled"' : '' ?> />
+        <input type="hidden" name="<?= /* @escapeNotVerified */ $fieldNameAction ?>" value="<?= /* @escapeNotVerified */ $fieldValueAction ?>" />
+        <?php if ($option->getData('extensions')): ?>
+            <p class="note">
+                <?= /* @escapeNotVerified */ __('Compatible file extensions to upload') ?>: <strong><?= /* @escapeNotVerified */ $option->getData('extensions') ?></strong>
+            </p>
+        <?php endif; ?>
+
+    </div>
+</div>
+
+

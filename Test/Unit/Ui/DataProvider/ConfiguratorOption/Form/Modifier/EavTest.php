@@ -19,7 +19,7 @@ class EavTest extends AbstractModifierTest
             [
                 'searchCriteriaBuilder' => $this->searchCriteriaBuilderMock,
                 'attributeRepository'   => $this->attributeRepositoryMock,
-                'arrayManager'          => $this->arrayManagerMock,
+                'arrayManager'          => $this->arrayManager,
                 'formElementMapper'     => $this->formElementMapperMock,
                 'eavAttributeFactory'   => $this->eavAttributeFactoryMock,
                 'dataPersistor'         => $this->dataPersistorMock,

@@ -35,7 +35,6 @@ class SaveAndDuplicateTest extends GenericTest
                             ]
                         ]
                     ],
-                    'form-role' => 'save',
                 ],
                 'sort_order' => 85,
             ],

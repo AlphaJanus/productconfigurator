@@ -45,8 +45,8 @@ abstract class AbstractModifierTest extends TestCase
     /** @var ConfiguratorOptionAttributeInterface | MockObject */
     protected $itemMock;
 
-    /** @var ArrayManager | MockObject */
-    protected $arrayManagerMock;
+    /** @var ArrayManager */
+    protected $arrayManager;
 
     /** @var FormElement | MockObject */
     protected $formElementMapperMock;
@@ -84,10 +84,7 @@ abstract class AbstractModifierTest extends TestCase
         $this->itemMock = $this->getMockBuilder(ConfiguratorOptionAttributeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $this->arrayManagerMock = $this->getMockBuilder(ArrayManager::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['merge'])
-            ->getMock();
+        $this->arrayManager= $this->objectManager->getObject(ArrayManager::class);
         $this->formElementMapperMock = $this->getMockBuilder(FormElement::class)
             ->disableOriginalConstructor()
             ->getMock();

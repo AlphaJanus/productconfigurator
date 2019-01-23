@@ -34,7 +34,6 @@ class SaveAndDuplicate extends Generic
                         ]
                     ]
                 ],
-                'form-role' => 'save',
             ],
             'sort_order' => 85,
         ];

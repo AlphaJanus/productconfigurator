@@ -19,6 +19,7 @@ class OptionType extends AbstractSource implements OptionSourceInterface
     const TYPE_IMAGE        = 'image';
     const TYPE_EXPRESSION   = 'expression';
     const TYPE_STATIC       = 'static';
+    const TYPE_FILE         = 'file';
 
     /**
      * @inheritDoc
@@ -41,6 +42,7 @@ class OptionType extends AbstractSource implements OptionSourceInterface
                 ['label' => __('Image'), 'value' => self::TYPE_IMAGE],
                 ['label' => __('Expression'), 'value' => self::TYPE_EXPRESSION],
                 ['label' => __('Static'), 'value' => self::TYPE_STATIC],
+                ['label' => __('File'), 'value' => self::TYPE_FILE],
             ];
         }
         return $this->_options;
