@@ -139,7 +139,7 @@ abstract class AbstractModifier implements ModifierInterface
         }
     }
 
-    public function setupAttributeMeta(EavAttribute $attribute, $sortOrder = 0)
+    public function setupAttributeMeta($attribute, $sortOrder = 0)
     {
         $configPath = ltrim(static::META_CONFIG_PATH, ArrayManager::DEFAULT_PATH_DELIMITER);
 

@@ -10,6 +10,13 @@ $fieldNameAction = $fileName . '_action';
 $fieldValueAction = $fileExists ? 'save_old' : 'save_new';
 $fileNamed = $fileName . '_name';
 $class = ($option->getData('is_required')) ? ' required' : '';
+$textValidate = null;
+if ($option->getData('is_required')) {
+    $textValidate['required'] = true;
+}
+if ($option->getData('extensions')) {
+    $textValidate['fileextensions'] = $option->getData('extensions');
+}
 ?>
 <div class="field file<?= /* @escapeNotVerified */ $class ?>">
     <label class="label" for="<?= /* @noEscape */ $fileName ?>" id="<?= /* @noEscape */ $fileName ?>-label">
@@ -40,6 +47,7 @@ $class = ($option->getData('is_required')) ? ' required' : '';
         <input type="file"
                name="<?= /* @escapeNotVerified */ $fileName ?>"
                id="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+               data-validate="<?php echo $block->escapeHtml(json_encode($textValidate)) ?>"
                class="product-configurator-option<?= $option->getData('is_required') ? ' required' : '' ?>"
                data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
             <?= $fileExists ? 'disabled="disabled"' : '' ?> />
@@ -52,3 +60,5 @@ $class = ($option->getData('is_required')) ? ' required' : '';
 
     </div>
 </div>
+
+

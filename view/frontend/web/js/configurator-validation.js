@@ -41,5 +41,23 @@ define([
                 return message.replace('%s', this.gteToVal);
             }
         );
+
+        $.validator.addMethod(
+            "fileextensions",
+            function (value, element, params) {
+                if (!value || !params) {
+                    return true;
+                }
+                var ext = value.substring(value.lastIndexOf('.') + 1);
+                var extensions = params.split(',');
+                for (var i=0; i < extensions.length; i++) {
+                    if (ext === extensions[i]) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            $.mage.__('Disallowed file type.')
+        );
     }
 });
