@@ -10,6 +10,7 @@ namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Serialize\Serializer\Json;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Magento\Framework\Model\AbstractModel;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Variant\Collection;
@@ -20,11 +21,15 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     /** @var CollectionFactory  */
     private $variantsCollectionFactory;
 
+    /** @var Json  */
+    private $json;
+
     /**
      * ProductConfiguratorOption constructor.
      * @param Context $context
      * @param \Magento\Framework\Registry $registry
      * @param CollectionFactory $variantsCollectionFactory
+     * @param Json $json
      * @param AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
      * @param array $data
@@ -33,6 +38,7 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
         Context $context,
         \Magento\Framework\Registry $registry,
         CollectionFactory $variantsCollectionFactory,
+        Json $json,
         AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -45,6 +51,7 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
             $data
         );
         $this->variantsCollectionFactory    = $variantsCollectionFactory;
+        $this->json                         = $json;
     }
 
     protected function _construct()
@@ -106,6 +113,15 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     {
         return explode(',', $this->getData(self::ENABLED_ON_PARENT_VARIANTS));
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDependencies()
+    {
+        return $this->json->unserialize($this->getData(self::DEPENDENCIES));
+    }
+
 
     /**
      * @inheritDoc
@@ -176,6 +192,15 @@ class ProductConfiguratorOption extends AbstractModel implements ProductConfigur
     {
         return $this->setData(self::ENABLED_ON_PARENT_VARIANTS, implode(',', $variants));
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDependencies($dependencies)
+    {
+        return $this->setData(self::DEPENDENCIES, $this->json->serialize($dependencies));
+    }
+
 
     /**
      * @inheritDoc

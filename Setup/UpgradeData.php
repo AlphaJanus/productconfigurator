@@ -52,8 +52,8 @@ class UpgradeData implements UpgradeDataInterface
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.17', '<')) {
-            $this->upgradeVersionTwoZeroSeventeen($setup, $eavSetup, $context);
+        if (version_compare($context->getVersion(), '2.0.19', '<')) {
+            $this->upgradeVersionTwoZeroNineteen($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -77,6 +77,27 @@ class UpgradeData implements UpgradeDataInterface
             } catch (\Exception $exception) {
                 $this->logger->error($exception->getMessage());
             }
+        }
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeVersionTwoZeroNineTeen($setup, $eavSetup, $context)
+    {
+        $tableName = $setup->getTable('catalog_product_configurator_options');
+        $sql = "UPDATE " . $tableName . " SET parent_option = NULL WHERE parent_option = 0";
+        $setup->getConnection()->query($sql);
+        $sql = "UPDATE " . $tableName . " SET dependencies = NULL WHERE 1";
+        $setup->getConnection()->query($sql);
+
+        $tableName = $setup->getTable('catalog_product_configurator_options_variants');
+        $sql = "UPDATE " . $tableName . " SET dependencies = '[]' WHERE 1";
+        $setup->getConnection()->query($sql);
+        if (version_compare($context->getVersion(), '2.0.17', '<')) {
+            $this->upgradeVersionTwoZeroSeventeen($setup, $eavSetup, $context);
         }
     }
 

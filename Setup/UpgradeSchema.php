@@ -74,6 +74,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.16') < 0) {
             $this->upgradeVersionTwoZeroSixteen($setup);
         }
+        if (version_compare($context->getVersion(), '2.0.18') < 0) {
+            $this->upgradeVersionTwoZeroEighteen($setup);
+        }
+        if (version_compare($context->getVersion(), '2.0.19') < 0) {
+            $this->upgradeVersionTwoZeroNineteen($setup);
+        }
 
         $setup->endSetup();
     }
@@ -1026,6 +1032,55 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'nullable'  => true,
                 'default'   => null,
                 'comment'   => 'Enabled on parent option variants'
+            ]
+        );
+    }
+
+    public function upgradeVersionTwoZeroEighteen(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->dropIndex(
+            $setup->getTable('catalog_product_configurator_options'),
+            $setup->getIdxName('catalog_product_configurator_options', ['parent_option'])
+        );
+        $setup->getConnection()->changeColumn(
+            $setup->getTable('catalog_product_configurator_options'),
+            'parent_option',
+            'parent_option',
+            [
+                'type'      => Table::TYPE_TEXT,
+                'length'    => 255,
+                'nullable'  => true,
+                'default'   => null,
+                'comment'   => 'Parent option'
+            ]
+        );
+    }
+
+    public function upgradeVersionTwoZeroNineteen(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->changeColumn(
+            $setup->getTable('catalog_product_configurator_options_variants'),
+            'allowed_variants',
+            'dependencies',
+            [
+                'type'      => Table::TYPE_TEXT,
+                'length'    => '64k',
+                'nullable'  => true,
+                'default'   => '[]',
+                'comment'   => 'Dependencies'
+            ]
+        );
+
+        $setup->getConnection()->changeColumn(
+            $setup->getTable('catalog_product_configurator_options'),
+            'allowed_variants',
+            'dependencies',
+            [
+                'type'      => Table::TYPE_TEXT,
+                'length'    => '64k',
+                'nullable'  => true,
+                'default'   => '[]',
+                'comment'   => 'Dependencies'
             ]
         );
     }

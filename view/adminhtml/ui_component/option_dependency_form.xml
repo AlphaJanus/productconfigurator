@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">option_dependency_form.option_dependency_form_data_source</item>
+            <item name="namespace" xsi:type="string">option_dependency_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <ajaxSaveType>simple</ajaxSaveType>
+        <deps>
+            <dep>option_dependency_form.option_dependency_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="option_dependency_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <dataProvider class="\Netzexpert\ProductConfigurator\Ui\DataProvider\Product\ConfiguratorOption\Variant\Dependency\DataProvider" name="option_dependency_form_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>value_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="data">
+        <settings>
+            <collapsible>false</collapsible>
+            <label/>
+        </settings>
+        <field name="name" sortOrder="10" formElement="input">
+            <settings>
+                <required>true</required>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+                <dataType>string</dataType>
+                <label translate="true">Category Name</label>
+                <dataScope>data.name</dataScope>
+                <componentType>field</componentType>
+            </settings>
+        </field>
+    </fieldset>
+</form>

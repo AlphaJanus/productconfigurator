@@ -2,4 +2,16 @@
   .trigger {display: inline-block; width: 5%;}
   .group-name {display: inline-block;width: 75%;}
   .group-delete {display: inline-block;width: 19%;text-align:right;}
+  .assigned-configurator-options {
+    .admin__field-control {
+      & > .admin__control-table-wrapper {
+        overflow-y: visible;
+      }
+    }
+    .action-menu {
+      &._active {
+        z-index: 10;
+      }
+    }
+  }
 }
