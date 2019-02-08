@@ -33,7 +33,11 @@ define([
                 enabled: true,
                 distinct: true
             },
-            optionsParents: []
+            links: {
+                groups: '${ $ .provider }:${ $ .parentScope }'
+            },
+            optionsParents: [],
+            sorted: false
         },
 
         initConfig: function (config) {
@@ -367,7 +371,6 @@ define([
                 registry.get(elem.name, function () {
                     that.sort(position, elem);
                 });
-
                 return false;
             }
 
@@ -377,55 +380,43 @@ define([
 
             updatedCollection = this.updatePosition(sorted, position, elem.name);
             this.elems(updatedCollection);
-            updatedCollection.forEach(function (el) {
-                that.updateParentOptions(el);
-            });
+            if (this._isSortComplete(sorted)) {
+                /*if ((!this.hasChanged() && elem.data().record_id === this._getLastRecordId()) ||     uncomment for better performance, but have some bugs
+                    (this.hasChanged() && elem.data().record_id !== this._getLastRecordId())) {*/
+                    var parentOptionPromise = registry.promise('index = parent_option');
+                    parentOptionPromise.then(
+                        result => this.updateParentOptions()
+                    );
+                /*}*/ //uncomment for better performance, but have some bugs
+            }
 
         },
 
-        updateParentOptions: function (elem) {
-            var option,
-                self = this,
-                recData  = self.recordData()[this.groupIndex];
-            var options = [],
-                typesWithVariants = ['image', 'select', 'radio'];
-            $.each(this.elems(), function (index, row) {
-                var item = _.findWhere(recData, {entity_id: row.recordId});
-                var pos = (typeof(row.position) !== 'undefined') ? row.position : item.position;
-                if (typeof(item) !== 'undefined' && parseInt(pos) < parseInt(elem.position, 10) && typesWithVariants.indexOf(item.type) !== -1 ) {
-                    option = {
-                        value: item.configurator_option_id,
-                        label: item.name,
-                        labeltitle: item.name,
-                        position: parseInt(row.position)
-                    };
-                    options.push(option);
-                }
+        updateParentOptions: function () {
+            var parentOptions = registry.filter('index = parent_option');
+            parentOptions.forEach(function (item) {
+                item.updateOptions();
             });
-            this.setParentOptionOptions(elem,options)
         },
 
-        setParentOptionOptions: function (elem, options) {
-            var value,
-                self = this,
-                dependencyContainer = elem.getChild('dependency_container');
+        _isSortComplete: function (collection) {
+            var positions = _.pluck(collection, 'position').map(Number);
+            return _.uniq(positions).length === this.getChildItems().length
+        },
 
-            if (!_.isUndefined(dependencyContainer)) {
-                var parentOptionElem = dependencyContainer.getChild('parent_option');
+        _getLastRecordId: function () {
+            var lastId = null,
+                index = this.groups.length,
+                lastGroupOpts = [];
+            do {
+                --index;
+                lastGroupOpts = (this.groups[index].assigned_configurator_options) ?
+                    this.groups[index].assigned_configurator_options : [];
+            } while (!lastGroupOpts.length && index>=0);
+            if (lastGroupOpts.length) {
+                lastId = lastGroupOpts.last().record_id;
             }
-            if (typeof(parentOptionElem) !== 'undefined') {
-                value = parentOptionElem.value();
-                parentOptionElem.setOptions(options);
-                if (typeof(_.findWhere(parentOptionElem.options(), {value: value})) !== "undefined") {
-                    parentOptionElem.value(value);
-                }
-                self.showSpinner(false);
-            } else {
-                self.showSpinner(true);
-                setTimeout(function () {
-                    self.setParentOptionOptions(elem,options)
-                }, 100);
-            }
+            return lastId;
         },
 
         /**

@@ -9,6 +9,7 @@ namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
+use Magento\Framework\Serialize\Serializer\Json;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOption\Collection
     as OptionsCollection;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionVariant\Collection;
@@ -24,13 +25,18 @@ class ProductConfiguratorOptionVariantProcessor
     /** @var CollectionFactory  */
     private $collectionFactory;
 
+    /** @var Json  */
+    private $serializer;
+
     public function __construct(
         ProductConfiguratorOptionVariantFactory $variantFactory,
         CollectionFactory $collectionFactory,
+        Json $serializer,
         LoggerInterface $logger
     ) {
         $this->variantFactory       = $variantFactory;
         $this->collectionFactory    = $collectionFactory;
+        $this->serializer           = $serializer;
         $this->logger               = $logger;
     }
 
@@ -52,27 +58,21 @@ class ProductConfiguratorOptionVariantProcessor
                     continue;
                 }
                 foreach ($option->getData('values') as $variant) {
-                    if (!$option->getParentOption()) {
-                        unset($variant['allowed_variants']);
-                    }
+                    $dependencies = (!empty($variant['dependencies'])) ? $variant['dependencies'] : [];
                     if (!empty($variant['variant_id']) && !$product->getData('is_duplicate')) {
                         $collection->getItemById($variant['variant_id'])
                             ->setData($variant)
                             ->setProductId($productId)
                             ->setOptionId($option->getId())
-                            ->setAllowedVariants(
-                                (!empty($variant['allowed_variants'])) ?
-                                    implode(',', $variant['allowed_variants']) : null
-                            )->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                            ->setDependencies(/*$this->serializer->serialize(*/$dependencies/*)*/)
+                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
                     } else {
                         $variant = $this->variantFactory->create()
                             ->setData($variant)
                             ->setProductId($productId)
                             ->setOptionId($option->getId())
-                            ->setAllowedVariants(
-                                (!empty($variant['allowed_variants'])) ?
-                                    implode(',', $variant['allowed_variants']) : null
-                            )->setConfiguratorOptionId($option->getConfiguratorOptionId());
+                            ->setDependencies(/*$this->serializer->serialize(*/$dependencies/*)*/)
+                            ->setConfiguratorOptionId($option->getConfiguratorOptionId());
                         if (!$variant['variant_id'] || $product->getData('is_duplicate')) {
                             $variant->setId(null);
                         }

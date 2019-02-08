@@ -121,14 +121,14 @@ class ProductConfiguratorOptionsProcessor
                 if (!is_array($option) || empty($option['configurator_option_id'])) {
                     continue;
                 }
-                $parentOption = (!empty($option['parent_option'])) ? $option['parent_option'] : 0;
-                $variants = (!empty($option['allowed_variants'])) ? $option['allowed_variants'] : [];
+                $parentOption = (!empty($option['parent_option'])) ? array_filter($option['parent_option']) : null;
+                $dependencies = (!empty($option['dependencies'])) ? $option['dependencies'] : [];
                 if ($option['option_id'] && !$product->getData('is_duplicate')) {
                     /** @var ProductConfiguratorOptionInterface $productOption */
                     $productOption = $collection->getItemById($option['option_id']);
                     $productOption->setData($option)
-                        ->setParentOption($parentOption)
-                        ->setEnabledOnParentVariants($variants);
+                        ->setParentOption(implode(',', $parentOption))
+                        ->setDependencies($dependencies);
                 } else {
                     $optionEntity = $this->optionFactory->create();
                     $optionEntity->setData($option)->setGroupId($group->getId());
@@ -140,7 +140,7 @@ class ProductConfiguratorOptionsProcessor
                     }
                     $optionEntity->setProductId($product->getId())
                         ->setParentOption($parentOption)
-                        ->setEnabledOnParentVariants($variants);
+                        ->setDependencies($dependencies);
                     try {
                         $collection->addItem($optionEntity);
                     } catch (\Exception $exception) {

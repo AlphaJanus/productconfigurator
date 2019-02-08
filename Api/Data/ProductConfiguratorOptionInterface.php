@@ -21,6 +21,7 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
     const PARENT_OPTION                 = 'parent_option';
     const ENABLED_ON_PARENT_VARIANTS    = 'allowed_variants';
     const VALUES_DATA                   = 'values_data';
+    const DEPENDENCIES                  = 'dependencies';
 
     /**
      * @return int | null
@@ -56,6 +57,11 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
      * @return array
      */
     public function getEnabledOnParentVariants();
+
+    /**
+     * @return array
+     */
+    public function getDependencies();
 
     /**
      * @return array
@@ -103,6 +109,12 @@ interface ProductConfiguratorOptionInterface extends \Magento\Framework\Api\Exte
      * @return $this
      */
     public function setEnabledOnParentVariants($variants);
+
+    /**
+     * @param array $variants
+     * @return $this
+     */
+    public function setDependencies($dependencies);
 
     /**
      * @param array $valuesData

@@ -2,31 +2,38 @@ define([
     'jquery',
     'underscore',
     'uiRegistry',
-    'Magento_Ui/js/form/element/select'
-], function ($, _, registry, Select) {
+    'mageUtils',
+    'Magento_Ui/js/form/element/ui-select'
+], function ($, _, registry, utils, Select) {
     'use strict';
 
     /**
-     * Parses incoming options, considers options with undefined value property
-     *     as caption
+     * Preprocessing options list
      *
-     * @param  {Array} nodes
-     * @param {string} captionValue
-     * @return {Object}
+     * @param {Array} nodes - Options list
+     *
+     * @return {Object} Object with property - options(options list)
+     *      and cache options with plain and tree list
      */
-    function parseOptions(nodes, captionValue)
+    function parseOptions(nodes)
     {
-        var caption,
-            value;
+        var value,
+            cacheNodes,
+            copyNodes;
 
-        nodes.sort(compare);
+        nodes = setProperty(nodes, 'optgroup');
+        copyNodes = JSON.parse(JSON.stringify(nodes));
+        cacheNodes = flattenCollection(copyNodes, 'optgroup');
+
         nodes = _.map(nodes, function (node) {
             value = node.value;
 
-            if (value === null || value === captionValue) {
-                if (_.isUndefined(caption)) {
-                    caption = node.label;
+            if (value == null || value === '') {
+                if (_.isUndefined(node.caption)) {
+                    node.caption = node.label;
+                    node.is_active = '0';
                 }
+                return node;
             } else {
                 return node;
             }
@@ -34,109 +41,183 @@ define([
 
         return {
             options: _.compact(nodes),
-            caption: _.isString(caption) ? caption : false
+            cacheOptions: {
+                plain: _.compact(cacheNodes),
+                tree: _.compact(nodes)
+            }
         };
     }
 
-    function compare(a,b)
+    /**
+     * Set levels to options list
+     *
+     * @param {Array} array - Property array
+     * @param {String} separator - Level separator
+     * @param {Number} level - Starting level
+     * @param {String} path - path to root
+     *
+     * @returns {Array} Array with levels
+     */
+    function setProperty(array, separator, level, path)
     {
-        if (a.position < b.position) {
-            return -1;
+        var i = 0,
+            length,
+            nextLevel,
+            nextPath;
+
+        array = _.compact(array);
+        length = array.length;
+        level = level || 0;
+        path = path || '';
+
+        for (i; i < length; i++) {
+            if (array[i]) {
+                _.extend(array[i], {
+                    level: level,
+                    path: path
+                });
+            }
+
+            if (array[i].hasOwnProperty(separator)) {
+                nextLevel = level + 1;
+                nextPath = path ? path + '.' + array[i].label : array[i].label;
+                setProperty.call(this, array[i][separator], separator, nextLevel, nextPath);
+            }
         }
-        if (a.position > b.position) {
-            return 1;
-        }
-        return 0;
+
+        return array;
     }
 
     /**
-     * Recursively set to object item like value and item.value like key.
+     * Processing options list
      *
-     * @param {Array} data
-     * @param {Object} result
-     * @returns {Object}
+     * @param {Array} array - Property array
+     * @param {String} separator - Level separator
+     * @param {Array} created - list to add new options
+     *
+     * @return {Array} Plain options list
      */
-    function indexOptions(data, result)
+    function flattenCollection(array, separator, created)
     {
-        var value;
+        var i = 0,
+            length,
+            childCollection;
 
-        result = result || {};
+        array = _.compact(array);
+        length = array.length;
+        created = created || [];
 
-        data.forEach(function (item) {
-            value = item.value;
+        for (i; i < length; i++) {
+            created.push(array[i]);
 
-            if (Array.isArray(value)) {
-                indexOptions(value, result);
-            } else {
-                result[value] = item;
+            if (array[i].hasOwnProperty(separator)) {
+                childCollection = array[i][separator];
+                delete array[i][separator];
+                flattenCollection.call(this, childCollection, separator, created);
             }
-        });
+        }
 
-        return result;
+        return created;
     }
 
     return Select.extend({
         defaults: {
-            imports: {
-                assignedOptions: '${ $ .provider }:data.product.assigned_configurator_options',
-                rowData: '${ $ .provider }:${ $ .parentScope }'
+            links: {
+                groups: '${ $ .provider }:data.product.configurator_option_groups',
+                currentGroup: '${ $ .provider }:${ $ .dataScope.split(\'.assigned_configurator_options\')[0] }',
+                currentRecord: '${ $ .provider }:${ $ .parentScope }',
+                parent_option: 'currentRecord.parent_option'
+            },
+            listens: {
+                parent_option: 'updateModalProvider'
             }
         },
 
-        initialize: function () {
-            this._super();
-            return this;
+        tmpl: {
+            id: '${ $.$data.id }',
+            name: '',
+            values: [],
         },
 
-        /**
-         * Sets initial value of the element and subscribes to it's changes.
-         *
-         * @returns {Abstract} Chainable.
-         */
-        setInitialValue: function () {
-            this.initialValue = this.getInitialValue();
-            if (typeof(this.initialValue) === 'undefined') {
-                this.initialValue = this.rowData.parent_option;
-            }
-
-            if (this.value.peek() !== this.initialValue) {
-                this.value(this.initialValue);
-            }
-            this.on('value', this.onUpdate.bind(this));
-            this.isUseDefault(this.disabled());
-
-            return this;
-        },
-
-        /**
-         * Sets 'data' to 'options' observable array, if instance has
-         * 'customEntry' property set to true, calls 'setHidden' method
-         *  passing !options.length as a parameter
-         *
-         * @param {Array} data
-         * @returns {Object} Chainable
-         */
-        setOptions: function (data) {
-            var captionValue = this.captionValue || '',
-                result = parseOptions(data, captionValue),
-                isVisible;
-
-            this.indexedOptions = indexOptions(result.options);
-
+        updateOptions: function () {
+            var self = this,
+                optionsWithVariants = [
+                    'select',
+                    'radio',
+                    'image'
+                ],
+                groups = _.filter(this.groups, function (group) {
+                    return !_.isUndefined(self.currentGroup) && ~~group.position <= self.currentGroup.position;
+                });
+            groups.forEach(function (group, index, groups) {
+                group.value = group.group_id;
+                group.label = group.name;
+                group.parent = 'root';
+                if (_.isArray(group.assigned_configurator_options) || _.isObject(group.assigned_configurator_options)) {
+                    var assignedOptions = group.assigned_configurator_options;
+                    var grid = _.findWhere(registry.filter("index=assigned_configurator_options"), {groupIndex: group.record_id.toString()});
+                    if (self.currentRecord.group_id === group.group_id) {
+                        assignedOptions = _.filter(assignedOptions, function (option) {
+                            var elem = _.findWhere(grid.elems(), {recordId: option.record_id});
+                            return elem.position < self.currentRecord.position
+                        });
+                    }
+                    if (!assignedOptions.length) {
+                        groups.splice(index, 1);
+                    }
+                    assignedOptions = _.filter(assignedOptions, function (option) {
+                        return optionsWithVariants.indexOf(option.type) !== -1;
+                    });
+                    assignedOptions.forEach(function (assignedOption) {
+                        assignedOption.label = assignedOption.name;
+                        assignedOption.value = assignedOption.configurator_option_id;
+                        assignedOption.parent = group.value;
+                    });
+                    group.optgroup = assignedOptions;
+                }
+            });
+            var result = parseOptions(groups);
+            this.cacheOptions = result.cacheOptions;
             this.options(result.options);
-
-            if (!this.caption()) {
-                this.caption(result.caption);
-            }
-
-            if (this.customEntry) {
-                isVisible = !!result.options.length;
-
-                this.setVisible(isVisible);
-                this.toggleInput(!isVisible);
-            }
-
-            return this;
         },
-    });
+
+        updateModalProvider: function (data) {
+            var self = this,
+                dependencies = this.currentRecord.dependencies;
+            if (!_.isArray(dependencies)) {
+                dependencies = [];
+            }
+            if (data) {
+                data.forEach(function (parentOptionId) {
+                    if (parentOptionId) {
+                        if (!_.findWhere(dependencies, {id: parentOptionId})) {
+                            dependencies.push(utils.template(self.tmpl, {id: parentOptionId}))
+                        }
+                    }
+                });
+                dependencies = _.filter(dependencies, function (dep) {
+                    return data.indexOf(dep.id) !== -1;
+                });
+
+
+                this.currentRecord.values.forEach(function (value) {
+                    data.forEach(function (parentOptionId) {
+                        if (parentOptionId) {
+                            if (!_.isArray(value.dependencies)) {
+                                value.dependencies = [];
+                            }
+                            if (!_.findWhere(value.dependencies, {id: parentOptionId})) {
+                                value.dependencies.push(utils.template(self.tmpl, {id: parentOptionId}))
+                            }
+                        }
+                    });
+                    value.dependencies = _.filter(value.dependencies, function (dep) {
+                        return data.indexOf(dep.id) !== -1;
+                    });
+                });
+                this.source.set(this.parentScope + '.values' , this.currentRecord.values);
+            }
+            this.source.set(this.parentScope + '.dependencies', dependencies);
+        }
+    })
 });

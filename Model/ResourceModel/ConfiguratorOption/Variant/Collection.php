@@ -33,7 +33,7 @@ class Collection extends AbstractCollection
                 'cpcov.product_id',
                 'cpcov.enabled',
                 'cpcov.is_dependent',
-                'cpcov.allowed_variants'
+                'cpcov.dependencies'
             ]
         );
         return $this;

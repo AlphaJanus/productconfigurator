@@ -17,6 +17,7 @@ interface ProductConfiguratorOptionVariantInterface
     const ENABLED                   = 'enabled';
     const IS_DEPENDENT              = 'is_dependent';
     const ALLOWED_VARIANTS          = 'allowed_variants';
+    const DEPENDENCIES              = 'dependencies';
 
     /**
      * @return int
@@ -57,6 +58,11 @@ interface ProductConfiguratorOptionVariantInterface
      * @return array
      */
     public function getAllowedVariants();
+
+    /**
+     * @return array
+     */
+    public function getDependencies();
 
     /**
      * @param $id int
@@ -105,4 +111,10 @@ interface ProductConfiguratorOptionVariantInterface
      * @return $this
      */
     public function setAllowedVariants($variants);
+
+    /**
+     * @param $dependencies array
+     * @return $this
+     */
+    public function setDependencies($dependencies);
 }

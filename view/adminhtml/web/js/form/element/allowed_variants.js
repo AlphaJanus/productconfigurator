@@ -7,53 +7,37 @@ define([
 
     return Multiselect.extend({
         defaults: {
-            imports: {
-                rows: '${ $ .provider }:${ $ .dataScope.replace(/.[(0-9)]+.values.[(0-9)]+.allowed_variants/, "") }',
-                parentOption: '${ $ .provider }:${ $ .dataScope.replace(/.values.[(0-9)]+.allowed_variants/, "") }.parent_option',
-                isDependent: '${ $ .provider }:${ $ .parentScope }.is_dependent',
-                isEnabled: '${ $ .provider }:${ $ .parentScope }.enabled',
+            links: {
+                option: '${ $ .provider }:${ $ .parentScope }',
+                assignedOptionsGroups: '${ $ .provider }:data.product.assigned_configurator_options'
             }
         },
 
-        initObservable: function () {
-            this._super();
-            this.observe(['rows', 'parentOption', 'isDependent', 'isEnabled']);
-            this.on('parentOption', this.refreshVariants.bind(this));
-            this.on('isDependent', this.refreshDisable.bind(this));
-            this.on('isEnabled', this.refreshDisable.bind(this));
-            return this;
+        setInitialValue: function () {
+            this.refreshVariants();
+            return this._super();
         },
-
-        refreshVariants: function (value) {
+        refreshVariants: function () {
             var option,
+                opt,
+                variants,
+                options = [],
                 self = this;
-            var parentOption = _.findWhere(this.rows(), {configurator_option_id: value});
-            if (typeof (parentOption) !== 'undefined' && parentOption !== 0) {
-                var options = [],
-                    variants = parentOption.values;
-                variants.forEach(function (item) {
-                    option = {
-                        value: item.value_id,
-                        label: item.title,
-                        labeltitle: item.title
-                    };
-                    options.push(option);
-                });
-                self.setOptions(options);
-                self.refreshDisable();
-            } else {
-                self.setOptions([]);
-                self.refreshDisable();
-            }
-
-        },
-
-        refreshDisable: function () {
-            if (parseInt(this.isEnabled(), 10) && parseInt(this.isDependent(), 10)) {
-                this.disabled(false);
-            } else {
-                this.disabled(true);
-            }
+            this.assignedOptionsGroups.some(function (group) {
+                option = _.findWhere(group, {configurator_option_id: self.option.id});
+                return !_.isUndefined(option);
+            });
+            variants = option.values;
+            this.source.set(this.parentScope + '.name', option.name);
+            variants.forEach(function (item) {
+                opt = {
+                    value: item.value_id,
+                    label: item.title,
+                    labeltitle: item.title
+                };
+                options.push(opt);
+            });
+            self.setOptions(options);
         }
     });
 });

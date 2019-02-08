@@ -8,11 +8,34 @@
 namespace Netzexpert\ProductConfigurator\Model\Product;
 
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Serialize\Serializer\Json;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionVariantInterface;
 use Netzexpert\ProductConfigurator\Model\ResourceModel\Product\ProductConfiguratorOptionVariant as VariantResource;
 
 class ProductConfiguratorOptionVariant extends AbstractModel implements ProductConfiguratorOptionVariantInterface
 {
+    /** @var Json  */
+    private $serializer;
+
+    public function __construct(
+        Context $context,
+        \Magento\Framework\Registry $registry,
+        Json $serialiser,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->serializer = $serialiser;
+        parent::__construct(
+            $context,
+            $registry,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+    }
+
     /**
      * @inheritDoc
      */
@@ -88,6 +111,15 @@ class ProductConfiguratorOptionVariant extends AbstractModel implements ProductC
     /**
      * @inheritDoc
      */
+    public function getDependencies()
+    {
+        return $this->serializer->unserialize($this->getData(self::DEPENDENCIES));
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function setId($id)
     {
         return $this->setData(self::VARIANT_ID, $id);
@@ -148,4 +180,14 @@ class ProductConfiguratorOptionVariant extends AbstractModel implements ProductC
     {
         return $this->setData(self::ALLOWED_VARIANTS, $variants);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDependencies($dependencies)
+    {
+        return $this->setData(self::DEPENDENCIES, $this->serializer->serialize($dependencies));
+    }
+
+
 }
