@@ -1066,7 +1066,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'type'      => Table::TYPE_TEXT,
                 'length'    => '64k',
                 'nullable'  => true,
-                'default'   => '[]',
+                'default'   => null,
                 'comment'   => 'Dependencies'
             ]
         );
@@ -1079,7 +1079,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'type'      => Table::TYPE_TEXT,
                 'length'    => '64k',
                 'nullable'  => true,
-                'default'   => '[]',
+                'default'   => null,
                 'comment'   => 'Dependencies'
             ]
         );
