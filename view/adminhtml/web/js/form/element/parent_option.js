@@ -150,7 +150,7 @@ define([
                     return !_.isUndefined(self.currentGroup) && ~~group.position <= self.currentGroup.position;
                 });
             groups.forEach(function (group, index, groups) {
-                group.value = group.group_id;
+                group.value = 'g.' + group.group_id;
                 group.label = group.name;
                 group.parent = 'root';
                 if (_.isArray(group.assigned_configurator_options) || _.isObject(group.assigned_configurator_options)) {

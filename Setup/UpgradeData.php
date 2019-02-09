@@ -90,7 +90,7 @@ class UpgradeData implements UpgradeDataInterface
         $tableName = $setup->getTable('catalog_product_configurator_options');
         $sql = "UPDATE " . $tableName . " SET parent_option = NULL WHERE parent_option = 0";
         $setup->getConnection()->query($sql);
-        $sql = "UPDATE " . $tableName . " SET dependencies = NULL WHERE 1";
+        $sql = "UPDATE " . $tableName . " SET dependencies = '[]' WHERE 1";
         $setup->getConnection()->query($sql);
 
         $tableName = $setup->getTable('catalog_product_configurator_options_variants');

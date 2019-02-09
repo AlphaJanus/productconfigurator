@@ -121,7 +121,7 @@ class ProductConfiguratorOptionsProcessor
                 if (!is_array($option) || empty($option['configurator_option_id'])) {
                     continue;
                 }
-                $parentOption = (!empty($option['parent_option'])) ? array_filter($option['parent_option']) : null;
+                $parentOption = (!empty($option['parent_option'])) ? array_filter($option['parent_option']) : [];
                 $dependencies = (!empty($option['dependencies'])) ? $option['dependencies'] : [];
                 if ($option['option_id'] && !$product->getData('is_duplicate')) {
                     /** @var ProductConfiguratorOptionInterface $productOption */
