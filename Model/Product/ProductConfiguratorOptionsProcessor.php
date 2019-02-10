@@ -139,7 +139,7 @@ class ProductConfiguratorOptionsProcessor
                         $optionEntity->setId(null);
                     }
                     $optionEntity->setProductId($product->getId())
-                        ->setParentOption($parentOption)
+                        ->setParentOption(implode(',', $parentOption))
                         ->setDependencies($dependencies);
                     try {
                         $collection->addItem($optionEntity);
