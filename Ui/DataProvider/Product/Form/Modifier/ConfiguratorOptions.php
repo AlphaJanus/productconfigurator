@@ -159,7 +159,11 @@ class ConfiguratorOptions extends AbstractModifier
                 }
                 $values = $option->getValuesData();
                 foreach ($values as &$value) {
-                    $value['dependencies'] = $this->json->unserialize($value['dependencies']);
+                    if (!empty($value['dependencies'])) {
+                        $value['dependencies'] = $this->json->unserialize($value['dependencies']);
+                    } else {
+                        $value['dependencies'] = [];
+                    }
                 }
                 $configuratorOption->setValues($values);
                 $options[] =  array_merge(
