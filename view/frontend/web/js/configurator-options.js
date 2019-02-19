@@ -197,7 +197,6 @@ define([
         updateOptions: function (event) {
             var optionId,
                 parts,
-                tempId,
                 dependencyConfig,
                 options = $(this.options.optionsSelector),
                 self = this;
@@ -208,7 +207,6 @@ define([
                 parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
                 optionId = parts[2];
                 dependencyConfig = self.getDependencyConfig(optionId);
-                tempId = parseInt(dependencyConfig.parent_option, 10);
                 var parentOptions = (dependencyConfig.parent_option)? dependencyConfig.parent_option.split(',') : [];
                 var allowed = self.isOptionAllowed(parentOptions, dependencyConfig);
                 if (!allowed) {
