@@ -15,7 +15,7 @@ class Select extends AbstractOptions
     public function getValuesHtml()
     {
         $option = $this->getOption();
-        $parentOptionDefaultValue = $this->getParentOptionDefaultValue();
+        $parentOptionDefaultValue = $this->getParentOptionDefaultValues();
         $extraParams = '';
         $require = $option->getIsRequired() ? ' required' : '';
         $params = [];
@@ -32,8 +32,7 @@ class Select extends AbstractOptions
         );
         $select->setName('configurator_options[' . $option->getId(). ']')->addOption('', __('-- Please Select --'));
         foreach ($this->getValuesData() as $_value) {
-            if ($_value['is_dependent']
-                && !in_array($parentOptionDefaultValue, explode(',', $_value['allowed_variants']))) {
+            if (!$this->isVariantAllowed($_value)) {
                 $params = ['disabled' => true];
             }
             if ($_value['enabled']) {
@@ -74,5 +73,23 @@ class Select extends AbstractOptions
             }
         }
         return ($default) ? $default : $fistActive;
+    }
+
+    private function isVariantAllowed($value)
+    {
+        $parentDefaults = $this->getParentOptionDefaultValues();
+        if (!$value['is_dependent']) {
+            return true;
+        }
+        if (!is_array($parentDefaults)) {
+            return false;
+        }
+        $dependencies = $this->mapDependencies($value['dependencies']);
+        foreach ($parentDefaults as $optionId => $defaultValue) {
+            if (!in_array($defaultValue, $dependencies[$optionId])) {
+                return false;
+            }
+        }
+        return true;
     }
 }

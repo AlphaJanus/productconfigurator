@@ -14,6 +14,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Image\AdapterFactory;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
@@ -39,6 +40,7 @@ class Image extends AbstractOptions
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterProvider $filterProvider
+     * @param Json $json
      * @param Filesystem $filesystem
      * @param AdapterFactory $imageFactory
      * @param ImageHelper $imageHelper
@@ -50,6 +52,7 @@ class Image extends AbstractOptions
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterProvider $filterProvider,
+        Json $json,
         Filesystem $filesystem,
         AdapterFactory $imageFactory,
         ImageHelper $imageHelper,
@@ -64,6 +67,7 @@ class Image extends AbstractOptions
             $productConfiguratorOptionRepository,
             $searchCriteriaBuilder,
             $filterProvider,
+            $json,
             $data
         );
     }

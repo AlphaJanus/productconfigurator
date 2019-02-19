@@ -26,9 +26,6 @@ class Expression extends AbstractOptions
     /** @var ConfiguratorOptionRepositoryInterface  */
     private $configuratorOptionRepository;
 
-    /** @var Json  */
-    private $json;
-
     /**
      * Expression constructor.
      * @param Template\Context $context
@@ -52,13 +49,13 @@ class Expression extends AbstractOptions
     ) {
         $this->extensionFactory             = $extensionFactory;
         $this->configuratorOptionRepository = $configuratorOptionRepository;
-        $this->json = $json;
         parent::__construct(
             $context,
             $configuratorOptionRepository,
             $productConfiguratorOptionRepository,
             $searchCriteriaBuilder,
             $filterProvider,
+            $json,
             $data
         );
     }
