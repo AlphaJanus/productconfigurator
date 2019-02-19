@@ -200,9 +200,7 @@ define([
                 tempId,
                 dependencyConfig,
                 valueConfig,
-                allowedVariants,
                 parentOption,
-                parentElement,
                 options = $(this.options.optionsSelector),
                 self = this;
 
@@ -225,15 +223,10 @@ define([
                 }
                 if (parentOptions.length) {
                     parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()});
-                    parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
                     $.each(option.options, function (n, optionHtml) {
                         var optionValue = $(optionHtml).val();
                         var variantAllowed = self.isVariantAllowed(parentOptions, optionValue, dependencyConfig);
                         valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
-                        if (valueConfig) {
-                            var valueDependencies = JSON.parse(valueConfig.dependencies);
-                            allowedVariants = (valueDependencies.values) ? valueDependencies.values : [];
-                        }
                         if (!variantAllowed) {
                             $(optionHtml).attr('disabled','disabled');
                             if (optionHtml.parentElement.value === optionValue) {
