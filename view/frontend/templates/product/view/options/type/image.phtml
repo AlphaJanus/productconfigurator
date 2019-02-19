@@ -2,7 +2,7 @@
 /** @var \Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Type\Image $block */
 $option = $block->getOption();
 $required = $option->getData('is_required') ? ' required' : '';
-$parentOptionDefaultValue = $this->getParentOptionDefaultValue();
+$parentOptionDefaultValues = $this->getParentOptionDefaultValues();
 $isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' hidden' : '';
 $defaultValue = $block->getDefaultValue();
 $value = null;
@@ -18,7 +18,7 @@ $disabled = false;
         $valuesData = $block->getValuesData();
         foreach ($valuesData as $item) {
             $disabled = false;
-            if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, explode(',', $item['allowed_variants']))) {
+            if ($item['is_dependent'] && !$block->isAllowed($parentOptionDefaultValues, $item['dependencies'])) {
                 $disabled = true;
             }
             if ($item['enabled']) {
@@ -42,7 +42,7 @@ $disabled = false;
     </ul>
     <div class="control">
         <select id="image-<?php echo /* @escapeNotVerified */ $option->getData('code') ?>"
-                name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
+                name="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
                 class="product-configurator-option admin__control-select hide<?php echo /* @escapeNotVerified */ $required; ?>"
                 data-selector="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
                 data-code="<?php echo /* @escapeNotVerified */ $option->getCode() ?>">
@@ -50,7 +50,7 @@ $disabled = false;
             <?php
             foreach ($valuesData as $item) {
                 $disabled = false;
-                if ($item['is_dependent'] && !in_array($parentOptionDefaultValue, explode(',', $item['allowed_variants']))) {
+                if ($item['is_dependent'] && !$block->isAllowed($parentOptionDefaultValues, $item['dependencies'])) {
                     $disabled = true;
                 }
                 if ($item['value_id'] == $defaultValue) {

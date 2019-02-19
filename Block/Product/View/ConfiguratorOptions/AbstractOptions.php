@@ -13,6 +13,7 @@ use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Template;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
@@ -39,6 +40,9 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
     /** @var FilterProvider  */
     private $filterProvider;
 
+    /** @var Json  */
+    protected $json;
+
     /**
      * AbstractOptions constructor.
      * @param Template\Context $context
@@ -46,6 +50,7 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
      * @param ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param FilterProvider $filterProvider
+     * @param Json $json
      * @param array $data
      */
     public function __construct(
@@ -54,12 +59,14 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
         ProductConfiguratorOptionRepositoryInterface $productConfiguratorOptionRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         FilterProvider $filterProvider,
+        Json $json,
         array $data = []
     ) {
         $this->configuratorOptionRepository         = $configuratorOptionRepository;
         $this->productConfiguratorOptionRepository  = $productConfiguratorOptionRepository;
         $this->searchCriteriaBuilder                = $searchCriteriaBuilder;
         $this->filterProvider                       = $filterProvider;
+        $this->json                                 = $json;
         parent::__construct($context, $data);
     }
 
@@ -107,47 +114,53 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
         return $this->option;
     }
 
-    public function getParentOptionDefaultValue()
+    /**
+     * @return array
+     */
+    public function getParentOptionDefaultValues()
     {
-        $parentId = $this->option->getParentOption();
-        $this->searchCriteriaBuilder
-            ->addFilter('product_id', $this->getProduct()->getId())
-            ->addFilter('configurator_option_id', $parentId);
-        $searchCriteria = $this->searchCriteriaBuilder->create();
-        try {
-            $parentProductOptions = $this->productConfiguratorOptionRepository->getList($searchCriteria);
-            if ($parentProductOptions->getTotalCount()) {
-                $items = $parentProductOptions->getItems();
-                $parentProductOption = array_shift($items);
-                $configuredValue = $this->getProduct()
-                    ->getPreconfiguredValues()
-                    ->getData('configurator_options/' . $parentProductOption->getId());
-                if ($configuredValue) {
-                    return $configuredValue;
-                }
-            }
-        } catch (LocalizedException $exception) {
-            $this->_logger->error($exception->getMessage());
-        }
-
-        $defaultValue = null;
-        if ($parentId != '0') {
+        $defaultValues = [];
+        $parentIds = $this->option->getParentOption();
+        if ($parentIds) {
+            $this->searchCriteriaBuilder
+                ->addFilter('product_id', $this->getProduct()->getId())
+                ->addFilter('configurator_option_id', $parentIds, 'in');
+            $searchCriteria = $this->searchCriteriaBuilder->create();
             try {
-                $parentOption = $this->configuratorOptionRepository->get($parentId);
-            } catch (NoSuchEntityException $exception) {
-                $this->_logger->error($exception->getMessage());
-                return $defaultValue;
-            }
-            $values = $parentOption->getValues();
-            if (is_array($values)) {
-                foreach ($values as $value) {
-                    if ($value['is_default']) {
-                        $defaultValue = $value['value_id'];
+                $parentProductOptions = $this->productConfiguratorOptionRepository->getList($searchCriteria);
+                if ($parentProductOptions->getTotalCount()) {
+                    foreach ($parentProductOptions->getItems() as $option) {
+                        $configuredValue = $this->getProduct()
+                            ->getPreconfiguredValues()
+                            ->getData('configurator_options/' . $option->getId());
+                        if ($configuredValue) {
+                            $defaultValues[$option->getConfiguratorOptionId()] = $configuredValue;
+                            continue;
+                        }
+
+                        $defaultValue = null;
+
+                        try {
+                            $parentOption = $this->configuratorOptionRepository->get($option->getConfiguratorOptionId());
+                        } catch (NoSuchEntityException $exception) {
+                            $this->_logger->error($exception->getMessage());
+                            continue;
+                        }
+                        $values = $parentOption->getValues();
+                        if (is_array($values)) {
+                            foreach ($values as $value) {
+                                if ($value['is_default']) {
+                                    $defaultValues[$parentOption->getId()] = $value['value_id'];
+                                }
+                            }
+                        }
                     }
                 }
+            } catch (LocalizedException $exception) {
+                $this->_logger->error($exception->getMessage());
             }
         }
-        return $defaultValue;
+        return $defaultValues;
     }
 
     public function getValuesData()
@@ -159,9 +172,11 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
     {
         $availableOptions = [];
         foreach ($this->getValuesData() as $value) {
-            if ($value['is_dependent']
-                && !in_array($this->getParentOptionDefaultValue(), explode(',', $value['allowed_variants']))) {
-                continue;
+            if ($value['is_dependent']) {
+                $parentDefaults = $this->getParentOptionDefaultValues();
+                if (!$this->isAllowed($parentDefaults, $value['dependencies'])) {
+                    continue;
+                }
             }
             $availableOptions[] = $value;
         }
@@ -176,5 +191,40 @@ class AbstractOptions extends \Magento\Framework\View\Element\Template
             $this->_logger->error($exception->getMessage());
             return $this->option->getData('description');
         }
+    }
+
+    /**
+     * @param $parentDefaults array
+     * @param $dependencies string
+     * @return bool
+     */
+    public function isAllowed($parentDefaults, $dependencies)
+    {
+        if (!is_array($parentDefaults)) {
+            return false;
+        }
+        $isAllowed = true;
+        $dependencies = $this->mapDependencies($dependencies);
+
+        foreach ($parentDefaults as $optionId => $defaultValue) {
+            if (!in_array($defaultValue, $dependencies[$optionId])) {
+                $isAllowed = false;
+            }
+        }
+        return $isAllowed;
+    }
+
+    /**
+     * @param $dependencies string
+     * @return array
+     */
+    protected function mapDependencies($dependencies)
+    {
+        $result = [];
+        $dependencies = $this->json->unserialize($dependencies);
+        foreach ($dependencies as $dep) {
+            $result[$dep['id']] = (!empty($dep['values'])) ? $dep['values'] : [];
+        }
+        return $result;
     }
 }

@@ -201,7 +201,6 @@ define([
                 dependencyConfig,
                 valueConfig,
                 allowedVariants,
-                allowedPVariants,
                 parentOption,
                 parentElement,
                 options = $(this.options.optionsSelector),
@@ -214,28 +213,28 @@ define([
                 optionId = parts[2];
                 dependencyConfig = self.getDependencyConfig(optionId);
                 tempId = parseInt(dependencyConfig.parent_option, 10);
-                if (tempId) {
+                var parentOptions = (dependencyConfig.parent_option)? dependencyConfig.parent_option.split(',') : [];
+                var allowed = self.isOptionAllowed(parentOptions, dependencyConfig);
+                if (!allowed) {
+                    $(option).parents('.field').addClass('hide');
+                    if (option.type === 'text') {
+                        option.value = dependencyConfig.default_value;
+                    }
+                } else {
+                    $(option).parents('.field').removeClass('hide');
+                }
+                if (parentOptions.length) {
                     parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()});
                     parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
-                    if (parentOption) {
-                        allowedPVariants = (!_.isNull(dependencyConfig.allowed_variants)) ? dependencyConfig.allowed_variants.split(',') : [];
-                        if (allowedPVariants.indexOf(parentElement.val()) === -1) {
-                            $(option).parents('.field').addClass('hide');
-                            if (option.type === 'text') {
-                                option.value = dependencyConfig.default_value;
-                            }
-                        } else {
-                            $(option).parents('.field').removeClass('hide');
-                        }
-                    }
                     $.each(option.options, function (n, optionHtml) {
                         var optionValue = $(optionHtml).val();
+                        var variantAllowed = self.isVariantAllowed(parentOptions, optionValue, dependencyConfig);
                         valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
                         if (valueConfig) {
-                            allowedVariants = valueConfig.allowed_variants;
+                            var valueDependencies = JSON.parse(valueConfig.dependencies);
+                            allowedVariants = (valueDependencies.values) ? valueDependencies.values : [];
                         }
-                        if (optionValue && parseInt(valueConfig.is_dependent, 10) && !allowedVariants.includes(parentElement.val().toString()) ||
-                            (optionValue && !parseInt(valueConfig.enabled, 10))) {
+                        if (!variantAllowed) {
                             $(optionHtml).attr('disabled','disabled');
                             if (optionHtml.parentElement.value === optionValue) {
                                 optionHtml.parentElement.value = '';
@@ -268,6 +267,50 @@ define([
 
         getDependencyConfig: function (optionId) {
             return this.options.dependencyConfig[optionId];
+        },
+
+        isOptionAllowed: function (parentOptions, dependencyConfig) {
+            var parentOption,
+                parentElement,
+                optionDependencies,
+                optionDependency,
+                allowed = true,
+                self = this;
+
+            parentOptions.forEach(function (parentOptionId) {
+                parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: parentOptionId});
+                parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
+                if (parentOption) {
+                    optionDependencies = (!_.isUndefined(dependencyConfig.dependencies)) ? JSON.parse(dependencyConfig.dependencies) : [];
+                    optionDependency = _.findWhere(optionDependencies, {id: parentOption.configurator_option_id});
+                    var allowedPVariants = (optionDependency.values) ? (optionDependency.values) : [];
+                    if (allowedPVariants.indexOf(parentElement.val()) === -1) {
+                        allowed = false;
+                    }
+                }
+            });
+            return allowed;
+        },
+
+        isVariantAllowed: function (parentOptions, optionValue, dependencyConfig) {
+            var parentOption,
+                parentElement,
+                variantDependencies,
+                self = this,
+                allowed = true,
+                valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
+            if (!valueConfig || valueConfig.is_dependent ==="0") {
+                return true;
+            }
+            variantDependencies = JSON.parse(valueConfig.dependencies);
+            variantDependencies.forEach(function (parentOpt) {
+                parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: parentOpt.id});
+                parentElement = $('*[data-selector="configurator_options[' + parentOption.option_id + ']"]');
+                if (_.isUndefined(parentOpt.values) || parentOpt.values.indexOf(parentElement.val()) === -1) {
+                    allowed = false;
+                }
+            });
+            return allowed;
         }
     });
 
