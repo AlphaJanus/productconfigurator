@@ -199,8 +199,6 @@ define([
                 parts,
                 tempId,
                 dependencyConfig,
-                valueConfig,
-                parentOption,
                 options = $(this.options.optionsSelector),
                 self = this;
 
@@ -222,11 +220,9 @@ define([
                     $(option).parents('.field').removeClass('hide');
                 }
                 if (parentOptions.length) {
-                    parentOption = _.findWhere(self.options.dependencyConfig, {configurator_option_id: tempId.toString()});
                     $.each(option.options, function (n, optionHtml) {
                         var optionValue = $(optionHtml).val();
                         var variantAllowed = self.isVariantAllowed(parentOptions, optionValue, dependencyConfig);
-                        valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
                         if (!variantAllowed) {
                             $(optionHtml).attr('disabled','disabled');
                             if (optionHtml.parentElement.value === optionValue) {
