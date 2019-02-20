@@ -23,6 +23,9 @@ if ($option->getData('extensions')) {
         <span><?= $block->escapeHtml($option->getData('title')) ?></span>
         <?= /* @escapeNotVerified */ $block->getFormattedPrice() ?>
     </label>
+    <div class="description">
+        <?php echo /* @escapeNotVerified */ $block->getOptionDescription() ?>
+    </div>
     <?php if ($fileExists): ?>
         <div class="control">
             <span class="<?= /* @noEscape */ $fileNamed ?>"><?= $block->escapeHtml($fileInfo->getData('title')) ?></span>
