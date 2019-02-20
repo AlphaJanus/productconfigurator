@@ -23,6 +23,15 @@ define([
             this.optionsData = this.options.dependencyConfig;
             this.input = document.getElementById(this.options.input);
             this.optionId = this.options.input.replace('expression-', '');
+            var priceBox = $(this.options.priceHolderSelector, $(this.options.optionsSelector).element);
+            if (priceBox.data('magePriceBox') &&
+                priceBox.priceBox('option') &&
+                priceBox.priceBox('option').priceConfig
+            ) {
+                this._setOption('productPrice', priceBox.priceBox('option').prices.finalPrice.amount);
+                this._setOption('oldPrice', priceBox.priceBox('option').prices.oldPrice.amount);
+                this._setOption('basePrice', priceBox.priceBox('option').prices.basePrice.amount);
+            }
 
             this.currentOptions.on('change', this._recalculateValue.bind(this));
         },
@@ -61,6 +70,9 @@ define([
                 //}
             });
             expr = tempExpr + this.options.expressionCode;
+            var productPrice = this.options.productPrice;
+            var productOldPrice = this.options.productPrice;
+            var productBasePrice = this.options.basePrice;
             try {
                 val = eval(expr);
             } catch (err) {
