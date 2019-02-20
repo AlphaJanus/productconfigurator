@@ -223,12 +223,14 @@ define([
                         var variantAllowed = self.isVariantAllowed(parentOptions, optionValue, dependencyConfig);
                         if (!variantAllowed) {
                             $(optionHtml).attr('disabled','disabled');
+                            $(optionHtml).attr('style','display: none');
                             if (optionHtml.parentElement.value === optionValue) {
                                 optionHtml.parentElement.value = '';
                                 $(optionHtml.parentElement).trigger('change');
                             }
                         } else {
                             $(optionHtml).removeAttr('disabled');
+                            $(optionHtml).removeAttr('style');
                             var availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
                                 return (el.value !== "" && !el.disabled);
                             });
