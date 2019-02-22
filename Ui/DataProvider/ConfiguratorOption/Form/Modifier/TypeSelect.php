@@ -49,6 +49,7 @@ class TypeSelect extends AbstractModifier
     const FIELD_VALUE_NAME      = 'value';
     const FIELD_PRICE_NAME      = 'price';
     const FIELD_SORT_ORDER_NAME = 'sort_order';
+    const FIELD_SHOW_IN_CART    = 'show_in_cart';
     const FIELD_IS_DEFAULT_NAME = 'is_default';
 
     /** @var StoreManagerInterface  */
@@ -283,7 +284,6 @@ class TypeSelect extends AbstractModifier
                             [
                                 'label'         => __('Price'),
                                 'dataScope'     => static::FIELD_PRICE_NAME,
-                                'template'      => 'Magento_Catalog/form/field',
                                 'component'   => 'Netzexpert_ProductConfigurator/js/components/option-select-component',
                                 'dataType'      => Number::NAME,
                                 'addbefore'     => $this->getCurrencySymbol(),
@@ -292,8 +292,26 @@ class TypeSelect extends AbstractModifier
                                 ],
                             ]
                         ),
-                        static::FIELD_IS_DEFAULT_NAME => $this->getVariantsFieldConfig(
+                        static::FIELD_SHOW_IN_CART => $this->getVariantsFieldConfig(
                             50,
+                            [
+                                'label'             => __('Show in cart'),
+                                'formElement'       => Checkbox::NAME,
+                                'dataType'          => Number::NAME,
+                                'componentType'     => Field::NAME,
+                                'dataScope'         => static::FIELD_SHOW_IN_CART,
+                                'default'           => '1',
+                                'initialValue'      => 1,
+                                'prefer'            => 'toggle',
+                                'valueMap'          => [
+                                    'false'     => '0',
+                                    'true'      => '1'
+                                ],
+                                'fit'               => true,
+                            ]
+                        ),
+                        static::FIELD_IS_DEFAULT_NAME => $this->getVariantsFieldConfig(
+                            60,
                             [
                                 'label'             => __('Is Default'),
                                 'dataScope'         => static::FIELD_IS_DEFAULT_NAME,
@@ -309,14 +327,14 @@ class TypeSelect extends AbstractModifier
                             ]
                         ),
                         static::FIELD_SORT_ORDER_NAME => $this->getVariantsFieldConfig(
-                            60,
+                            70,
                             [
                                 'label'     => __('Sort order'),
                                 'dataScope' => static::FIELD_SORT_ORDER_NAME,
                                 'visible'   => false,
                             ]
                         ),
-                        static::FIELD_IS_DELETE => $this->getIsDeleteFieldConfig(60)
+                        static::FIELD_IS_DELETE => $this->getIsDeleteFieldConfig(80)
                     ]
                 ]
             ]

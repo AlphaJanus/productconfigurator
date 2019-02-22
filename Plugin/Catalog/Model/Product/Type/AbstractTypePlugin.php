@@ -20,6 +20,7 @@ use Magento\Framework\Message\Manager;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Validator\Exception;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
+use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Source\OptionType;
 use Netzexpert\ProductConfigurator\Model\Product\ConfiguratorOption\FileProcessor;
@@ -33,6 +34,9 @@ class AbstractTypePlugin
 
     /** @var ConfiguratorOptionRepositoryInterface */
     private $configuratorOptionRepository;
+
+    /** @var ConfiguratorOptionVariantRepositoryInterface */
+    private $optionVariantRepository;
 
     /** @var Json  */
     private $serializer;
@@ -58,6 +62,7 @@ class AbstractTypePlugin
     public function __construct(
         ProductExtensionFactory $productExtensionFactory,
         ConfiguratorOptionRepositoryInterface $configuratorOptionRepository,
+        ConfiguratorOptionVariantRepositoryInterface $optionVariantRepository,
         Json $serializer,
         FileProcessor $fileProcessor,
         Manager $messageManager,
@@ -65,6 +70,7 @@ class AbstractTypePlugin
     ) {
         $this->productExtensionFactory      = $productExtensionFactory;
         $this->configuratorOptionRepository = $configuratorOptionRepository;
+        $this->optionVariantRepository      = $optionVariantRepository;
         $this->serializer                   = $serializer;
         $this->fileProcessor                = $fileProcessor;
         $this->messageManager               = $messageManager;
@@ -119,7 +125,18 @@ class AbstractTypePlugin
                     }
                     $optionValue = (!empty($requestOptions[$option->getId()])) ? $requestOptions[$option->getId()] : '';
                     if ($optionValue) {
-                        $options[$option->getConfiguratorOptionId()] = $optionValue;
+                        $showInCart = false;
+                        if ($optionEntity->hasVariants()) {
+                            try {
+                                $variant = $this->optionVariantRepository->get($optionValue);
+                                $showInCart = $variant->getShowInCart();
+                            } catch (NoSuchEntityException $exception) {
+                                $this->logger->error($exception->getMessage());
+                            }
+                        }
+                        if ($showInCart) {
+                            $options[$option->getConfiguratorOptionId()] = $optionValue;
+                        }
                     }
                     if ($optionEntity->getType() == OptionType::TYPE_FILE) {
                         try {

@@ -185,6 +185,22 @@ class Variant extends AbstractExtensibleModel implements ConfiguratorOptionVaria
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getShowInCart()
+    {
+        return $this->getData(self::SHOW_IN_CART);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setShowInCart($showInCart)
+    {
+        return $this->setData(self::SHOW_IN_CART, $showInCart);
+    }
+
+    /**
      * Remove old image after save
      * @inheritDoc
      */

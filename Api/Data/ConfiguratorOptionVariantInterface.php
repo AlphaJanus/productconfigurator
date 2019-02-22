@@ -19,6 +19,7 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
     const PRICE                     = 'price';
     const IS_DEFAULT                = 'is_default';
     const IMAGE                     = 'image';
+    const SHOW_IN_CART              = 'show_in_cart';
 
     /**
      * @return int
@@ -57,6 +58,11 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
      * @return string
      */
     public function getValue();
+
+    /**
+     * @return int
+     */
+    public function getShowInCart();
 
     /**
      * @param string$value
@@ -107,6 +113,12 @@ interface ConfiguratorOptionVariantInterface extends ExtensibleDataInterface
      * @return $this
      */
     public function setImage($image);
+
+    /**
+     * @param int $showInCart
+     * @return $this
+     */
+    public function setShowInCart($showInCart);
 
     /**
      * @param string $key

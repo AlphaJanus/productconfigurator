@@ -80,6 +80,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         if (version_compare($context->getVersion(), '2.0.19') < 0) {
             $this->upgradeVersionTwoZeroNineteen($setup);
         }
+        if (version_compare($context->getVersion(), '2.0.20') < 0) {
+            $this->upgradeVersionTwoZeroTwenty($setup);
+        }
 
         $setup->endSetup();
     }
@@ -1036,6 +1039,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         );
     }
 
+    /**
+     * @param SchemaSetupInterface $setup
+     */
     public function upgradeVersionTwoZeroEighteen(SchemaSetupInterface $setup)
     {
         $setup->getConnection()->dropIndex(
@@ -1056,6 +1062,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
         );
     }
 
+    /**
+     * @param SchemaSetupInterface $setup
+     */
     public function upgradeVersionTwoZeroNineteen(SchemaSetupInterface $setup)
     {
         $setup->getConnection()->changeColumn(
@@ -1081,6 +1090,24 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 'nullable'  => true,
                 'default'   => null,
                 'comment'   => 'Dependencies'
+            ]
+        );
+    }
+
+    /**
+     * @param SchemaSetupInterface $setup
+     */
+    public function upgradeVersionTwoZeroTwenty(SchemaSetupInterface $setup)
+    {
+        $setup->getConnection()->addColumn(
+            $setup->getTable('configurator_option_entity_variants'),
+            'show_in_cart',
+            [
+                'type'      => Table::TYPE_SMALLINT,
+                'length'    => 1,
+                'nullable'  => false,
+                'default'   => 1,
+                'comment'   => 'Show in cart'
             ]
         );
     }

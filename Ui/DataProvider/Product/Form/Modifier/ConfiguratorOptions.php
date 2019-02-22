@@ -231,37 +231,6 @@ class ConfiguratorOptions extends AbstractModifier
                         ],
                         'children' => [
                             static::DEPENDENCIES => $this->getValueDependencyGridConfig(0)
-                            /*'dependency_form' => [
-                                'arguments' => [
-                                    'data' => [
-                                        'config' => [
-                                            'autoRender' => true,
-                                            'cssclass' => 'noclass',
-                                            'componentType' => 'container',
-                                            'component' => 'Magento_Ui/js/form/components/insert-form',
-                                            'dataScope' => '',
-                                            'ns' => 'option_dependency_form',
-                                            'externalFilterMode' => true,
-                                            'currentProductId' => $this->locator->getProduct()->getId(),
-                                            'dataLinks' => [
-                                                'imports' => false,
-                                                'exports' => true
-                                            ],
-                                            'exports' => [
-                                                'currentProductId' => '${ $.externalProvider }:params.current_product_id'
-                                            ],
-                                            'update_url' => $this->urlBuilder->getUrl('mui/index/render'),
-                                            'render_url' => $this->urlBuilder->getUrl(
-                                                'mui/index/render_handle',
-                                                [
-                                                    'handle' => 'variant_dependency_set',
-                                                    'buttons' => 1
-                                                ]
-                                            ),
-                                        ],
-                                    ],
-                                ],
-                            ],*/
                         ],
                     ]
                 ]
