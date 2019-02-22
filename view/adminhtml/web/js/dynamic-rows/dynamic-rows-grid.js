@@ -33,7 +33,7 @@ define([
                 enabled: true,
                 distinct: true
             },
-            links: {
+            imports: {
                 groups: '${ $ .provider }:${ $ .parentScope }'
             },
             optionsParents: [],

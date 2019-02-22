@@ -122,7 +122,7 @@ define([
 
     return Select.extend({
         defaults: {
-            links: {
+            imports: {
                 groups: '${ $ .provider }:data.product.configurator_option_groups',
                 currentGroup: '${ $ .provider }:${ $ .dataScope.split(\'.assigned_configurator_options\')[0] }',
                 currentRecord: '${ $ .provider }:${ $ .parentScope }',

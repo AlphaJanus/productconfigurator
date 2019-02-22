@@ -20,6 +20,14 @@ define([
 
         switchVisibility: function () {
             this.visible(this.recordData().length);
-        }
+        },
+        /**
+         * Set initial property to records data
+         *
+         * @returns {Object} Chainable.
+         */
+        setInitialProperty: function () {
+            return this;
+        },
     })
 });

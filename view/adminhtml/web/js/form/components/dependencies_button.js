@@ -6,7 +6,7 @@ define([
 
     return Button.extend({
         defaults: {
-            links: {
+            imports: {
                 rowData: '${ $ .provider }:${ $ .dataScope }'
             },
         },
