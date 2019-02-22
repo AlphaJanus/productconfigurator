@@ -7,7 +7,7 @@ define([
 
     return Multiselect.extend({
         defaults: {
-            links: {
+            imports: {
                 option: '${ $ .provider }:${ $ .parentScope }',
                 assignedOptionsGroups: '${ $ .provider }:data.product.assigned_configurator_options'
             }
