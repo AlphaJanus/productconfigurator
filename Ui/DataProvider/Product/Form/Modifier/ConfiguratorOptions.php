@@ -724,7 +724,7 @@ class ConfiguratorOptions extends AbstractModifier
                                         'componentType' => Container::NAME,
                                         'isTemplate' => true,
                                         'is_collection' => true,
-                                        'component' => 'Magento_Ui/js/dynamic-rows/record',
+                                        'component' => 'Netzexpert_ProductConfigurator/js/dynamic-rows/variant-record',
                                         'dataScope' => 'values',
                                     ],
                                 ],
