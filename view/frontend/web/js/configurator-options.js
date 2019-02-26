@@ -209,7 +209,7 @@ define([
                 dependencyConfig = self.getDependencyConfig(optionId);
                 var parentOptions = (dependencyConfig.parent_option)? dependencyConfig.parent_option.split(',') : [];
                 var allowed = self.isOptionAllowed(parentOptions, dependencyConfig);
-                if (!allowed) {
+                if (!allowed || dependencyConfig.is_visible === "0") {
                     $(option).parents('.field').addClass('hide');
                     if (option.type === 'text') {
                         option.value = dependencyConfig.default_value;
