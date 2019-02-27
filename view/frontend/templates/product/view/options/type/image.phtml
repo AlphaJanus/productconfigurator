@@ -18,9 +18,6 @@ $disabled = false;
         $valuesData = $block->getValuesData();
         foreach ($valuesData as $item) {
             $disabled = false;
-            if ($item['is_dependent'] && !$block->isAllowed($parentOptionDefaultValues, $item['dependencies'])) {
-                $disabled = true;
-            }
             if ($item['enabled']) {
                 if ($item['value_id'] == $defaultValue) {
                     $value = $item['value'];
