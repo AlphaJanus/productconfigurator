@@ -97,6 +97,12 @@ define([
             }
             this.input.value = val;
             $('#option-value-'+self.optionId).text(val);
+            if (this.options.optionCode === 'weight') {
+                $.each($('[data-role="product-weight"]'), function (i, block) {
+                    $(block).text(val);
+                });
+                $('.product-info-weight').show();
+            }
 
         }
     });

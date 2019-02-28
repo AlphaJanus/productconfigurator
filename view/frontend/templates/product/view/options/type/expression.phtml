@@ -27,7 +27,8 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
                 "input": "expression-<?php echo $option->getId(); ?>",
                 "priceHolderSelector": "[data-product-id='<?= $block->escapeHtml($_productId) ?>'][data-role=priceBox]",
                 "dependencyConfig": <?php echo /* @escapeNotVerified */ $block->getDependencyJsonConfig() ?>,
-                "expressionCode": "<?php echo str_replace(array("\n", "\r"), '', $option->getData('expression'))?>"
+                "expressionCode": "<?php echo str_replace(array("\n", "\r"), '', $option->getData('expression'))?>",
+                "optionCode": "<?= $option->getData('code') ?>"
             }
         }
     }

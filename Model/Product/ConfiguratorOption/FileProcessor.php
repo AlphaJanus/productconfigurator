@@ -98,8 +98,9 @@ class FileProcessor
     {
         $upload = $this->fileTransferFactory->create();
         $file = 'configurator_options_' . $option->getId() . '_file';
-        $runValidation = $optionEntity->getData('is_required') || $upload->isUploaded($file);
-        if (!$runValidation) {
+        $valid = ($optionEntity->getData('is_required') == "0" ||
+            ($optionEntity->getData('is_required') == '1' && !$upload->isUploaded($file)));
+        if (!$valid) {
             throw new Exception(
                 __('Validation failed. Required options were not filled or the file was not uploaded.')
             );

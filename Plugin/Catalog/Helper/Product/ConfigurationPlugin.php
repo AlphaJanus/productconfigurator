@@ -108,6 +108,9 @@ class ConfigurationPlugin
                 } else {
                     $value = $itemOption->getValue();
                 }
+                if ($option->getType() == OptionType::TYPE_FILE && $value == '[]') {
+                    continue;
+                }
                 $options[] = [
                     'label' => $this->filter->filter($option->getName()),
                     'value' => $this->getFormattedOptionValue($option, $value, $item),
@@ -137,6 +140,9 @@ class ConfigurationPlugin
         }
         if ($value === null || !is_array($value)) {
             return $optionValue;
+        }
+        if (empty($value)) {
+            return '';
         }
         $customOptionUrlParams =  [
             'id' => $item->getOptionByCode(Configurator::CONFIGURATOR_OPTION_PREFIX . $option->getId())->getId(),

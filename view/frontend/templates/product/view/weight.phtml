@@ -1,0 +1,10 @@
+<?php
+/** @var $block Netzexpert\ProductConfigurator\Block\Product\View\Weight */
+?>
+<div class="product-info-weight" style="display: none">
+    <div class="product attribute weight">
+        <strong class="type"><?= /* @escapeNotVerified */  __('Weight') ?>:</strong>
+        <div data-role="product-weight" class="value" itemprop="weight"><?= /* @escapeNotVerified */ $block->getProductWeight() ?></div>
+        <span class="unit"><?= /* @escapeNotVerified */ $block->getWeightUnit() ?></span>
+    </div>
+</div>

@@ -199,9 +199,10 @@ define([
                 parts,
                 dependencyConfig,
                 options = $(this.options.optionsSelector),
-                self = this;
+                self = this,
+                body = $('body');
 
-
+            body.trigger('processStart');
             $.each(options, function (index, option) {
                 /** to get Id of option */
                 parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
@@ -252,6 +253,7 @@ define([
                 }
 
             });
+            body.trigger('processStop');
         },
 
         getDependencyConfig: function (optionId) {
