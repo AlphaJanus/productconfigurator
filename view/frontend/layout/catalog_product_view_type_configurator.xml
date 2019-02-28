@@ -34,5 +34,11 @@
                        template="Netzexpert_ProductConfigurator::product/view/options/type/file.phtml" />
             </block>
         </referenceBlock>
+        <referenceContainer name="product.info.price">
+            <block class="Netzexpert\ProductConfigurator\Block\Product\View\Weight"
+                   name="product.weight"
+                   template="Netzexpert_ProductConfigurator::product/view/weight.phtml"
+                   after="-" />
+        </referenceContainer>
     </body>
 </page>

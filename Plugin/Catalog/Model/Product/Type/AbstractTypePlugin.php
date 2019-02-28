@@ -125,7 +125,7 @@ class AbstractTypePlugin
                     }
                     $optionValue = (!empty($requestOptions[$option->getId()])) ? $requestOptions[$option->getId()] : '';
                     if ($optionValue) {
-                        $showInCart = false;
+                        $showInCart = true;
                         if ($optionEntity->hasVariants()) {
                             try {
                                 $variant = $this->optionVariantRepository->get($optionValue);
@@ -138,7 +138,7 @@ class AbstractTypePlugin
                             $options[$option->getConfiguratorOptionId()] = $optionValue;
                         }
                     }
-                    if ($optionEntity->getType() == OptionType::TYPE_FILE) {
+                    if ($optionEntity->getType() == OptionType::TYPE_FILE && $optionValue) {
                         try {
                             $optionValue = $this->fileProcessor->validate($option, $optionEntity, $product);
                             $options[$option->getConfiguratorOptionId()] = $this->serializer->serialize($optionValue);
@@ -151,6 +151,9 @@ class AbstractTypePlugin
                             $this->messageManager->addExceptionMessage($exception);
                             $options[$option->getConfiguratorOptionId()] = null;
                         }
+                    }
+                    if ($optionEntity->getCode() == 'weight') {
+                        $product->setWeight($optionValue);
                     }
                 }
             }
