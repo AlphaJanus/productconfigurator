@@ -220,19 +220,32 @@ define([
                 }
                 if (parentOptions.length) {
                     $.each(option.options, function (n, optionHtml) {
-                        var optionValue = $(optionHtml).val();
+                        var availableOptions,
+                            val,
+                            oldVal = optionHtml.parentElement.value,
+                            optionValue = $(optionHtml).val();
                         var variantAllowed = self.isVariantAllowed(parentOptions, optionValue, dependencyConfig);
                         if (!variantAllowed) {
                             $(optionHtml).attr('disabled','disabled');
                             $(optionHtml).attr('style','display: none');
-                            if (optionHtml.parentElement.value === optionValue) {
-                                optionHtml.parentElement.value = '';
-                                $(optionHtml.parentElement).trigger('change');
+                            if (oldVal === optionValue) {
+                                availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
+                                    return (el.value !== "" && !el.disabled);
+                                });
+                                if (availableOptions.length) {
+                                    val = availableOptions[0].value;
+                                } else {
+                                    val = '';
+                                }
+                                optionHtml.parentElement.value = val;
+                                if (val !== oldVal) {
+                                    $(optionHtml.parentElement).trigger('change');
+                                }
                             }
                         } else {
                             $(optionHtml).removeAttr('disabled');
                             $(optionHtml).removeAttr('style');
-                            var availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
+                            availableOptions = _.filter(optionHtml.parentElement.options, function (el) {
                                 return (el.value !== "" && !el.disabled);
                             });
                             if (availableOptions.length === 1) {
@@ -290,7 +303,10 @@ define([
                 self = this,
                 allowed = true,
                 valueConfig = _.findWhere(dependencyConfig.values, {value_id:optionValue.toString()});
-            if (!valueConfig || valueConfig.is_dependent ==="0") {
+            if (!valueConfig) {
+                return false;
+            }
+            if (valueConfig.is_dependent ==="0") {
                 return true;
             }
             variantDependencies = JSON.parse(valueConfig.dependencies);
