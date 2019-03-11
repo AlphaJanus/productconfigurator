@@ -159,7 +159,7 @@ define([
                     if (self.currentRecord.group_id === group.group_id) {
                         assignedOptions = _.filter(assignedOptions, function (option) {
                             var elem = _.findWhere(grid.elems(), {recordId: option.record_id});
-                            return elem.position < self.currentRecord.position
+                            return parseInt(elem.position, 10) < parseInt(self.currentRecord.position, 10);
                         });
                     }
                     if (!assignedOptions.length) {
