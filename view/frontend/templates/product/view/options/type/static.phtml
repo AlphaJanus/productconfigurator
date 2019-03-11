@@ -3,7 +3,13 @@
 $option = $block->getOption();
 ?>
 <div id="option-<?= $option->getId() ?>" class="field choice">
-    <div class="description">
+    <div id="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+         class="description">
         <?= /* @escapeNotVerified */ $option->getData('description') ?>
     </div>
+    <input type="hidden"
+           name="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+           class="product-configurator-option"
+           data-selector="configurator_options[<?= /* @escapeNotVerified */ $option->getId() ?>]"
+           data-code="<?php echo /* @escapeNotVerified */ $option->getCode() ?>">
 </div>
