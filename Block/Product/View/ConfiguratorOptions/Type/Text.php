@@ -28,10 +28,12 @@ class Text extends AbstractOptions
         if ($option->getIsRequired()) {
             $textValidate['required'] = true;
         }
-        if ($min = $option->getData('min_value')) {
+        $min = $option->getData('min_value');
+        if ($min) {
             $textValidate['gte'] = (float)$min;
         }
-        if ($max = $option->getData('max_value')) {
+        $max = $option->getData('max_value');
+        if ($max) {
             $textValidate['lte'] = (float)$max;
         }
         if ($option->getMaxCharacters()) {
