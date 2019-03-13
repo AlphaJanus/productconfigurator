@@ -59,5 +59,19 @@ define([
             },
             $.mage.__('Disallowed file type.')
         );
+
+        $.validator.addMethod(
+            "digits-two-after-comma",
+            function (value) {
+                var pattern = /^\d+(\.\d{1,2})?$/;
+                if (pattern.test(value)) {
+                    return true;
+                }
+                return false;
+            },
+            function () {
+                return $.mage.__('Only 2 digits after comma');
+            }
+        );
     }
 });
