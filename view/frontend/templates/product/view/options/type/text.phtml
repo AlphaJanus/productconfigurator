@@ -3,6 +3,7 @@
 $option = $block->getOption();
 $class = ($option->getIsRequired()) ? ' required' : '';
 $isHidden = !$option->getIsVisible() ? ' hide' : '';
+$validation = $block->getValidationRules();
 ?>
 <div id="option-<?php echo $option->getId() ?>" class="field<?php if ($option->getType() == \Magento\Catalog\Api\Data\ProductCustomOptionInterface::OPTION_TYPE_AREA) {
     echo ' textarea';
@@ -33,9 +34,9 @@ $isHidden = !$option->getIsVisible() ? ' hide' : '';
             <input type="text"
                    id="options_<?php echo /* @escapeNotVerified */ $option->getId() ?>_text"
                    class="input-text product-configurator-option"
-                <?php if (!empty($_textValidate)) {
+                <?php if (!empty($validation)) {
         ?>
-                    data-validate="<?php echo $block->escapeHtml(json_encode($_textValidate)) ?>"
+                    data-validate="<?php echo $block->escapeHtml($validation) ?>"
                 <?php
     } ?>
                    name="configurator_options[<?php echo /* @escapeNotVerified */ $option->getId() ?>]"
