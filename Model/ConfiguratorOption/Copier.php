@@ -58,7 +58,7 @@ class Copier
                 $this->optionRepository->save($duplicate);
                 $isDuplicateSaved = true;
             } catch (CouldNotSaveException $exception) {
-                 continue;
+                continue;
             }
         } while (!$isDuplicateSaved);
 
