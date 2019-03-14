@@ -15,6 +15,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionVariantRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionInterface;
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionVariantInterfaceFactory;
+use Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant\ImageProcessor;
 use Psr\Log\LoggerInterface;
 
 class ConfiguratorOptionVariantsProcessor
@@ -28,6 +29,8 @@ class ConfiguratorOptionVariantsProcessor
     /** @var ManagerInterface  */
     private $messageManager;
 
+    private $imageProcessor;
+
     /** @var LoggerInterface  */
     private $logger;
 
@@ -35,11 +38,13 @@ class ConfiguratorOptionVariantsProcessor
         ConfiguratorOptionVariantRepositoryInterface $variantRepository,
         ConfiguratorOptionVariantInterfaceFactory $configuratorOptionVariantInterfaceFactory,
         ManagerInterface $messageManager,
+        ImageProcessor $imageProcessor,
         LoggerInterface $logger
     ) {
         $this->variantRepository    = $variantRepository;
         $this->variantFactory       = $configuratorOptionVariantInterfaceFactory;
         $this->messageManager       = $messageManager;
+        $this->imageProcessor       = $imageProcessor;
         $this->logger               = $logger;
     }
 
@@ -73,7 +78,10 @@ class ConfiguratorOptionVariantsProcessor
             }
             try {
                 $variant->setData($value);
-                if (isset($value['image'])) {
+                if (isset($value['image']) && $option->isDuplicate()) {
+                    $newFile = $this->imageProcessor->duplicateImageFromTmp($value["image"][0]["file"]);
+                    $variant->setImage($newFile);
+                } elseif (isset($value['image'])) {
                     $variant->setImage($value["image"][0]["file"]);
                 } else {
                     $variant->setImage(null);
