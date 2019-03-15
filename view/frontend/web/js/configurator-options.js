@@ -255,7 +255,7 @@ define([
                     });
                 }
                 if (option.type ==="select-one") {
-                    if (_.where(option.options, {disabled: true}).length + 1 >= option.options.length) {
+                    if (_.where(option.options, {disabled: true}).length === option.options.length) {
                         $(option).parents('.field').addClass('hidden');
                         $(option).addClass('hidden');
                     } else {
