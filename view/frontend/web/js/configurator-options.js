@@ -127,7 +127,6 @@ define([
                 mask = $('#product_addtocart_form .loading-mask'),
                 handler = this.options.optionHandlers[option.data('role')];
 
-            $('#product_addtocart_form').trigger('processStart');
             this.changesToDo ++;
             option.data('optionContainer', option.closest(this.options.controlContainer));
 
@@ -138,9 +137,7 @@ define([
             }
             $(this.options.priceHolderSelector).trigger('updatePrice', changes);
             this.updateOptions(event);
-            $('#product_addtocart_form').delay(3000).trigger('processStop');
             this.changesToDo --;
-            console.log(this.changesToDo);
             if (this.changesToDo) {
                 mask.show();
             } else {
