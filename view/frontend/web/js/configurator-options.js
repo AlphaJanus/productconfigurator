@@ -1,11 +1,12 @@
 define([
+    "ko",
     "jquery",
     'underscore',
     'mage/template',
     'priceUtils',
     'priceBox',
     'jquery/ui'
-], function ($, _, mageTemplate, utils) {
+], function (ko, $, _, mageTemplate, utils) {
     'use strict';
 
     var globalOptions = {
@@ -76,6 +77,7 @@ define([
 
     $.widget('mage.configuratorOptions', {
         options: globalOptions,
+        changesToDo: 0,
         /**
          * @private
          */
@@ -122,8 +124,11 @@ define([
         {
             var changes,
                 option = $(event.target),
+                mask = $('#product_addtocart_form .loading-mask'),
                 handler = this.options.optionHandlers[option.data('role')];
 
+            $('#product_addtocart_form').trigger('processStart');
+            this.changesToDo ++;
             option.data('optionContainer', option.closest(this.options.controlContainer));
 
             if (handler && handler instanceof Function) {
@@ -133,6 +138,14 @@ define([
             }
             $(this.options.priceHolderSelector).trigger('updatePrice', changes);
             this.updateOptions(event);
+            $('#product_addtocart_form').delay(3000).trigger('processStop');
+            this.changesToDo --;
+            console.log(this.changesToDo);
+            if (this.changesToDo) {
+                mask.show();
+            } else {
+                mask.hide();
+            }
         },
 
         /**
@@ -199,10 +212,8 @@ define([
                 parts,
                 dependencyConfig,
                 options = $(this.options.optionsSelector),
-                self = this,
-                body = $('body');
+                self = this;
 
-            body.trigger('processStart');
             $.each(options, function (index, option) {
                 /** to get Id of option */
                 parts = /^(configurator_options\[)(\d+)(\])$/.exec($(option).data('selector'));
@@ -266,7 +277,6 @@ define([
                 }
 
             });
-            body.trigger('processStop');
         },
 
         getDependencyConfig: function (optionId) {

@@ -41,6 +41,9 @@ class Configurator extends AbstractView
     /** @var DataObjectFactory  */
     private $dataObjectFactory;
 
+    /** @var array | null ConfiguratorOptions */
+    private $configuratorOptions;
+
     /**
      * Configurator constructor.
      * @param Context $context
@@ -82,6 +85,9 @@ class Configurator extends AbstractView
      */
     public function getConfiguratorOptions()
     {
+        if (!empty($this->configuratorOptions)){
+            return $this->configuratorOptions;
+        }
         $extensionAttributes = $this->getProduct()->getExtensionAttributes();
         $productExtension = $extensionAttributes ?
             $extensionAttributes : $this->extensionFactory->create();
@@ -102,6 +108,18 @@ class Configurator extends AbstractView
             return $productOptions;
         }
         return $productOptions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOptionsCount()
+    {
+        $count = 0;
+        foreach ($this->getConfiguratorOptions() as $optionGroup) {
+            $count += count($optionGroup['options']);
+        }
+        return $count;
     }
 
     /**

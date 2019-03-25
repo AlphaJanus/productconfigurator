@@ -17,12 +17,21 @@ if (!empty($optionsGroups)) :
             }
         }
     </script>
+    <div data-role="loader" class="loading-mask">
+        <div class="loader">
+            <img src="<?= /* @escapeNotVerified */ $block->getViewFileUrl('images/loader-1.gif') ?>"
+                 alt="<?= /* @escapeNotVerified */ __('Loading...') ?>">
+        </div>
+    </div>
 <div id="configurator-options-accordion"
      data-sections="tabs"
      data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "active": false, "multipleCollapsible": true}}'>
 <?php
 foreach ($optionsGroups as $optionsGroup) {
-    echo '<div class="item title" data-section="title" data-role="collapsible"><div class="switch" data-toggle="switch" data-role="trigger">' . $optionsGroup['group_name'] . '</div></div>';
+    $active = ($optionsGroup == reset($optionsGroups)) ? ' active' : '';
+    echo '<div class="item title' . $active . '" data-section="title" data-role="collapsible">
+            <div class="switch" data-toggle="switch" data-role="trigger">' . $optionsGroup['group_name'] . '</div>
+         </div>';
     echo '<div class="item content" data-role="content">';
     foreach ($optionsGroup['options'] as $option) {
         echo $block->getOptionHtml($option);
@@ -35,7 +44,8 @@ foreach ($optionsGroups as $optionsGroup) {
 <script>
     require([
         'jquery',
-        'accordion'], function ($) {
+        'accordion'
+    ], function ($) {
         $("#configurator-options-accordion").accordion();
     });
 </script>
