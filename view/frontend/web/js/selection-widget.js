@@ -68,8 +68,14 @@ define([
                             }
                             value = valObj.title;
                             break;
+                        case 'file':
+                            if (!option.files.length) {
+                                return;
+                            }
+                            value = option.files[0].name;
+                            break;
                         default:
-                            value = 'test';
+                            return;
                     }
                     toTemplate = {
                         data: {
