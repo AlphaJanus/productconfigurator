@@ -72,5 +72,17 @@
         cursor: pointer;
       }
     }
+    .selected-options {
+      dl {
+        display: grid;
+        grid-template: auto / 3fr 2fr;
+        dt {
+          grid-column: 1;
+        }
+        dd {
+          grid-column: 2;
+        }
+      }
+    }
   }
 }

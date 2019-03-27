@@ -95,7 +95,7 @@ define([
                 };
                 $(this.options.priceHolderSelector).trigger('updatePrice', changes);
             }
-            this.input.value = val;
+            $(this.input).val(val);
             $('#option-value-'+self.optionId).text(val);
             if (this.options.optionCode === 'weight') {
                 $.each($('[data-role="product-weight"]'), function (i, block) {
