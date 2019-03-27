@@ -24,12 +24,10 @@ if (!empty($optionsGroups)) :
         </div>
     </div>
 <div id="configurator-options-accordion"
-     data-sections="tabs"
-     data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "active": false, "multipleCollapsible": true}}'>
+     data-sections="tabs">
 <?php
 foreach ($optionsGroups as $optionsGroup) {
-    $active = ($optionsGroup == reset($optionsGroups)) ? ' active' : '';
-    echo '<div class="item title' . $active . '" data-section="title" data-role="collapsible">
+    echo '<div class="item title" data-section="title" data-role="collapsible">
             <div class="switch" data-toggle="switch" data-role="trigger">' . $optionsGroup['group_name'] . '</div>
          </div>';
     echo '<div class="item content" data-role="content">';
@@ -46,7 +44,15 @@ foreach ($optionsGroups as $optionsGroup) {
         'jquery',
         'accordion'
     ], function ($) {
-        $("#configurator-options-accordion").accordion();
+        $("#configurator-options-accordion").accordion({
+            "active": "0",
+            "openedState": "active",
+            "collapsible": true,
+            "multipleCollapsible": true,
+            "animate": {
+                duration:300
+            }
+        });
     });
 </script>
 <?php

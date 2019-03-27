@@ -4,7 +4,8 @@ var config = {
             imageField:             'Netzexpert_ProductConfigurator/js/form/select-image-field',
             expressionField:        'Netzexpert_ProductConfigurator/js/form/expression-field',
             configuratorOptions:    'Netzexpert_ProductConfigurator/js/configurator-options',
-            configuratorValidation: 'Netzexpert_ProductConfigurator/js/configurator-validation'
+            configuratorValidation: 'Netzexpert_ProductConfigurator/js/configurator-validation',
+            selectionWidget:        'Netzexpert_ProductConfigurator/js/selection-widget',
         }
     },
     config: {

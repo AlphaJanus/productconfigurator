@@ -40,5 +40,11 @@
                    template="Netzexpert_ProductConfigurator::product/view/weight.phtml"
                    after="-" />
         </referenceContainer>
+        <referenceContainer name="product.info.main">
+            <block class="Netzexpert\ProductConfigurator\Block\Product\View\SelectionWidget"
+                   name="widget.selection"
+                   after="alert.urls"
+                   template="Netzexpert_ProductConfigurator::product/view/selection-widget.phtml" />
+        </referenceContainer>
     </body>
 </page>
