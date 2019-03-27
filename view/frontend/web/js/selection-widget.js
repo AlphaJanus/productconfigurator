@@ -50,7 +50,11 @@ define([
                 optionId = parts[2];
                 optionConfig = self.getDependencyConfig(optionId);
 
-                if (optionConfig.is_visible === "1" && optionConfig.type !=='static' && !_.isNull(currentVal)) {
+                if (optionConfig.is_visible === "1" &&
+                    optionConfig.type !=='static' &&
+                    !_.isNull(currentVal) &&
+                    ! $('#option-' + optionConfig.option_id).hasClass("hide")
+                ) {
                     switch (optionConfig.type) {
                         case 'text':
                         case 'expression':
@@ -59,6 +63,9 @@ define([
                         case 'select':
                         case 'image':
                             var valObj = _.findWhere(optionConfig.values, {'value_id': $(option).val()});
+                            if (_.isUndefined(valObj)) {
+                                return;
+                            }
                             value = valObj.title;
                             break;
                         default:
