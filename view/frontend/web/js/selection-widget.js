@@ -53,6 +53,7 @@ define([
                 if (optionConfig.is_visible === "1" &&
                     optionConfig.type !=='static' &&
                     !_.isNull(currentVal) &&
+                    parseFloat(currentVal) &&
                     ! $('#option-' + optionConfig.option_id).hasClass("hide")
                 ) {
                     switch (optionConfig.type) {
@@ -63,7 +64,7 @@ define([
                         case 'select':
                         case 'image':
                             var valObj = _.findWhere(optionConfig.values, {'value_id': $(option).val()});
-                            if (_.isUndefined(valObj)) {
+                            if (_.isUndefined(valObj) || valObj.title === "Keine") {
                                 return;
                             }
                             value = valObj.title;
