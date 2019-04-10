@@ -220,11 +220,13 @@ define([
                 var allowed = self.isOptionAllowed(parentOptions, dependencyConfig);
                 if (!allowed || dependencyConfig.is_visible === "0") {
                     $(option).parents('.field').addClass('hide');
+                    $(option).hide();
                     if (option.type === 'text') {
                         option.value = dependencyConfig.default_value;
                     }
                 } else {
                     $(option).parents('.field').removeClass('hide');
+                    $(option).show();
                 }
                 if (parentOptions.length) {
                     $.each(option.options, function (n, optionHtml) {

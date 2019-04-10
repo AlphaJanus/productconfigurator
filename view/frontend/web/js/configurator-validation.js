@@ -5,8 +5,22 @@ define([
     'mage/translate'
 ], function ($) {
     'use strict';
-
     return function () {
+        $.validator.setDefaults({
+            ignore: '[style*="display: none"]',
+            showErrors: function (errorsMap, errorsList) {
+                var element;
+
+                if (errorsList.length) {
+                    element = errorsList[0].element;
+                }
+                var index = $(element).closest(".item.content")
+                    .index(".item.content");
+                $("#configurator-options-accordion").accordion("activate", index);
+
+                jQuery('#product_addtocart_form').validate().defaultShowErrors()
+            }
+        });
         $.validator.addMethod(
             "lte",
             function (value, element, params) {
