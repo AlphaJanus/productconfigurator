@@ -74,6 +74,24 @@ class ConfiguratorOptionRepository implements ConfiguratorOptionRepositoryInterf
     /**
      * @inheritDoc
      */
+    public function getByCode($code)
+    {
+        /** @var ConfiguratorOptionInterface $configuratorOption */
+        $configuratorOption = $this->configuratorOptionFactory->create();
+        $optionId = $this->configuratorOptionResource->getIdByCode($code);
+        if (!$optionId) {
+            throw new NoSuchEntityException(
+                __("The option that was requested doesn't exist. Verify the option and try again.")
+            );
+        }
+        $this->configuratorOptionResource->load($configuratorOption, $optionId);
+        return $configuratorOption;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function save(ConfiguratorOptionInterface $configuratorOption)
     {
         try {
