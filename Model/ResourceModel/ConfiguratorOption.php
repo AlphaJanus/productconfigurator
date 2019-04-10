@@ -24,4 +24,12 @@ class ConfiguratorOption extends AbstractEntity
         }
         return parent::getEntityType();
     }
+
+    public function getIdByCode($code)
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()->from($this->getEntityTable(), 'entity_id')->where('code = :code');
+        $bind = [':code' => (string)$code];
+        return $connection->fetchOne($select, $bind);
+    }
 }

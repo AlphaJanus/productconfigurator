@@ -25,6 +25,13 @@ interface ConfiguratorOptionRepositoryInterface
     public function get($id);
 
     /**
+     * @param string $code
+     * @return ConfiguratorOptionInterface
+     * @throws NoSuchEntityException
+     */
+    public function getByCode($code);
+
+    /**
      * @param ConfiguratorOptionInterface $configuratorOption
      * @return ConfiguratorOptionInterface
      * @throws CouldNotSaveException
