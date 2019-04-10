@@ -18,7 +18,7 @@ define([
                     .index(".item.content");
                 $("#configurator-options-accordion").accordion("activate", index);
 
-                jQuery('#product_addtocart_form').validate().defaultShowErrors()
+                jQuery('#product_addtocart_form').validate().defaultShowErrors();
             }
         });
         $.validator.addMethod(
@@ -87,5 +87,5 @@ define([
                 return $.mage.__('Only 2 digits after comma');
             }
         );
-    }
+    };
 });
