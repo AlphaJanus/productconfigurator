@@ -6,6 +6,7 @@ var config = {
             configuratorOptions:    'Netzexpert_ProductConfigurator/js/configurator-options',
             configuratorValidation: 'Netzexpert_ProductConfigurator/js/configurator-validation',
             selectionWidget:        'Netzexpert_ProductConfigurator/js/selection-widget',
+            easyZoom:               'Netzexpert_ProductConfigurator/js/easyzoom'
         }
     },
     config: {

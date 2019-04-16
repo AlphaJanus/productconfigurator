@@ -15,17 +15,21 @@
                     <item name="class" xsi:type="string">Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form\Modifier\TypeText</item>
                     <item name="sortOrder" xsi:type="number">30</item>
                 </item>
+                <item name="type_image" xsi:type="array">
+                    <item name="class" xsi:type="string">Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form\Modifier\TypeImage</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
                 <item name="type_select" xsi:type="array">
                     <item name="class" xsi:type="string">Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form\Modifier\TypeSelect</item>
-                    <item name="sortOrder" xsi:type="number">40</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
                 </item>
                 <item name="type_expression" xsi:type="array">
                     <item name="class" xsi:type="string">Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form\Modifier\TypeExpression</item>
-                    <item name="sortOrder" xsi:type="number">50</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
                 </item>
                 <item name="type_file" xsi:type="array">
                     <item name="class" xsi:type="string">Netzexpert\ProductConfigurator\Ui\DataProvider\ConfiguratorOption\Form\Modifier\TypeFile</item>
-                    <item name="sortOrder" xsi:type="number">60</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
                 </item>
             </argument>
         </arguments>

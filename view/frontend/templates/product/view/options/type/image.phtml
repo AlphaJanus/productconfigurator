@@ -7,6 +7,7 @@ $isHidden = !$block->getAvailableOptionsCount() || !$option->getIsVisible() ? ' 
 $defaultValue = $block->getDefaultValue();
 $value = null;
 $disabled = false;
+$magnifier = ($option->getData('use_magnifier')) ? ' easyzoom easyzoom--adjacent' : '';
 ?>
 <div id="option-<?php echo $option->getId() ?>" class="field<?php echo /* @escapeNotVerified */ $required . $isHidden; ?>">
     <label class="label"><?php echo /* @escapeNotVerified */ $option->getData('name') ?></label>
@@ -24,13 +25,26 @@ $disabled = false;
                 }
                 $selected = ($item['value_id'] == $defaultValue) ? ' selected' : '';
                 $hidden = $disabled ? ' hide' : ''; ?>
-                <li class="value<?php echo /* @escapeNotVerified */ $selected . $hidden; ?>"
+                <li class="value<?php echo /* @escapeNotVerified */ $selected . $hidden . $magnifier; ?>"
                     id="value-<?php echo $item['value_id']; ?>"
                     data-value="<?php echo $item['value'] ?>"
                     data-id="<?php echo $item['value_id'] ?>">
-                    <img src="<?php echo $block->getResizedImage($item, 135) ?>"
-                         alt="<?php echo /* @escapeNotVerified */ $item['title']; ?>"
-                         title="<?php echo /* @escapeNotVerified */ $item['title']; ?>"/>
+                    <?php
+                        if ($magnifier) {
+                            ?>
+                    <a href="<?php echo /* @escapeNotVerified */ $block->getImageUrl($item['image']) ?>">
+                        <img src="<?php echo $block->getResizedImage($item, 135) ?>"
+                             alt="<?php echo /* @escapeNotVerified */ $item['title']; ?>"
+                             title="<?php echo /* @escapeNotVerified */ $item['title']; ?>"/>
+                    </a>
+                    <?php
+                        } else {
+                            ?>
+                            <img src="<?php echo $block->getResizedImage($item, 135) ?>"
+                                 alt="<?php echo /* @escapeNotVerified */ $item['title']; ?>"
+                                 title="<?php echo /* @escapeNotVerified */ $item['title']; ?>"/>
+                    <?php
+                        } ?>
                 </li>
                 <?php
             }
@@ -72,4 +86,14 @@ $disabled = false;
             }
         }
     }
+</script>
+<script>
+    require([
+        'jquery',
+        'easyZoom'
+    ], function($){
+        $(document).ready(function () {
+            $('.easyzoom').easyZoom();
+        })
+    });
 </script>
