@@ -11,12 +11,17 @@ namespace Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Image\AdapterFactory;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
+use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\Store;
 use Netzexpert\ProductConfigurator\Api\ConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionRepositoryInterface;
 use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\AbstractOptions;
@@ -24,14 +29,17 @@ use Netzexpert\ProductConfigurator\Block\Product\View\ConfiguratorOptions\Abstra
 class Image extends AbstractOptions
 {
 
-    /** @var Filesystem  */
+    /** @var Filesystem */
     private $filesystem;
 
-    /** @var AdapterFactory  */
+    /** @var AdapterFactory */
     private $imageFactory;
 
-    /** @var ImageHelper  */
+    /** @var ImageHelper */
     private $imageHelper;
+
+    /** @var ScopeConfigInterface */
+    private $scopeConfig;
 
     /**
      * Image constructor.
@@ -44,6 +52,7 @@ class Image extends AbstractOptions
      * @param Filesystem $filesystem
      * @param AdapterFactory $imageFactory
      * @param ImageHelper $imageHelper
+     * @param ScopeConfigInterface $scopeConfig
      * @param array $data
      */
     public function __construct(
@@ -56,11 +65,13 @@ class Image extends AbstractOptions
         Filesystem $filesystem,
         AdapterFactory $imageFactory,
         ImageHelper $imageHelper,
+        ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
         $this->filesystem   = $filesystem;
         $this->imageFactory = $imageFactory;
         $this->imageHelper  = $imageHelper;
+        $this->scopeConfig  = $scopeConfig;
         parent::__construct(
             $context,
             $configuratorOptionRepository,
@@ -121,5 +132,31 @@ class Image extends AbstractOptions
             }
         }
         return ($default) ? $default : $fistActive;
+    }
+
+    /**
+     * @param string $image
+     * @return string
+     */
+    public function getImageUrl($image)
+    {
+        if (is_null($image)) {
+            $image = $this->scopeConfig->getValue(
+                'catalog/placeholder/image_placeholder',
+                ScopeInterface::SCOPE_STORE
+            );
+            if (!$image) {
+                return '#';
+            }
+        }
+        try {
+            /** @var Store $store */
+            $store = $this->_storeManager->getStore();
+
+            return $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'configurator/option' . $image;
+        } catch (NoSuchEntityException $exception) {
+            $this->_logger->error($exception->getMessage());
+            return '#';
+        }
     }
 }

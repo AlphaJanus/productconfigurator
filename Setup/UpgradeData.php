@@ -52,8 +52,8 @@ class UpgradeData implements UpgradeDataInterface
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.21', '<')) {
-            $this->upgradeVersionTwoZeroTwentyOne($setup, $eavSetup, $context);
+        if (version_compare($context->getVersion(), '2.0.22', '<')) {
+            $this->upgradeVersionTwoZeroTwentyTwo($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -78,6 +78,39 @@ class UpgradeData implements UpgradeDataInterface
                 $this->logger->error($exception->getMessage());
             }
         }
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    public function upgradeVersionTwoZeroTwentyTwo($setup, $eavSetup, $context)
+    {
+        if (version_compare($context->getVersion(), '2.0.21', '<')) {
+            $this->upgradeVersionTwoZeroTwentyOne($setup, $eavSetup, $context);
+        }
+
+        $eavSetup->addAttribute(
+            ConfiguratorOption::ENTITY,
+            'use_magnifier',
+            [
+                'group'                 => 'General',
+                'type'                  => 'int',
+                'backend'               => '',
+                'frontend'              => '',
+                'label'                 => 'Use magnifier?',
+                'input'                 => 'boolean',
+                'class'                 => '',
+                'required'              => false,
+                'position'              => 96,
+                'default'               => '1',
+                'is_visible_in_grid'    => 0,
+                'is_filterable_in_grid' => 0,
+                'apply_to'              => 'image',
+                'source'                => \Magento\Eav\Model\Entity\Attribute\Source\Boolean::class,
+            ]
+        );
     }
 
     /**
