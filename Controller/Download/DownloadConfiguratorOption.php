@@ -96,7 +96,6 @@ class DownloadConfiguratorOption extends Action
                 return $resultForward->forward('noroute');
             }
         }
-        return;
     }
 
 }
