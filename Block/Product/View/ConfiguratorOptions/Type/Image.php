@@ -140,7 +140,7 @@ class Image extends AbstractOptions
      */
     public function getImageUrl($image)
     {
-        if (is_null($image)) {
+        if ($image === null) {
             $image = $this->scopeConfig->getValue(
                 'catalog/placeholder/image_placeholder',
                 ScopeInterface::SCOPE_STORE

@@ -103,11 +103,10 @@ class DownloadConfiguratorOption extends Action
      * Ends execution process
      *
      * @return void
-     * @SuppressWarnings(PHPMD.ExitExpression)
      */
     protected function endExecute()
     {
-        exit(0);
+        return;
     }
 
 }

@@ -29,5 +29,5 @@ define([
         setInitialProperty: function () {
             return this;
         },
-    })
+    });
 });
