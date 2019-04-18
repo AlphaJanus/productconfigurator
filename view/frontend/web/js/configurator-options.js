@@ -259,7 +259,7 @@ define([
                                 return (el.value !== "" && !el.disabled);
                             });
                             if (availableOptions.length === 1) {
-                                optionHtml.parentElement.value = availableOptions[0].value
+                                optionHtml.parentElement.value = availableOptions[0].value;
                             }
                         }
                     });

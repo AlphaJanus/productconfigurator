@@ -8,6 +8,46 @@ define([
     'use strict';
 
     /**
+     * Set levels to options list
+     *
+     * @param {Array} array - Property array
+     * @param {String} separator - Level separator
+     * @param {Number} level - Starting level
+     * @param {String} path - path to root
+     *
+     * @returns {Array} Array with levels
+     */
+    function setProperty(array, separator, level, path)
+    {
+        var i = 0,
+            length,
+            nextLevel,
+            nextPath;
+
+        array = _.compact(array);
+        length = array.length;
+        level = level || 0;
+        path = path || '';
+
+        for (i; i < length; i++) {
+            if (array[i]) {
+                _.extend(array[i], {
+                    level: level,
+                    path: path
+                });
+            }
+
+            if (array[i].hasOwnProperty(separator)) {
+                nextLevel = level + 1;
+                nextPath = path ? path + '.' + array[i].label : array[i].label;
+                setProperty.call(this, array[i][separator], separator, nextLevel, nextPath);
+            }
+        }
+
+        return array;
+    }
+
+    /**
      * Preprocessing options list
      *
      * @param {Array} nodes - Options list
@@ -46,46 +86,6 @@ define([
                 tree: _.compact(nodes)
             }
         };
-    }
-
-    /**
-     * Set levels to options list
-     *
-     * @param {Array} array - Property array
-     * @param {String} separator - Level separator
-     * @param {Number} level - Starting level
-     * @param {String} path - path to root
-     *
-     * @returns {Array} Array with levels
-     */
-    function setProperty(array, separator, level, path)
-    {
-        var i = 0,
-            length,
-            nextLevel,
-            nextPath;
-
-        array = _.compact(array);
-        length = array.length;
-        level = level || 0;
-        path = path || '';
-
-        for (i; i < length; i++) {
-            if (array[i]) {
-                _.extend(array[i], {
-                    level: level,
-                    path: path
-                });
-            }
-
-            if (array[i].hasOwnProperty(separator)) {
-                nextLevel = level + 1;
-                nextPath = path ? path + '.' + array[i].label : array[i].label;
-                setProperty.call(this, array[i][separator], separator, nextLevel, nextPath);
-            }
-        }
-
-        return array;
     }
 
     /**
@@ -191,7 +191,7 @@ define([
                 data.forEach(function (parentOptionId) {
                     if (parentOptionId) {
                         if (!_.findWhere(dependencies, {id: parentOptionId})) {
-                            dependencies.push(utils.template(self.tmpl, {id: parentOptionId}))
+                            dependencies.push(utils.template(self.tmpl, {id: parentOptionId}));
                         }
                     }
                 });
@@ -219,5 +219,5 @@ define([
             }
             this.source.set(this.parentScope + '.dependencies', dependencies);
         }
-    })
+    });
 });

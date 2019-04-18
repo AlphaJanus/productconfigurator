@@ -12,5 +12,5 @@ define([
             _super(options);
         });
         return provider;
-    }
+    };
 });

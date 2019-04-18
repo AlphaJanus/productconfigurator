@@ -45,7 +45,7 @@ define([
             config.links.insertData =  config.provider + ':data.product.assign_configurator_option_grid';
             config.links.recordData =  config.provider + ':data.product.' + config.index;
             config.dataProvider = 'data.product.assign_configurator_option_grid.' + config.groupIndex;
-            return this._super(config)
+            return this._super(config);
         },
 
         /**
@@ -84,7 +84,7 @@ define([
                     this.source.set(this.dataProvider, insertData);
                 }
             } else {
-                this.source.set(this.dataProvider, insertData) // This is workaround for deleting last record. Not sure. (By Andrew Stepanchuk)
+                this.source.set(this.dataProvider, insertData) ;// This is workaround for deleting last record. Not sure. (By Andrew Stepanchuk)
             }
         },
 

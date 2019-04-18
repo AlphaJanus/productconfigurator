@@ -2,7 +2,7 @@ define([
     'uiRegistry',
     'underscore',
     'Magento_Ui/js/dynamic-rows/dynamic-rows-grid'
-], function (registry, underscore, dynamicRows) {
+], function (registry, _, dynamicRows) {
     'use strict';
 
     Object.byString = function (o, s) {
