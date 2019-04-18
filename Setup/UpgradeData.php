@@ -7,12 +7,14 @@
 
 namespace Netzexpert\ProductConfigurator\Setup;
 
+use Magento\Catalog\Model\Product;
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Netzexpert\ProductConfigurator\Model\ConfiguratorOption;
+use Netzexpert\ProductConfigurator\Model\Product\Type\Configurator;
 use Psr\Log\LoggerInterface;
 
 class UpgradeData implements UpgradeDataInterface
@@ -52,8 +54,8 @@ class UpgradeData implements UpgradeDataInterface
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.22', '<')) {
-            $this->upgradeVersionTwoZeroTwentyTwo($setup, $eavSetup, $context);
+        if (version_compare($context->getVersion(), '2.0.23', '<')) {
+            $this->upgradeVersionTwoZeroTwentyThree($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -77,6 +79,32 @@ class UpgradeData implements UpgradeDataInterface
             } catch (\Exception $exception) {
                 $this->logger->error($exception->getMessage());
             }
+        }
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
+    public function upgradeVersionTwoZeroTwentyThree($setup, $eavSetup, $context)
+    {
+        if (version_compare($context->getVersion(), '2.0.22', '<')) {
+            $this->upgradeVersionTwoZeroTwentyTwo($setup, $eavSetup, $context);
+        }
+
+        $aplyTo = explode(
+            ',',
+            $eavSetup->getAttribute(Product::ENTITY, 'tax_class_id', 'apply_to')
+        );
+        if (!in_array(Configurator::TYPE_ID, $aplyTo)) {
+            $aplyTo[] = Configurator::TYPE_ID;
+            $eavSetup->updateAttribute(
+                Product::ENTITY,
+                "tax_class_id",
+                'apply_to',
+                implode(',', $aplyTo)
+            );
         }
     }
 
