@@ -96,16 +96,6 @@ class DownloadConfiguratorOption extends Action
                 return $resultForward->forward('noroute');
             }
         }
-        $this->endExecute();
-    }
-
-    /**
-     * Ends execution process
-     *
-     * @return void
-     */
-    protected function endExecute()
-    {
         return;
     }
 
