@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="configurator_option_entity" resource="default" engine="innodb">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"/>
+    <column xsi:type="varchar" name="code" nullable="false" length="255" default=""/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="CONFIGURATOR_OPTION_ENTITY_CODE">
+      <column name="code"/>
+    </constraint>
+  </table>
+  <table name="configurator_option_entity_int" resource="default" engine="innodb">
+    <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="smallint" name="attribute_id" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="value" padding="11" unsigned="false" nullable="true" identity="false"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="value_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_INT_ATTR_ID_EAV_ATTR_ATTR_ID" table="configurator_option_entity_int" column="attribute_id" referenceTable="eav_attribute" referenceColumn="attribute_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_INT_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID" table="configurator_option_entity_int" column="entity_id" referenceTable="configurator_option_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="CONFIGURATOR_OPTION_ENTITY_INT_ENTITY_ID_ATTRIBUTE_ID">
+      <column name="entity_id"/>
+      <column name="attribute_id"/>
+    </constraint>
+    <index referenceId="CONFIGURATOR_OPTION_ENTITY_INT_ATTRIBUTE_ID" indexType="btree">
+      <column name="attribute_id"/>
+    </index>
+  </table>
+  <table name="configurator_option_entity_text" resource="default" engine="innodb">
+    <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="smallint" name="attribute_id" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="text" name="value" nullable="true"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="value_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_TEXT_ATTR_ID_EAV_ATTR_ATTR_ID" table="configurator_option_entity_text" column="attribute_id" referenceTable="eav_attribute" referenceColumn="attribute_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_TEXT_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID" table="configurator_option_entity_text" column="entity_id" referenceTable="configurator_option_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="CONFIGURATOR_OPTION_ENTITY_TEXT_ENTITY_ID_ATTRIBUTE_ID">
+      <column name="entity_id"/>
+      <column name="attribute_id"/>
+    </constraint>
+    <index referenceId="CONFIGURATOR_OPTION_ENTITY_TEXT_ATTRIBUTE_ID" indexType="btree">
+      <column name="attribute_id"/>
+    </index>
+  </table>
+  <table name="configurator_option_entity_varchar" resource="default" engine="innodb">
+    <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="smallint" name="attribute_id" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="value" nullable="true" length="255"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="value_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_VCHR_ATTR_ID_EAV_ATTR_ATTR_ID" table="configurator_option_entity_varchar" column="attribute_id" referenceTable="eav_attribute" referenceColumn="attribute_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_ENTT_VCHR_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID" table="configurator_option_entity_varchar" column="entity_id" referenceTable="configurator_option_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="CONFIGURATOR_OPTION_ENTITY_VARCHAR_ENTITY_ID_ATTRIBUTE_ID">
+      <column name="entity_id"/>
+      <column name="attribute_id"/>
+    </constraint>
+    <index referenceId="CONFIGURATOR_OPTION_ENTITY_VARCHAR_ATTRIBUTE_ID" indexType="btree">
+      <column name="attribute_id"/>
+    </index>
+  </table>
+  <table name="configurator_option_eav_attribute" resource="default" engine="innodb">
+    <column xsi:type="smallint" name="attribute_id" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="smallint" name="is_visible_in_grid" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="smallint" name="is_filterable_in_grid" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="apply_to" nullable="true" length="255"/>
+    <constraint xsi:type="foreign" referenceId="CONFIGURATOR_OPT_EAV_ATTR_ATTR_ID_EAV_ATTR_ATTR_ID" table="configurator_option_eav_attribute" column="attribute_id" referenceTable="eav_attribute" referenceColumn="attribute_id" onDelete="CASCADE"/>
+  </table>
+  <table name="configurator_option_entity_variants" resource="default" engine="innodb">
+    <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="int" name="option_id" padding="10" unsigned="true" nullable="false" identity="false" disabled="true"/>
+    <column xsi:type="varchar" name="title" nullable="false" length="255" default=""/>
+    <column xsi:type="varchar" name="value" nullable="false" length="255" default=""/>
+    <column xsi:type="int" name="sort_order" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="decimal" name="price" scale="4" precision="12" unsigned="false" nullable="false" default="0"/>
+    <column xsi:type="smallint" name="is_default" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="image" nullable="true" length="255"/>
+    <column xsi:type="int" name="configurator_option_id" padding="10" unsigned="true" nullable="false" identity="false" onCreate="migrateDataFrom(option_id)"/>
+    <column xsi:type="boolean" name="show_in_cart" nullable="false" default="true"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="value_id"/>
+    </constraint>
+    <constraint xsi:type="foreign"
+                referenceId="FK_16FEE40451AC0AA9474D376DC5B65D2F"
+                table="configurator_option_entity_variants"
+                column="option_id"
+                referenceTable="configurator_option_entity"
+                referenceColumn="entity_id"
+                onDelete="CASCADE"
+                disabled="true"/>
+    <constraint xsi:type="foreign"
+                referenceId="CONFIGURATOR_OPT_ENT_ENT_ID"
+                table="configurator_option_entity_variants"
+                column="configurator_option_id"
+                referenceTable="configurator_option_entity"
+                referenceColumn="entity_id"
+                onDelete="CASCADE"
+                disabled="true"/>
+    <constraint xsi:type="unique" referenceId="CONFIGURATOR_OPTION_ENTITY_VARIANTS_OPTION_ID_IS_DEFAULT" disabled="true">
+      <column name="option_id"/>
+      <column name="is_default"/>
+    </constraint>
+  </table>
+  <table name="catalog_product_configurator_options" resource="default" engine="innodb">
+    <column xsi:type="int" name="option_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="int" name="configurator_option_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="int" name="position" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="varchar" name="parent_option" length="255"/>
+    <column xsi:type="text" name="values_data" nullable="true" disabled="true"/>
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="varchar" name="allowed_variants" nullable="true" length="255" disabled="true"/>
+    <column xsi:type="text" name="dependencies" nullable="true" onCreate="migrateDataFrom(allowed_variants)"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="option_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CAT_PRD_CONFIGURATOR_OPTS_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="catalog_product_configurator_options" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_FD94CE44537F97E142FB751515197207" table="catalog_product_configurator_options" column="configurator_option_id" referenceTable="configurator_option_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_F5AA4E5B3A2AB5E25F3E0B03C7D2FAE5" table="catalog_product_configurator_options" column="group_id" referenceTable="catalog_product_configurator_option_groups" referenceColumn="group_id" onDelete="CASCADE"/>
+    <constraint xsi:type="unique" referenceId="CAT_PRD_CONFIGURATOR_OPTS_PRD_ID_CONFIGURATOR_OPT_ID">
+      <column name="product_id"/>
+      <column name="configurator_option_id"/>
+    </constraint>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_PRODUCT_ID" indexType="btree">
+      <column name="product_id"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_CONFIGURATOR_OPTION_ID" indexType="btree">
+      <column name="configurator_option_id"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_PARENT_OPTION" disabled="1">
+      <column name="parent_option" />
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_GROUP_ID" indexType="btree">
+      <column name="group_id"/>
+    </index>
+  </table>
+  <table name="catalog_product_configurator_option_groups" resource="default" engine="innodb">
+    <column xsi:type="int" name="group_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="varchar" name="name" nullable="false" length="255" default=""/>
+    <column xsi:type="int" name="position" padding="10" unsigned="true" nullable="false" identity="false" default="0"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="group_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="CAT_PRD_CONFIGURATOR_OPT_GROUPS_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="catalog_product_configurator_option_groups" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTION_GROUPS_PRODUCT_ID" indexType="btree">
+      <column name="product_id"/>
+    </index>
+  </table>
+  <table name="catalog_product_configurator_options_variants" resource="default" engine="innodb">
+    <column xsi:type="int" name="variant_id" padding="10" unsigned="true" nullable="false" identity="true"/>
+    <column xsi:type="int" name="option_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="int" name="configurator_option_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="int" name="value_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false"/>
+    <column xsi:type="smallint" name="enabled" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="smallint" name="is_dependent" padding="5" unsigned="true" nullable="false" identity="false" default="0"/>
+    <column xsi:type="text" name="allowed_variants" nullable="true" disabled="true"/>
+    <column xsi:type="text" name="dependencies" nullable="true" onCreate="migrateDataFrom(allowed_variants)"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="variant_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="FK_059E00B02B730E68AA8D08C226525032" table="catalog_product_configurator_options_variants" column="option_id" referenceTable="catalog_product_configurator_options" referenceColumn="option_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_89256388E3BF149656677825F3C4A23A" table="catalog_product_configurator_options_variants" column="configurator_option_id" referenceTable="configurator_option_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="FK_5AB3B8B1812682835FC85F84068126BB" table="catalog_product_configurator_options_variants" column="value_id" referenceTable="configurator_option_entity_variants" referenceColumn="value_id" onDelete="CASCADE"/>
+    <constraint xsi:type="foreign" referenceId="CAT_PRD_CONFIGURATOR_OPTS_VARIANTS_PRD_ID_CAT_PRD_ENTT_ENTT_ID" table="catalog_product_configurator_options_variants" column="product_id" referenceTable="catalog_product_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_OPTION_ID" indexType="btree">
+      <column name="option_id"/>
+    </index>
+    <index referenceId="CAT_PRD_CONFIGURATOR_OPTS_VARIANTS_CONFIGURATOR_OPT_ID" indexType="btree">
+      <column name="configurator_option_id"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_VALUE_ID" indexType="btree">
+      <column name="value_id"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_PRODUCT_ID" indexType="btree">
+      <column name="product_id"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_ENABLED" indexType="btree">
+      <column name="enabled"/>
+    </index>
+    <index referenceId="CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_IS_DEPENDENT" indexType="btree">
+      <column name="is_dependent"/>
+    </index>
+  </table>
+</schema>
