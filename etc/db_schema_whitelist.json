@@ -1,0 +1,165 @@
+{
+    "configurator_option_entity": {
+        "column": {
+            "entity_id": true,
+            "created_at": true,
+            "updated_at": true,
+            "code": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CONFIGURATOR_OPTION_ENTITY_CODE": true
+        }
+    },
+    "configurator_option_entity_int": {
+        "column": {
+            "value_id": true,
+            "attribute_id": true,
+            "entity_id": true,
+            "value": true
+        },
+        "index": {
+            "CONFIGURATOR_OPTION_ENTITY_INT_ATTRIBUTE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CONFIGURATOR_OPT_ENTT_INT_ATTR_ID_EAV_ATTR_ATTR_ID": true,
+            "CONFIGURATOR_OPT_ENTT_INT_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID": true,
+            "CONFIGURATOR_OPTION_ENTITY_INT_ENTITY_ID_ATTRIBUTE_ID": true
+        }
+    },
+    "configurator_option_entity_text": {
+        "column": {
+            "value_id": true,
+            "attribute_id": true,
+            "entity_id": true,
+            "value": true
+        },
+        "index": {
+            "CONFIGURATOR_OPTION_ENTITY_TEXT_ATTRIBUTE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CONFIGURATOR_OPT_ENTT_TEXT_ATTR_ID_EAV_ATTR_ATTR_ID": true,
+            "CONFIGURATOR_OPT_ENTT_TEXT_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID": true,
+            "CONFIGURATOR_OPTION_ENTITY_TEXT_ENTITY_ID_ATTRIBUTE_ID": true
+        }
+    },
+    "configurator_option_entity_varchar": {
+        "column": {
+            "value_id": true,
+            "attribute_id": true,
+            "entity_id": true,
+            "value": true
+        },
+        "index": {
+            "CONFIGURATOR_OPTION_ENTITY_VARCHAR_ATTRIBUTE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CONFIGURATOR_OPT_ENTT_VCHR_ATTR_ID_EAV_ATTR_ATTR_ID": true,
+            "CONFIGURATOR_OPT_ENTT_VCHR_ENTT_ID_CONFIGURATOR_OPT_ENTT_ENTT_ID": true,
+            "CONFIGURATOR_OPTION_ENTITY_VARCHAR_ENTITY_ID_ATTRIBUTE_ID": true
+        }
+    },
+    "configurator_option_eav_attribute": {
+        "column": {
+            "attribute_id": true,
+            "sort_order": true,
+            "is_visible_in_grid": true,
+            "is_filterable_in_grid": true,
+            "apply_to": true
+        },
+        "constraint": {
+            "CONFIGURATOR_OPT_EAV_ATTR_ATTR_ID_EAV_ATTR_ATTR_ID": true
+        }
+    },
+    "configurator_option_entity_variants": {
+        "column": {
+            "value_id": true,
+            "option_id": true,
+            "title": true,
+            "value": true,
+            "sort_order": true,
+            "price": true,
+            "is_default": true,
+            "image": true,
+            "configurator_option_id": true,
+            "show_in_cart": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_8F490C51B091409C38CA143917313248": true,
+            "CONFIGURATOR_OPTION_ENTITY_VARIANTS_OPTION_ID_IS_DEFAULT": true
+        }
+    },
+    "catalog_product_configurator_options": {
+        "column": {
+            "option_id": true,
+            "product_id": true,
+            "configurator_option_id": true,
+            "position": true,
+            "parent_option": true,
+            "values_data": true,
+            "group_id": true,
+            "allowed_variants": true,
+            "dependencies": true
+        },
+        "index": {
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_PRODUCT_ID": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_CONFIGURATOR_OPTION_ID": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_PARENT_OPTION": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_GROUP_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CAT_PRD_CONFIGURATOR_OPTS_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true,
+            "FK_FD94CE44537F97E142FB751515197207": true,
+            "FK_F5AA4E5B3A2AB5E25F3E0B03C7D2FAE5": true,
+            "CAT_PRD_CONFIGURATOR_OPTS_PRD_ID_CONFIGURATOR_OPT_ID": true
+        }
+    },
+    "catalog_product_configurator_option_groups": {
+        "column": {
+            "group_id": true,
+            "product_id": true,
+            "name": true,
+            "position": true
+        },
+        "index": {
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTION_GROUPS_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CAT_PRD_CONFIGURATOR_OPT_GROUPS_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "catalog_product_configurator_options_variants": {
+        "column": {
+            "variant_id": true,
+            "option_id": true,
+            "configurator_option_id": true,
+            "value_id": true,
+            "product_id": true,
+            "enabled": true,
+            "is_dependent": true,
+            "allowed_variants": true,
+            "dependencies": true
+        },
+        "index": {
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_OPTION_ID": true,
+            "CAT_PRD_CONFIGURATOR_OPTS_VARIANTS_CONFIGURATOR_OPT_ID": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_VALUE_ID": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_PRODUCT_ID": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_ENABLED": true,
+            "CATALOG_PRODUCT_CONFIGURATOR_OPTIONS_VARIANTS_IS_DEPENDENT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_059E00B02B730E68AA8D08C226525032": true,
+            "FK_89256388E3BF149656677825F3C4A23A": true,
+            "FK_5AB3B8B1812682835FC85F84068126BB": true,
+            "CAT_PRD_CONFIGURATOR_OPTS_VARIANTS_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    }
+}
