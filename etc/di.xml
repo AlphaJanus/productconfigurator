@@ -32,9 +32,14 @@
 
     <preference for="Netzexpert\ProductConfigurator\Api\Data\ProductConfiguratorOptionVariantInterface"
                 type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionVariant" />
+    <preference for="Netzexpert\ProductConfigurator\Api\ProductConfiguratorOptionsVariantRepositoryInterface"
+                type="Netzexpert\ProductConfigurator\Model\Product\ProductConfiguratorOptionsVariantRepository" />
 
     <preference for="Netzexpert\ProductConfigurator\Api\Data\ConfiguratorItemOptionValueInterface"
                 type="Netzexpert\ProductConfigurator\Model\Quote\Item\ConfiguratorItemOptionValue" />
+
+    <preference for="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\AttributeUpgradeInterface"
+                type="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\AttributeUpgrade" />
 
     <type name="Netzexpert\ProductConfigurator\Model\ConfiguratorOption\Variant">
         <arguments>
