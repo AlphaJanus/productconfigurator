@@ -9,7 +9,7 @@ namespace Netzexpert\ProductConfigurator\Model\ConfiguratorOption;
 
 use Netzexpert\ProductConfigurator\Api\Data\ConfiguratorOptionAttributeInterface;
 
-class Attribute extends \Magento\Eav\Model\Entity\Attribute implements ConfiguratorOptionAttributeInterface
+class Attribute extends \Magento\Eav\Model\Attribute implements ConfiguratorOptionAttributeInterface
 {
 
     /**
@@ -33,5 +33,17 @@ class Attribute extends \Magento\Eav\Model\Entity\Attribute implements Configura
     public function setSortOrder($sortOrder)
     {
         return $this->setData('sort_order', $sortOrder);
+    }
+
+    /**
+     * Init resource model
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init(
+            \Magento\Eav\Model\ResourceModel\Entity\Attribute::class
+        );
     }
 }

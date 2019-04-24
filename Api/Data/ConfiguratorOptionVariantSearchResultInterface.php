@@ -12,7 +12,6 @@ use Magento\Framework\Data\SearchResultInterface;
 interface ConfiguratorOptionVariantSearchResultInterface extends SearchResultInterface
 {
     /**
-     * Get vendors list
      * @return ConfiguratorOptionVariantInterface[]
      */
     public function getItems();

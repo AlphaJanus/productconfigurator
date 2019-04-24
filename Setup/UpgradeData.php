@@ -54,8 +54,8 @@ class UpgradeData implements UpgradeDataInterface
         /** @var EavSetup $eavSetup  */
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
 
-        if (version_compare($context->getVersion(), '2.0.23', '<')) {
-            $this->upgradeVersionTwoZeroTwentyThree($setup, $eavSetup, $context);
+        if (version_compare($context->getVersion(), '2.0.24', '<')) {
+            $this->upgradeVersionTwoZeroTwentyFour($setup, $eavSetup, $context);
         }
 
         $setup->endSetup();
@@ -87,23 +87,41 @@ class UpgradeData implements UpgradeDataInterface
      * @param EavSetup $eavSetup
      * @param ModuleContextInterface $context
      */
+    public function upgradeVersionTwoZeroTwentyFour($setup, $eavSetup, $context)
+    {
+        if (version_compare($context->getVersion(), '2.0.23', '<')) {
+            $this->upgradeVersionTwoZeroTwentyThree($setup, $eavSetup, $context);
+        }
+
+        $eavSetup->updateEntityType(
+            ConfiguratorOption::ENTITY,
+            'entity_attribute_collection',
+            'Netzexpert\ProductConfigurator\Model\ResourceModel\ConfiguratorOption\Attribute\Collection'
+        );
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param EavSetup $eavSetup
+     * @param ModuleContextInterface $context
+     */
     public function upgradeVersionTwoZeroTwentyThree($setup, $eavSetup, $context)
     {
         if (version_compare($context->getVersion(), '2.0.22', '<')) {
             $this->upgradeVersionTwoZeroTwentyTwo($setup, $eavSetup, $context);
         }
 
-        $aplyTo = explode(
+        $applyTo = explode(
             ',',
             $eavSetup->getAttribute(Product::ENTITY, 'tax_class_id', 'apply_to')
         );
-        if (!in_array(Configurator::TYPE_ID, $aplyTo)) {
-            $aplyTo[] = Configurator::TYPE_ID;
+        if (!in_array(Configurator::TYPE_ID, $applyTo)) {
+            $applyTo[] = Configurator::TYPE_ID;
             $eavSetup->updateAttribute(
                 Product::ENTITY,
                 "tax_class_id",
                 'apply_to',
-                implode(',', $aplyTo)
+                implode(',', $applyTo)
             );
         }
     }

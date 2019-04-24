@@ -76,7 +76,7 @@ class ProductConfiguratorOptionRepository implements ProductConfiguratorOptionRe
         $productConfiguratorOption = $this->productConfiguratorOptionInterfaceFactory->create();
         $this->resourceModel->load($productConfiguratorOption, $id);
         if (!$productConfiguratorOption->getId()) {
-            throw new NoSuchEntityException(__('There is no option assiged under id %1', $id));
+            throw new NoSuchEntityException(__('There is no option assigned under id %1', $id));
         }
         return $productConfiguratorOption;
     }
